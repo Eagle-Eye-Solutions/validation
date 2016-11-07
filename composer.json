@@ -1,5 +1,5 @@
 {
-    "name": "respect/validation",
+    "name": "Eagle-Eye-Solutions/validation",
     "description": "The most awesome validation engine ever created for PHP",
     "keywords": ["respect", "validation", "validator"],
     "type": "library",
@@ -12,7 +12,6 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
         "symfony/polyfill-mbstring": "^1.2"
     },
     "require-dev": {
