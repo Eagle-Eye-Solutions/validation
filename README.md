@@ -1,3 +1,7 @@
+# WARNING!!!!!!
+
+This has been forked from a specific commit because Respect Validator has dropped support for PHP 5.6, which means composer can no longer update and use the specific commit hash we're using on Respect Validator. We've changed the composer.json file locally.
+
 # Respect\Validation
 
 [![Build Status](https://img.shields.io/travis/Respect/Validation/master.svg?style=flat-square)](http://travis-ci.org/Respect/Validation)
