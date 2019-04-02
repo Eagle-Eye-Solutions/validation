@@ -1,5 +1,5 @@
 {
-    "name": "Eagle-Eye-Solutions/validation",
+    "name": "eagle-eye-solutions/validation",
     "description": "The most awesome validation engine ever created for PHP",
     "keywords": ["respect", "validation", "validator"],
     "type": "library",
