@@ -20,7 +20,7 @@ before_script:
   - export APP_ENV="local"
 
 script:
-  - php -dxdebug.mode=coverage vendor/bin/phpunit --configuration phpunit.xml.dist --colors --coverage-clover=coverage.clover
+  - php -dxdebug.mode=coverage vendor/bin/phpunit --configuration phpunit.xml --colors --coverage-clover=coverage.clover
 
 after_script:
   - |
