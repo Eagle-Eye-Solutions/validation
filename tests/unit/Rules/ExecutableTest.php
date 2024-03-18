@@ -16,10 +16,10 @@ class ExecutableTest extends RuleTestCase
     public function providerForValidInput(): array
     {
         $rule = new Executable();
-        chmod('tests/fixtures/executable.php', 705);
+        chmod('tests/fixtures/executable', 705);
         return [
-            [$rule, 'tests/fixtures/executable.php'],
-            [$rule, new SplFileInfo('tests/fixtures/executable.php')],
+            [$rule, 'tests/fixtures/executable'],
+            [$rule, new SplFileInfo('tests/fixtures/executable')],
         ];
     }
 

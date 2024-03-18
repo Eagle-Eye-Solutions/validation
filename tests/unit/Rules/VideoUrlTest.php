@@ -95,7 +95,7 @@ class VideoUrlTest extends TestCase
 
     public function testUseAProperExceptionMessageWhenVideoUrlIsNotValidForTheDefinedProvider(): void
     {
-        $this->expectExceptionMessage("\"exemplo.com\" must be a valid \"YouTube\" video URL");
+        $this->expectExceptionMessage("\"exemplo.com\" must be a valid video URL");
         $this->expectException(VideoUrlExceptionAlias::class);
         $rule = new VideoUrl('YouTube');
         $rule->check('exemplo.com');

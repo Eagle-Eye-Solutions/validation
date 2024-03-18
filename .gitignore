@@ -1,6 +1,4 @@
 .php_cs.cache
 .couscous/
 composer.lock
-Makefile
-phpunit.xml
 vendor/
