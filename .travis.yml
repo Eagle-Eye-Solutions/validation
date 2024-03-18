@@ -2,6 +2,9 @@ sudo: false
 
 language: php
 
+os: linux
+dist: focal
+
 php:
   - '8.2.13'
   - '8.3.2'
