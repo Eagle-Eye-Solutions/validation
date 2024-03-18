@@ -9,58 +9,65 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\NfeAccessKeyException;
+use Respect\Validation\Rules\NfeAccessKey;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\NfeAccessKey
- * @covers Respect\Validation\Exceptions\NfeAccessKeyException
+ * @covers NfeAccessKey
+ * @covers NfeAccessKeyException
  */
-class NfeAccessKeyTest extends \PHPUnit_Framework_TestCase
+class NfeAccessKeyTest extends TestCase
 {
-    protected $nfeValidator;
+    protected NfeAccessKey $nfeValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->nfeValidator = new NfeAccessKey();
     }
 
     /**
      * @dataProvider validAccessKeyProvider
+     * @throws \Exception
      */
-    public function testValidAccessKey($aK)
+    public function testValidAccessKey($aK): void
     {
-        $this->assertTrue($this->nfeValidator->assert($aK));
-        $this->assertTrue($this->nfeValidator->__invoke($aK));
-        $this->assertTrue($this->nfeValidator->check($aK));
+        static::assertTrue($this->nfeValidator->assert($aK));
+        static::assertTrue($this->nfeValidator->__invoke($aK));
+        static::assertTrue($this->nfeValidator->check($aK));
     }
 
     /**
      * @dataProvider invalidAccessKeyProvider
-     * @expectedException Respect\Validation\Exceptions\NfeAccessKeyException
+     * @throws \Exception
      */
     public function testInvalidAccessKey($aK)
     {
-        $this->assertFalse($this->nfeValidator->assert($aK));
+        $this->expectException(NfeAccessKeyException::class);
+        static::assertFalse($this->nfeValidator->assert($aK));
     }
 
     /**
      * @dataProvider invalidAccessKeyLengthProvider
-     * @expectedException Respect\Validation\Exceptions\NfeAccessKeyException
+     * @throws \Exception
      */
     public function testInvalidLengthCnh($aK)
     {
-        $this->assertFalse($this->nfeValidator->assert($aK));
+        $this->expectException(NfeAccessKeyException::class);
+        static::assertFalse($this->nfeValidator->assert($aK));
     }
 
-    public function validAccessKeyProvider()
+    public static function validAccessKeyProvider(): array
     {
         return [
             ['52060433009911002506550120000007800267301615'],
         ];
     }
 
-    public function invalidAccessKeyProvider()
+    public static function invalidAccessKeyProvider(): array
     {
         return [
             ['31841136830118868211870485416765268625116906'],
@@ -75,7 +82,7 @@ class NfeAccessKeyTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function invalidAccessKeyLengthProvider()
+    public static function invalidAccessKeyLengthProvider(): array
     {
         return [
             ['11145573386990252067204852181837301'],

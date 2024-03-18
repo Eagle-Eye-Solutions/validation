@@ -9,16 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use Respect\Validation\Rules\BankAccount;
 use Respect\Validation\Rules\Locale\Factory;
 use Respect\Validation\Rules\Locale\GermanBankAccount;
 use Respect\Validation\Validatable;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\BankAccount
- * @covers Respect\Validation\Exceptions\BankAccountException
+ * @covers BankAccount
+ * @covers BankAccountException
  */
 class BankAccountTest extends LocaleTestCase
 {
@@ -29,15 +30,14 @@ class BankAccountTest extends LocaleTestCase
 
         $validatable = $this->createMock(Validatable::class);
         $factory = $this->createMock(Factory::class);
-        $factory
-            ->expects($this->once())
+        $factory->expects($this->once())
             ->method('bankAccount')
             ->with($countryCode, $bank)
-            ->will($this->returnValue($validatable));
+            ->willReturn($validatable);
 
         $rule = new BankAccount($countryCode, $bank, $factory);
 
-        $this->assertSame($validatable, $rule->getValidatable());
+        static::assertSame($validatable, $rule->getValidatable());
     }
 
     public function testShouldUseDefaultFactoryToCreateInternalRuleBasedOnGivenCountryCodeWhenFactoryIsNotDefined()

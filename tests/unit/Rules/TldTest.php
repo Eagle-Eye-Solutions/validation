@@ -9,15 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\Tld;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Tld
+ * @covers Tld
  */
-class TldTest extends \PHPUnit_Framework_TestCase
+class TldTest extends TestCase
 {
-    public function providerForValidTld()
+    public static function providerForValidTld()
     {
         return [
             ['com'],
@@ -36,10 +39,10 @@ class TldTest extends \PHPUnit_Framework_TestCase
     {
         $rule = new Tld();
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
-    public function providerForInvalidTld()
+    public static function providerForInvalidTld()
     {
         return [
             ['1'],
@@ -56,6 +59,6 @@ class TldTest extends \PHPUnit_Framework_TestCase
     {
         $rule = new Tld();
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 }

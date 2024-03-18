@@ -9,67 +9,77 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\IpException;
+use Respect\Validation\Rules\Ip;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Ip
- * @covers Respect\Validation\Exceptions\IpException
+ * @covers Ip
+ * @covers IpException
  */
-class IpTest extends \PHPUnit_Framework_TestCase
+class IpTest extends TestCase
 {
     /**
      * @dataProvider providerForIp
+     * @throws \Exception
      */
-    public function testValidIpsShouldReturnTrue($input, $options = null)
+    public function testValidIpsShouldReturnTrue($input, $options = null): void
     {
         $ipValidator = new Ip($options);
-        $this->assertTrue($ipValidator->__invoke($input));
-        $this->assertTrue($ipValidator->assert($input));
-        $this->assertTrue($ipValidator->check($input));
+        static::assertTrue($ipValidator->__invoke($input));
+        static::assertTrue($ipValidator->assert($input));
+        static::assertTrue($ipValidator->check($input));
     }
 
     /**
      * @dataProvider providerForIpBetweenRange
+     * @throws \Exception
      */
-    public function testIpsBetweenRangeShouldReturnTrue($input, $networkRange)
+    public function testIpsBetweenRangeShouldReturnTrue($input, $networkRange): void
     {
         $ipValidator = new Ip($networkRange);
-        $this->assertTrue($ipValidator->__invoke($input));
-        $this->assertTrue($ipValidator->assert($input));
-        $this->assertTrue($ipValidator->check($input));
+        static::assertTrue($ipValidator->__invoke($input));
+        static::assertTrue($ipValidator->assert($input));
+        static::assertTrue($ipValidator->check($input));
     }
 
     /**
      * @dataProvider providerForNotIp
-     * @expectedException Respect\Validation\Exceptions\IpException
+     *
+     * @throws \Exception
      */
-    public function testInvalidIpsShouldThrowIpException($input, $options = null)
+    public function testInvalidIpsShouldThrowIpException($input, $options = null): void
     {
+        $this->expectException(IpException::class);
         $ipValidator = new Ip($options);
-        $this->assertFalse($ipValidator->__invoke($input));
-        $this->assertFalse($ipValidator->assert($input));
+        static::assertFalse($ipValidator->__invoke($input));
+        static::assertFalse($ipValidator->assert($input));
     }
 
     /**
      * @dataProvider providerForIpOutsideRange
-     * @expectedException Respect\Validation\Exceptions\IpException
+     * @throws \Exception
      */
-    public function testIpsOutsideRangeShouldReturnFalse($input, $networkRange)
+    public function testIpsOutsideRangeShouldReturnFalse($input, $networkRange): void
     {
+        $this->expectException(IpException::class);
         $ipValidator = new Ip($networkRange);
-        $this->assertFalse($ipValidator->__invoke($input));
-        $this->assertFalse($ipValidator->assert($input));
+        static::assertFalse($ipValidator->__invoke($input));
+        static::assertFalse($ipValidator->assert($input));
     }
 
-    public function providerForIp()
+    public static function providerForIp(): array
     {
         return [
             ['127.0.0.1'],
         ];
     }
 
-    public function providerForIpBetweenRange()
+    public static function providerForIpBetweenRange(): array
     {
         return [
             ['127.0.0.1', '127.*'],
@@ -92,7 +102,7 @@ class IpTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotIp()
+    public static function providerForNotIp(): array
     {
         return [
             [''],
@@ -104,7 +114,7 @@ class IpTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForIpOutsideRange()
+    public static function providerForIpOutsideRange(): array
     {
         return [
             ['127.0.0.1', '127.0.1.*'],
@@ -121,14 +131,15 @@ class IpTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerForInvalidRanges
-     * @expectedException Respect\Validation\Exceptions\ComponentException
+     *
      */
-    public function testInvalidRangeShouldRaiseException($range)
+    public function testInvalidRangeShouldRaiseException($range): void
     {
-        $o = new Ip($range);
+        $this->expectException(ComponentException::class);
+        new Ip($range);
     }
 
-    public function providerForInvalidRanges()
+    public static function providerForInvalidRanges(): array
     {
         return [
             ['192.168'],

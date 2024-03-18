@@ -9,25 +9,27 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use Respect\Validation\Rules\ArrayType;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\ArrayType
  */
 class ArrayTypeTest extends RuleTestCase
 {
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $rule = new ArrayType();
 
         return [
             [$rule, []],
+
             [$rule, [1, 2, 3]],
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $rule = new ArrayType();
 

@@ -1,71 +1,38 @@
 <?php
 
-/*
- * This file is part of Respect/Validation.
- *
- * (c) Alexandre Gomes Gaigalas <alexandre@gaigalas.net>
- *
- * For the full copyright and license information, please view the "LICENSE.md"
- * file that was distributed with this source code.
- */
+namespace Respect\Validation\Test\Rules;
 
-namespace Respect\Validation\Rules;
-
-$GLOBALS['is_link'] = null;
-
-function is_link($link)
-{
-    $return = \is_link($link);
-    if (null !== $GLOBALS['is_link']) {
-        $return = $GLOBALS['is_link'];
-        $GLOBALS['is_link'] = null;
-    }
-
-    return $return;
-}
+use Respect\Validation\Rules\SymbolicLink;
+use SplFileInfo;
 
 /**
- * @group  rule
- * @covers Respect\Validation\Rules\SymbolicLink
- * @covers Respect\Validation\Exceptions\SymbolicLinkException
+ * @group rule
+ * @covers SymbolicLink
  */
-class SymbolicLinkTest extends \PHPUnit_Framework_TestCase
+class SymbolicLinkTest extends RuleTestCase
 {
-    /**
-     * @covers Respect\Validation\Rules\SymbolicLink::validate
-     */
-    public function testValidSymbolicLinkShouldReturnTrue()
+    public function providerForValidInput(): array
     {
-        $GLOBALS['is_link'] = true;
+        $sut = new SymbolicLink();
 
-        $rule = new SymbolicLink();
-        $input = '/path/of/a/valid/link.lnk';
-        $this->assertTrue($rule->validate($input));
+        return [
+            'filename' => [$sut, 'tests/fixtures/symbolic'],
+            'SplFileInfo' => [$sut, new SplFileInfo('tests/fixtures/symbolic')],
+        ];
     }
 
-    /**
-     * @covers Respect\Validation\Rules\SymbolicLink::validate
-     */
-    public function testInvalidSymbolicLinkShouldThrowException()
+    public function providerForInvalidInput(): array
     {
-        $GLOBALS['is_link'] = false;
+        $sut = new SymbolicLink();
 
-        $rule = new SymbolicLink();
-        $input = '/path/of/an/invalid/link.lnk';
-        $this->assertFalse($rule->validate($input));
-    }
-
-    /**
-     * @covers Respect\Validation\Rules\SymbolicLink::validate
-     */
-    public function testShouldValidateObjects()
-    {
-        $rule = new SymbolicLink();
-        $object = $this->createMock('SplFileInfo', ['isLink'], ['somelink.lnk']);
-        $object->expects($this->once())
-                ->method('isLink')
-                ->will($this->returnValue(true));
-
-        $this->assertTrue($rule->validate($object));
+        return [
+            'no existing filename' => [$sut, 'tests/fixtures/non-existing-symbolic-link'],
+            'no existing SplFileInfo' => [$sut, new SplFileInfo('tests/fixtures/non-existing-symbolic-link')],
+            'bool true' => [$sut, true],
+            'bool false' => [$sut, false],
+            'empty string' => [$sut, ''],
+            'array' => [$sut, []],
+            'resource' => [$sut, tmpfile()],
+        ];
     }
 }

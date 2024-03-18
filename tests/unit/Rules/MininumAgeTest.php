@@ -9,58 +9,67 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\MinimumAgeException;
+use Respect\Validation\Rules\MinimumAge;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\MinimumAge
- * @covers Respect\Validation\Exceptions\MinimumAgeException
+ * @covers MinimumAge
+ * @covers MinimumAgeException
  */
-class MininumAgeTest extends \PHPUnit_Framework_TestCase
+class MininumAgeTest extends TestCase
 {
     /**
      * @dataProvider providerForValidDateValidMinimumAge
+     * @throws ComponentException
+     * @throws \Exception
      */
-    public function testValidMinimumAgeInsideBoundsShouldPass($age, $format, $input)
+    public function testValidMinimumAgeInsideBoundsShouldPass($age, $format, $input): void
     {
         $minimumAge = new MinimumAge($age, $format);
-        $this->assertTrue($minimumAge->__invoke($input));
-        $this->assertTrue($minimumAge->assert($input));
-        $this->assertTrue($minimumAge->check($input));
+        static::assertTrue($minimumAge->__invoke($input));
+        static::assertTrue($minimumAge->assert($input));
+        static::assertTrue($minimumAge->check($input));
     }
 
     /**
      * @dataProvider providerForValidDateInvalidMinimumAge
-     * @expectedException Respect\Validation\Exceptions\MinimumAgeException
+     * @throws ComponentException
+     * @throws \Exception
      */
-    public function testInvalidMinimumAgeShouldThrowException($age, $format, $input)
+    public function testInvalidMinimumAgeShouldThrowException($age, $format, $input): void
     {
+        $this->expectException(MinimumAgeException::class);
         $minimumAge = new MinimumAge($age, $format);
-        $this->assertFalse($minimumAge->__invoke($input));
-        $this->assertFalse($minimumAge->assert($input));
+        static::assertFalse($minimumAge->__invoke($input));
+        static::assertFalse($minimumAge->assert($input));
     }
 
     /**
      * @dataProvider providerForInvalidDate
-     * @expectedException Respect\Validation\Exceptions\MinimumAgeException
+     * @throws ComponentException
+     * @throws \Exception
      */
-    public function testInvalidDateShouldNotPass($age, $format, $input)
+    public function testInvalidDateShouldNotPass($age, $format, $input): void
     {
+        $this->expectException(MinimumAgeException::class);
         $minimumAge = new MinimumAge($age, $format);
-        $this->assertFalse($minimumAge->__invoke($input));
-        $this->assertFalse($minimumAge->assert($input));
+        static::assertFalse($minimumAge->__invoke($input));
+        static::assertFalse($minimumAge->assert($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage The age must be a integer value
-     */
-    public function testShouldNotAcceptNonIntegerAgeOnConstructor()
+    public function testShouldNotAcceptNonIntegerAgeOnConstructor(): void
     {
+        $this->expectExceptionMessage("The age must be a integer value");
+        $this->expectException(ComponentException::class);
         new MinimumAge('L12');
     }
 
-    public function providerForValidDateValidMinimumAge()
+    public static function providerForValidDateValidMinimumAge(): array
     {
         return [
             [18, 'Y-m-d', ''],
@@ -72,21 +81,21 @@ class MininumAgeTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidDateInvalidMinimumAge()
+    public static function providerForValidDateInvalidMinimumAge(): array
     {
         return [
-            [18, 'Y-m-d', '2002-06-30'],
-            [18, null, new \DateTime('2002-06-30')],
-            [18, 'Y-m-d', new \DateTime('2002-06-30')],
+            [18, 'Y-m-d', (new \DateTime('-16 Years'))->format('Y-m-d')],
+            [18, null, new \DateTime('-16 Years')],
+            [18, 'Y-m-d', new \DateTime('-16 Years')],
         ];
     }
 
-    public function providerForInvalidDate()
+    public static function providerForInvalidDate(): array
     {
         return [
             [18, null, 'invalid-input'],
             [18, null, new \stdClass()],
-            [18, 'y-m-d', '2002-06-30'],
+            [18, 'y-m-d', (new \DateTime('-16 Years'))->format('Y-m-d')],
         ];
     }
 }

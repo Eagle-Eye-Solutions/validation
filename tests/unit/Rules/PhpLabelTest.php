@@ -9,16 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use Respect\Validation\Rules\PhpLabel;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\PhpLabel
- * @covers Respect\Validation\Exceptions\PhpLabelException
+ * @covers PhpLabel
+ * @covers PhpLabelException
  */
 class PhpLabelTest extends RuleTestCase
 {
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $rule = new PhpLabel();
 
@@ -33,7 +35,7 @@ class PhpLabelTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $rule = new PhpLabel();
 
@@ -49,7 +51,7 @@ class PhpLabelTest extends RuleTestCase
             [$rule, 'f o o'],
             [$rule, '0ne'],
             [$rule, '0_ne'],
-            [$rule, uniqid(mt_rand(0, 9))],
+            [$rule, uniqid(mt_rand(0, 9), true)],
             [$rule, null],
             [$rule, mt_rand()],
             [$rule, 0],

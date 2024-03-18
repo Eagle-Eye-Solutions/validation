@@ -9,32 +9,34 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
 use malkusch\bav\BAV;
 use malkusch\bav\ConfigurationRegistry;
 use malkusch\bav\DataBackend;
 use malkusch\bav\DataBackendContainer;
+use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class LocaleTestCase extends \PHPUnit_Framework_TestCase
+class LocaleTestCase extends TestCase
 {
-    protected function getBavMock()
+    protected function getBavMock(): MockObject
     {
-        $bavMock = $this->getMockBuilder(BAV::class)
+        return $this->getMockBuilder(BAV::class)
             ->disableOriginalConstructor()
             ->getMock();
-
-        return $bavMock;
     }
 
-    protected function setUp()
+    /**
+     * @throws Exception
+     */
+    protected function setUp(): void
     {
         $dataBackend = $this->getMockForAbstractClass(DataBackend::class);
         $dataBackendContainer = $this->getMockForAbstractClass(DataBackendContainer::class);
-        $dataBackendContainer
-            ->expects($this->any())
-            ->method('makeDataBackend')
-            ->will($this->returnValue($dataBackend));
+        $dataBackendContainer->method('makeDataBackend')
+            ->willReturn($dataBackend);
 
         ConfigurationRegistry::getConfiguration()->setDataBackendContainer($dataBackendContainer);
         ConfigurationRegistry::getConfiguration()->setUpdatePlan(null);

@@ -9,15 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use Respect\Validation\Rules\FloatType;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\FloatType
+ * @covers FloatType
  */
 class FloatTypeTest extends RuleTestCase
 {
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $rule = new FloatType();
 
@@ -32,7 +34,7 @@ class FloatTypeTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $rule = new FloatType();
 

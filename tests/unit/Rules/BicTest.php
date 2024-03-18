@@ -9,16 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use Respect\Validation\Rules\Bic;
 use Respect\Validation\Rules\Locale\Factory;
 use Respect\Validation\Rules\Locale\GermanBic;
 use Respect\Validation\Validatable;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Bic
- * @covers Respect\Validation\Exceptions\BicException
+ * @covers Bic
+ * @covers BicException
  */
 class BicTest extends LocaleTestCase
 {
@@ -28,11 +29,10 @@ class BicTest extends LocaleTestCase
 
         $validatable = $this->createMock(Validatable::class);
         $factory = $this->createMock(Factory::class);
-        $factory
-            ->expects($this->once())
+        $factory->expects(static::once())
             ->method('bic')
             ->with($countryCode)
-            ->will($this->returnValue($validatable));
+            ->willReturn($validatable);
 
         $rule = new Bic($countryCode, $factory);
 

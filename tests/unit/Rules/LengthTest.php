@@ -9,61 +9,68 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\Length;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Length
- * @covers Respect\Validation\Exceptions\LengthException
+ * @covers Length
+ * @covers LengthException
  */
-class LengthTest extends \PHPUnit_Framework_TestCase
+class LengthTest extends TestCase
 {
     /**
      * @dataProvider providerForValidLengthInclusive
+     * @throws ComponentException
      */
-    public function testLengthInsideBoundsForInclusiveCasesReturnTrue($string, $min, $max)
+    public function testLengthInsideBoundsForInclusiveCasesReturnTrue($string, $min, $max): void
     {
         $validator = new Length($min, $max, true);
-        $this->assertTrue($validator->validate($string));
+        static::assertTrue($validator->validate($string));
     }
 
     /**
      * @dataProvider providerForValidLengthNonInclusive
+     * @throws ComponentException
      */
-    public function testLengthInsideBoundsForNonInclusiveCasesShouldReturnTrue($string, $min, $max)
+    public function testLengthInsideBoundsForNonInclusiveCasesShouldReturnTrue($string, $min, $max): void
     {
         $validator = new Length($min, $max, false);
-        $this->assertTrue($validator->validate($string));
+        static::assertTrue($validator->validate($string));
     }
 
     /**
      * @dataProvider providerForInvalidLengthInclusive
      */
-    public function testLengthOutsideBoundsForInclusiveCasesReturnFalse($string, $min, $max)
+    public function testLengthOutsideBoundsForInclusiveCasesReturnFalse($string, $min, $max): void
     {
         $validator = new Length($min, $max, true);
-        $this->assertfalse($validator->validate($string));
+        static::assertFalse($validator->validate($string));
     }
 
     /**
      * @dataProvider providerForInvalidLengthNonInclusive
+     * @throws ComponentException
      */
     public function testLengthOutsideBoundsForNonInclusiveCasesReturnFalse($string, $min, $max)
     {
         $validator = new Length($min, $max, false);
-        $this->assertfalse($validator->validate($string));
+        static::assertFalse($validator->validate($string));
     }
 
     /**
      * @dataProvider providerForComponentException
-     * @expectedException Respect\Validation\Exceptions\ComponentException
      */
-    public function testComponentExceptionsForInvalidParameters($min, $max)
+    public function testComponentExceptionsForInvalidParameters($min, $max): void
     {
-        $buggyValidator = new Length($min, $max);
+        $this->expectException(ComponentException::class);
+        new Length($min, $max);
     }
 
-    public function providerForValidLengthInclusive()
+    public static function providerForValidLengthInclusive(): array
     {
         return [
             ['alganet', 1, 15],
@@ -75,7 +82,7 @@ class LengthTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidLengthNonInclusive()
+    public static function providerForValidLengthNonInclusive(): array
     {
         return [
             ['alganet', 1, 15],
@@ -87,7 +94,7 @@ class LengthTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidLengthInclusive()
+    public static function providerForInvalidLengthInclusive(): array
     {
         return [
             ['', 1, 15],
@@ -98,7 +105,7 @@ class LengthTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidLengthNonInclusive()
+    public static function providerForInvalidLengthNonInclusive(): array
     {
         return [
             ['alganet', 1, 7],
@@ -107,7 +114,7 @@ class LengthTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForComponentException()
+    public static function providerForComponentException(): array
     {
         return [
             ['a', 15],

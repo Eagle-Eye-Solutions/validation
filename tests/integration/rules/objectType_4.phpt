@@ -8,4 +8,3 @@ v::not(v::objectType())->check('');
 v::not(v::objectType())->check(true);
 v::not(v::objectType())->check(0);
 ?>
---EXPECTF--

@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\CallableTypeException;
+use Respect\Validation\Rules\CallableType;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\CallableType
- * @covers Respect\Validation\Exceptions\CallableTypeException
+ * @covers CallableType
+ * @covers CallableTypeException
  */
-class CallableTypeTest extends \PHPUnit_Framework_TestCase
+class CallableTypeTest extends TestCase
 {
     protected $rule;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->rule = new CallableType();
     }
@@ -28,40 +32,42 @@ class CallableTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForCallable
      */
-    public function testShouldValidateCallableTypeNumbers($input)
+    public function testValidateCallableTypeNumbers($input): void
     {
-        $this->assertTrue($this->rule->validate($input));
+        static::assertTrue($this->rule->validate($input));
+    }
+
+    public function testValidateCallableFunctionTypeNumbers(): void
+    {
+        static::assertTrue($this->rule->validate([$this, __FUNCTION__]));
     }
 
     /**
      * @dataProvider providerForNonCallable
      */
-    public function testShouldNotValidateNonCallableTypeNumbers($input)
+    public function testValidateNonCallableTypeNumbers($input): void
     {
-        $this->assertFalse($this->rule->validate($input));
+        static::assertFalse($this->rule->validate($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\CallableTypeException
-     * @expectedExceptionMessage "testShouldThrowCallableTypeExceptionWhenChecking" must be a callable
-     */
-    public function testShouldThrowCallableTypeExceptionWhenChecking()
+    public function testShouldThrowCallableTypeExceptionWhenChecking(): void
     {
+        $this->expectExceptionMessage("\"testShouldThrowCallableTypeExceptionWhenChecking\" must be a callable");
+        $this->expectException(CallableTypeException::class);
         $this->rule->check(__FUNCTION__);
     }
 
-    public function providerForCallable()
+    public static function providerForCallable(): array
     {
         return [
             [function () {
             }],
             ['trim'],
             [__METHOD__],
-            [[$this, __FUNCTION__]],
         ];
     }
 
-    public function providerForNonCallable()
+    public static function providerForNonCallable(): array
     {
         return [
             [' '],

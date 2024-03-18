@@ -9,30 +9,34 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\Vatin;
 use Respect\Validation\Validatable;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Vatin
+ * @covers Vatin
  */
-final class VatinTest extends \PHPUnit_Framework_TestCase
+class VatinTest extends TestCase
 {
-    public function testShouldAcceptCountryCodeOnConstructor()
+    /**
+     * @throws ComponentException
+     */
+    public function testAcceptCountryCodeOnConstructor(): void
     {
         $countryCode = 'PL';
         $rule = new Vatin($countryCode);
 
-        $this->assertInstanceOf(Validatable::class, $rule->getValidatable());
+        static::assertInstanceOf(Validatable::class, $rule->getValidatable());
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage There is no support for VAT identification number from "BR"
-     */
-    public function testShouldThrowAnExceptionWhenCountryCodeIsNotSupported()
+    public function testCountryCodeIsNotSupported(): void
     {
+        $this->expectExceptionMessage("There is no support for VAT identification number from \"BR\"");
+        $this->expectException(ComponentException::class);
         new Vatin('BR');
     }
 }

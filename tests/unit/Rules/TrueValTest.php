@@ -9,14 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\TrueVal;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\TrueVal
- * @covers Respect\Validation\Exceptions\TrueValException
+ * @covers TrueVal
+ * @covers TrueValException
  */
-class TrueValTest extends \PHPUnit_Framework_TestCase
+class TrueValTest extends TestCase
 {
     /**
      * @dataProvider validTrueProvider
@@ -25,10 +28,10 @@ class TrueValTest extends \PHPUnit_Framework_TestCase
     {
         $rule = new TrueVal();
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
-    public function validTrueProvider()
+    public static function validTrueProvider()
     {
         return [
             [true],
@@ -53,10 +56,10 @@ class TrueValTest extends \PHPUnit_Framework_TestCase
     {
         $rule = new TrueVal();
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 
-    public function invalidTrueProvider()
+    public static function invalidTrueProvider()
     {
         return [
             [false],

@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
 use DateTime;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\BetweenException;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\Between;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Between
- * @covers Respect\Validation\Exceptions\BetweenException
+ * @covers Between
+ * @covers BetweenException
  */
-class BetweenTest extends \PHPUnit_Framework_TestCase
+class BetweenTest extends TestCase
 {
-    public function providerValid()
+    public static function providerValid()
     {
         return [
             [0, 1, true, 0],
@@ -39,7 +43,7 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerInvalid()
+    public static function providerInvalid()
     {
         return [
             [10, 20, false, ''],
@@ -67,27 +71,25 @@ class BetweenTest extends \PHPUnit_Framework_TestCase
     public function testValuesBetweenBoundsShouldPass($min, $max, $inclusive, $input)
     {
         $o = new Between($min, $max, $inclusive);
-        $this->assertTrue($o->__invoke($input));
-        $this->assertTrue($o->assert($input));
-        $this->assertTrue($o->check($input));
+        static::assertTrue($o->__invoke($input));
+        static::assertTrue($o->assert($input));
+        static::assertTrue($o->check($input));
     }
 
     /**
      * @dataProvider providerInvalid
-     * @expectedException Respect\Validation\Exceptions\BetweenException
      */
     public function testValuesOutBoundsShouldRaiseException($min, $max, $inclusive, $input)
     {
+        $this->expectException(BetweenException::class);
         $o = new Between($min, $max, $inclusive);
-        $this->assertFalse($o->__invoke($input));
-        $this->assertFalse($o->assert($input));
+        static::assertFalse($o->__invoke($input));
+        static::assertFalse($o->assert($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     */
-    public function testInvalidConstructionParamsShouldRaiseException()
+    public function testInvalidConstructionParamsShouldRaiseException(): void
     {
-        $o = new Between(10, 5);
+        $this->expectException(ComponentException::class);
+        new Between(10, 5);
     }
 }

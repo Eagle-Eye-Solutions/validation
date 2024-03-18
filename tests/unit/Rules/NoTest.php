@@ -9,14 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\No;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\No
- * @covers Respect\Validation\Exceptions\NoException
+ * @covers No
+ * @covers NoException
  */
-class NoTest extends \PHPUnit_Framework_TestCase
+class NoTest extends TestCase
 {
     public function testShouldUseDefaultPattern()
     {
@@ -25,15 +28,13 @@ class NoTest extends \PHPUnit_Framework_TestCase
         $actualPattern = $rule->regex;
         $expectedPattern = '/^n(o(t|pe)?|ix|ay)?$/i';
 
-        $this->assertEquals($expectedPattern, $actualPattern);
+        static::assertSame($expectedPattern, $actualPattern);
     }
 
-    public function testShouldUseLocalPatternForNoExpressionWhenDefined()
+    public function testShouldUseLocalPatternForNoExpressionWhenDefined(): void
     {
         if (!defined('NOEXPR')) {
             $this->markTestSkipped('Constant NOEXPR is not defined');
-
-            return;
         }
 
         $rule = new No(true);
@@ -41,20 +42,20 @@ class NoTest extends \PHPUnit_Framework_TestCase
         $actualPattern = $rule->regex;
         $expectedPattern = '/'.nl_langinfo(NOEXPR).'/i';
 
-        $this->assertEquals($expectedPattern, $actualPattern);
+        static::assertSame($expectedPattern, $actualPattern);
     }
 
     /**
      * @dataProvider validNoProvider
      */
-    public function testShouldValidatePatternAccordingToTheDefinedLocale($input)
+    public function testShouldValidatePatternAccordingToTheDefinedLocale($input): void
     {
         $rule = new No();
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
-    public function validNoProvider()
+    public static function validNoProvider(): array
     {
         return [
             ['N'],
@@ -69,14 +70,14 @@ class NoTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider invalidNoProvider
      */
-    public function testShouldNotValidatePatternAccordingToTheDefinedLocale($input)
+    public function testShouldNotValidatePatternAccordingToTheDefinedLocale($input): void
     {
         $rule = new No();
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 
-    public function invalidNoProvider()
+    public static function invalidNoProvider(): array
     {
         return [
             ['Donnot'],

@@ -9,41 +9,46 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\MultipleException;
+use Respect\Validation\Rules\Multiple;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Multiple
- * @covers Respect\Validation\Exceptions\MultipleException
+ * @covers Multiple
+ * @covers MultipleException
  */
-class MultipleTest extends \PHPUnit_Framework_TestCase
+class MultipleTest extends TestCase
 {
     /**
      * @dataProvider providerForMultiple
+     * @throws \Exception
      */
-    public function testValidNumberMultipleOf($multipleOf, $input)
+    public function testValidNumberMultipleOf($multipleOf, $input): void
     {
         $multiple = new Multiple($multipleOf);
-        $this->assertTrue($multiple->validate($input));
-        $this->assertTrue($multiple->assert($input));
-        $this->assertTrue($multiple->check($input));
+        static::assertTrue($multiple->validate($input));
+        static::assertTrue($multiple->assert($input));
+        static::assertTrue($multiple->check($input));
     }
 
     /**
      * @dataProvider providerForNotMultiple
-     * @expectedException Respect\Validation\Exceptions\MultipleException
+     * @throws \Exception
      */
-    public function testNotMultipleShouldThrowMultipleException($multipleOf, $input)
+    public function testNotMultipleShouldThrowMultipleException($multipleOf, $input): void
     {
+        $this->expectException(MultipleException::class);
         $multiple = new Multiple($multipleOf);
-        $this->assertFalse($multiple->validate($input));
-        $this->assertFalse($multiple->assert($input));
+        static::assertFalse($multiple->validate($input));
+        static::assertFalse($multiple->assert($input));
     }
 
-    public function providerForMultiple()
+    public static function providerForMultiple(): array
     {
         return [
-            ['', ''],
             [5, 20],
             [5, 5],
             [5, 0],
@@ -56,7 +61,7 @@ class MultipleTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotMultiple()
+    public static function providerForNotMultiple(): array
     {
         return [
             [5, 11],

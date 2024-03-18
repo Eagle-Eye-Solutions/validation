@@ -9,30 +9,36 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\MockObject\Exception;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\Bank;
 use Respect\Validation\Rules\Locale\Factory;
 use Respect\Validation\Rules\Locale\GermanBank;
 use Respect\Validation\Validatable;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Bank
- * @covers Respect\Validation\Exceptions\BankException
+ * @covers Bank
+ * @covers BankException
  */
 class BankTest extends LocaleTestCase
 {
+    /**
+     * @throws Exception
+     * @throws ComponentException
+     */
     public function testShouldUseDefinedFactoryToCreateInternalRuleBasedOnGivenCountryCode()
     {
         $countryCode = 'XX';
 
         $validatable = $this->createMock(Validatable::class);
         $factory = $this->createMock(Factory::class);
-        $factory
-            ->expects($this->once())
+        $factory->expects($this->once())
             ->method('bank')
             ->with($countryCode)
-            ->will($this->returnValue($validatable));
+            ->willReturn($validatable);
 
         $rule = new Bank($countryCode, $factory);
 

@@ -10,4 +10,5 @@ v::notOptional()->assert([]);
 v::notOptional()->check(true);
 v::notOptional()->check(PHP_EOL);
 ?>
---EXPECTF--
+
+

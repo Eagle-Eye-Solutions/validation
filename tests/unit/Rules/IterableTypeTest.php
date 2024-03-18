@@ -9,15 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use Respect\Validation\Rules\IterableType;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\IterableType
+ * @covers IterableType
  */
 class IterableTypeTest extends RuleTestCase
 {
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $rule = new IterableType();
 
@@ -28,7 +30,7 @@ class IterableTypeTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $rule = new IterableType();
 

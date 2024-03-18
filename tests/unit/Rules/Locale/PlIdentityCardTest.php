@@ -9,17 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules\Locale;
+namespace Respect\Validation\Test\Rules\Locale;
 
-use Respect\Validation\Rules\RuleTestCase;
+use Respect\Validation\Rules\Locale\PlIdentityCard;
+use Respect\Validation\Test\Rules\RuleTestCase;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Locale\PlIdentityCard
+ * @covers PlIdentityCard
  */
 class PlIdentityCardTest extends RuleTestCase
 {
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $rule = new PlIdentityCard();
 
@@ -30,7 +31,7 @@ class PlIdentityCardTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $rule = new PlIdentityCard();
 

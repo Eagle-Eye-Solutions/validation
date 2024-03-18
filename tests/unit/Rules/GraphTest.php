@@ -9,54 +9,64 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\GraphException;
+use Respect\Validation\Rules\Graph;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Graph
- * @covers Respect\Validation\Exceptions\GraphException
+ * @covers Graph
+ * @covers GraphException
  */
-class GraphTest extends \PHPUnit_Framework_TestCase
+class GraphTest extends TestCase
 {
     /**
      * @dataProvider providerForValidGraph
+     * @throws ComponentException
      */
-    public function testValidDataWithGraphCharsShouldReturnTrue($validGraph, $additional = '')
+    public function testValidDataWithGraphCharsShouldReturnTrue($validGraph, $additional = ''): void
     {
         $validator = new Graph($additional);
-        $this->assertTrue($validator->validate($validGraph));
+        static::assertTrue($validator->validate($validGraph));
     }
 
     /**
      * @dataProvider providerForInvalidGraph
-     * @expectedException Respect\Validation\Exceptions\GraphException
+     *
+     * @throws ComponentException
      */
-    public function testInvalidGraphShouldFailAndThrowGraphException($invalidGraph, $additional = '')
+    public function testInvalidGraphShouldFailAndThrowGraphException($invalidGraph, $additional = ''): void
     {
+        $this->expectException(GraphException::class);
         $validator = new Graph($additional);
-        $this->assertFalse($validator->validate($invalidGraph));
-        $this->assertFalse($validator->assert($invalidGraph));
+        static::assertFalse($validator->validate($invalidGraph));
+        static::assertFalse($validator->assert($invalidGraph));
     }
 
     /**
      * @dataProvider providerForInvalidParams
-     * @expectedException Respect\Validation\Exceptions\ComponentException
+     *
      */
-    public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
+    public function testInvalidConstructorParams($additional): void
     {
-        $validator = new Graph($additional);
+        $this->expectException(ComponentException::class);
+        new Graph($additional);
     }
 
     /**
      * @dataProvider providerAdditionalChars
+     * @throws ComponentException
      */
-    public function testAdditionalCharsShouldBeRespected($additional, $query)
+    public function testAdditionalCharsShouldBeRespected($additional, $query): void
     {
         $validator = new Graph($additional);
-        $this->assertTrue($validator->validate($query));
+        static::assertTrue($validator->validate($query));
     }
 
-    public function providerAdditionalChars()
+    public static function providerAdditionalChars(): array
     {
         return [
             [' ', '!@#$%^&*(){} abc 123'],
@@ -64,7 +74,7 @@ class GraphTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidParams()
+    public static function providerForInvalidParams(): array
     {
         return [
             [new \stdClass()],
@@ -73,7 +83,7 @@ class GraphTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidGraph()
+    public static function providerForValidGraph()
     {
         return [
             ['LKA#@%.54'],
@@ -84,7 +94,7 @@ class GraphTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidGraph()
+    public static function providerForInvalidGraph()
     {
         return [
             [''],

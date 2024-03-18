@@ -9,25 +9,28 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\VideoUrlException as VideoUrlExceptionAlias;
+use Respect\Validation\Rules\VideoUrl;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\VideoUrl
- * @covers Respect\Validation\Exceptions\VideoUrlException
+ * @covers VideoUrl
+ * @covers VideoUrlException
  */
-class VideoUrlTest extends \PHPUnit_Framework_TestCase
+class VideoUrlTest extends TestCase
 {
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage "teste" is not a recognized video service.
-     */
-    public function testShouldThrowsAnExceptionWhenProviderIsNotValid()
+    public function testShouldThrowsAnExceptionWhenProviderIsNotValid(): void
     {
+        $this->expectException(ComponentException::class);
+        $this->expectExceptionMessage("\"teste\" is not a recognized video service.");
         new VideoUrl('teste');
     }
 
-    public function validVideoUrlProvider()
+    public static function validVideoUrlProvider(): array
     {
         return [
             ['vimeo', 'https://player.vimeo.com/video/71787467'],
@@ -43,7 +46,7 @@ class VideoUrlTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function invalidVideoUrlProvider()
+    public static function invalidVideoUrlProvider(): array
     {
         return [
             ['vimeo', 'https://www.youtube.com/watch?v=netHLn9TScY'],
@@ -62,40 +65,38 @@ class VideoUrlTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider validVideoUrlProvider
+     * @throws ComponentException
      */
-    public function testShouldValidateVideoUrl($service, $input)
+    public function testShouldValidateVideoUrl($service, $input): void
     {
         $rule = new VideoUrl($service);
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
     /**
      * @dataProvider invalidVideoUrlProvider
+     * @throws ComponentException
      */
-    public function testShouldInvalidateNonVideoUrl($service, $input)
+    public function testShouldInvalidateNonVideoUrl($service, $input): void
     {
         $rule = new VideoUrl($service);
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\VideoUrlException
-     * @expectedExceptionMessage "exemplo.com" must be a valid video URL
-     */
-    public function testUseAProperExceptionMessageWhenVideoUrlIsNotValid()
+    public function testUseAProperExceptionMessageWhenVideoUrlIsNotValid(): void
     {
+        $this->expectExceptionMessage("\"exemplo.com\" must be a valid video URL");
+        $this->expectException(VideoUrlExceptionAlias::class);
         $rule = new VideoUrl();
         $rule->check('exemplo.com');
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\VideoUrlException
-     * @expectedExceptionMessage "exemplo.com" must be a valid "YouTube" video URL
-     */
-    public function testUseAProperExceptionMessageWhenVideoUrlIsNotValidForTheDefinedProvider()
+    public function testUseAProperExceptionMessageWhenVideoUrlIsNotValidForTheDefinedProvider(): void
     {
+        $this->expectExceptionMessage("\"exemplo.com\" must be a valid \"YouTube\" video URL");
+        $this->expectException(VideoUrlExceptionAlias::class);
         $rule = new VideoUrl('YouTube');
         $rule->check('exemplo.com');
     }

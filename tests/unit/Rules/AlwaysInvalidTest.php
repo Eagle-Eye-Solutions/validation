@@ -9,15 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\AlwaysInvalid;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\AlwaysInvalid
+ * @covers AlwaysInvalid
  */
-class AlwaysInvalidTest extends \PHPUnit_Framework_TestCase
+class AlwaysInvalidTest extends TestCase
 {
-    public function providerForValidAlwaysInvalid()
+    public static function providerForValidAlwaysInvalid(): array
     {
         return [
             [0],
@@ -35,10 +38,10 @@ class AlwaysInvalidTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForValidAlwaysInvalid
      */
-    public function testShouldValidateInputWhenItIsAValidAlwaysInvalid($input)
+    public function testShouldValidateInputWhenItIsAValidAlwaysInvalid($input): void
     {
         $rule = new AlwaysInvalid();
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 }

@@ -16,7 +16,7 @@ use DateTimeInterface;
 
 class Date extends AbstractRule
 {
-    public $format = null;
+    public $format;
 
     public function __construct($format = null)
     {

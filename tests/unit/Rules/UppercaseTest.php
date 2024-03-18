@@ -9,38 +9,42 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\UppercaseException;
+use Respect\Validation\Rules\Uppercase;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Uppercase
- * @covers Respect\Validation\Exceptions\UppercaseException
+ * @covers Uppercase
+ * @covers UppercaseException
  */
-class UppercaseTest extends \PHPUnit_Framework_TestCase
+class UppercaseTest extends TestCase
 {
     /**
      * @dataProvider providerForValidUppercase
      */
-    public function testValidUppercaseShouldReturnTrue($input)
+    public function testValidUppercaseShouldReturnTrue($input): void
     {
         $uppercase = new Uppercase();
-        $this->assertTrue($uppercase->validate($input));
-        $this->assertTrue($uppercase->assert($input));
-        $this->assertTrue($uppercase->check($input));
+        static::assertTrue($uppercase->validate($input));
+        static::assertTrue($uppercase->assert($input));
+        static::assertTrue($uppercase->check($input));
     }
 
     /**
      * @dataProvider providerForInvalidUppercase
-     * @expectedException Respect\Validation\Exceptions\UppercaseException
      */
-    public function testInvalidUppercaseShouldThrowException($input)
+    public function testInvalidUppercaseShouldThrowException($input): void
     {
+        $this->expectException(UppercaseException::class);
         $lowercase = new Uppercase();
-        $this->assertFalse($lowercase->validate($input));
-        $this->assertFalse($lowercase->assert($input));
+        static::assertFalse($lowercase->validate($input));
+        static::assertFalse($lowercase->assert($input));
     }
 
-    public function providerForValidUppercase()
+    public static function providerForValidUppercase(): array
     {
         return [
             [''],
@@ -54,7 +58,7 @@ class UppercaseTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidUppercase()
+    public static function providerForInvalidUppercase(): array
     {
         return [
             ['lowercase'],

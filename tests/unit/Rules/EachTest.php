@@ -9,16 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use Respect\Validation\Exceptions\EachException;
+use Respect\Validation\Rules\Each;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Each
- * @covers Respect\Validation\Exceptions\EachException
+ * @covers Each
+ * @covers EachException
  */
 class EachTest extends RuleTestCase
 {
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $ruleNotEmpty = new Each($this->getRuleMock(true));
         $ruleAlphaItemIntKey = new Each($this->getRuleMock(true), $this->getRuleMock(true));
@@ -44,7 +47,7 @@ class EachTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $rule = new Each($this->getRuleMock(false));
         $ruleOnlyKeyValidation = new Each(null, $this->getRuleMock(false));
@@ -59,65 +62,78 @@ class EachTest extends RuleTestCase
         ];
     }
 
-    public function testValidatorShouldPassIfEveryArrayItemPass()
+    /**
+     * @throws \Exception
+     */
+    public function testValidatorShouldPassIfEveryArrayItemPass(): void
     {
         $v = new Each($this->getRuleMock(true));
         $result = $v->check([1, 2, 3, 4, 5]);
-        $this->assertTrue($result);
+        static::assertTrue($result);
         $result = $v->assert([1, 2, 3, 4, 5]);
-        $this->assertTrue($result);
-    }
-
-    public function testValidatorShouldPassIfEveryArrayItemAndKeyPass()
-    {
-        $v = new Each($this->getRuleMock(true), $this->getRuleMock(true));
-        $result = $v->check(['a', 'b', 'c', 'd', 'e']);
-        $this->assertTrue($result);
-        $result = $v->assert(['a', 'b', 'c', 'd', 'e']);
-        $this->assertTrue($result);
-    }
-
-    public function testValidatorShouldPassWithOnlyKeyValidation()
-    {
-        $v = new Each(null, $this->getRuleMock(true));
-        $result = $v->check(['a', 'b', 'c', 'd', 'e']);
-        $this->assertTrue($result);
-        $result = $v->assert(['a', 'b', 'c', 'd', 'e']);
-        $this->assertTrue($result);
+        static::assertTrue($result);
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\EachException
+     * @throws \Exception
      */
-    public function testValidatorShouldNotPassWithOnlyKeyValidation()
+    public function testValidatorShouldPassIfEveryArrayItemAndKeyPass(): void
     {
+        $v = new Each($this->getRuleMock(true), $this->getRuleMock(true));
+        $result = $v->check(['a', 'b', 'c', 'd', 'e']);
+        static::assertTrue($result);
+        $result = $v->assert(['a', 'b', 'c', 'd', 'e']);
+        static::assertTrue($result);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testValidatorShouldPassWithOnlyKeyValidation(): void
+    {
+        $v = new Each(null, $this->getRuleMock(true));
+        $result = $v->check(['a', 'b', 'c', 'd', 'e']);
+        static::assertTrue($result);
+        $result = $v->assert(['a', 'b', 'c', 'd', 'e']);
+        static::assertTrue($result);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testValidatorShouldNotPassWithOnlyKeyValidation(): void
+    {
+        $this->expectException(EachException::class);
         $v = new Each(null, $this->getRuleMock(false));
         $v->assert(['a', 'b', 'c', 'd', 'e']);
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\EachException
+     * @throws \Exception
      */
-    public function testAssertShouldFailOnInvalidItem()
+    public function testAssertShouldFailOnInvalidItem(): void
     {
+        $this->expectException(EachException::class);
         $v = new Each($this->getRuleMock(false));
         $v->assert(['a', 2, 3, 4, 5]);
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\EachException
+     * @throws \Exception
      */
-    public function testAssertShouldFailWithNonIterableInput()
+    public function testAssertShouldFailWithNonIterableInput(): void
     {
+        $this->expectException(EachException::class);
         $v = new Each($this->getRuleMock(false));
         $v->assert('a');
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\EachException
+     * @throws \Exception
      */
-    public function testCheckShouldFailWithNonIterableInput()
+    public function testCheckShouldFailWithNonIterableInput(): void
     {
+        $this->expectException(EachException::class);
         $v = new Each($this->getRuleMock(false));
         $v->check(null);
     }

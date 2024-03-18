@@ -8,7 +8,7 @@ use Respect\Validation\Exceptions\AllOfException;
 use Respect\Validation\Validator as v;
 
 try {
-    v::MinimumAge(12, 'd/m/Y')->assert('12/10/2010');
+    v::MinimumAge(12)->assert((new \DateTime('-10 Years'))->format('d/m/Y'));
 } catch (AllOfException $exception) {
     echo $exception->getFullMessage();
 }

@@ -9,72 +9,74 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\TypeException;
+use Respect\Validation\Rules\Type;
 use stdClass;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Type
- * @covers Respect\Validation\Exceptions\TypeException
+ * @covers Type
+ * @covers TypeException
  */
-class TypeTest extends \PHPUnit_Framework_TestCase
+class TypeTest extends TestCase
 {
-    public function testShouldDefineTypeOnConstructor()
+    public function testShouldDefineTypeOnConstructor(): void
     {
         $type = 'int';
         $rule = new Type($type);
 
-        $this->assertSame($type, $rule->type);
+        static::assertSame($type, $rule->type);
     }
 
-    public function testShouldNotBeCaseSensitive()
+    public function testShouldNotBeCaseSensitive(): void
     {
         $rule = new Type('InTeGeR');
 
-        $this->assertTrue($rule->validate(42));
+        static::assertTrue($rule->validate(42));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage "whatever" is not a valid type
-     */
-    public function testShouldThrowExceptionWhenTypeIsNotValid()
+    public function testShouldThrowExceptionWhenTypeIsNotValid(): void
     {
+        $this->expectExceptionMessage("\"whatever\" is not a valid type");
+        $this->expectException(ComponentException::class);
         new Type('whatever');
     }
 
     /**
      * @dataProvider providerForValidType
+     * @throws ComponentException
      */
-    public function testShouldValidateValidTypes($type, $input)
+    public function testShouldValidateValidTypes($type, $input): void
     {
         $rule = new Type($type);
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
     /**
      * @dataProvider providerForInvalidType
+     * @throws ComponentException
      */
-    public function testShouldNotValidateInvalidTypes($type, $input)
+    public function testShouldNotValidateInvalidTypes($type, $input): void
     {
         $rule = new Type($type);
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\TypeException
-     * @expectedExceptionMessage "Something" must be "integer"
-     */
     public function testShouldThrowTypeExceptionWhenCheckingAnInvalidInput()
     {
+        $this->expectException(TypeException::class);
+        $this->expectExceptionMessage("\"Something\" must be \"integer\"");
         $rule = new Type('integer');
         $rule->check('Something');
     }
 
-    public function providerForValidType()
+    public static function providerForValidType(): array
     {
         return [
             ['array', []],
@@ -93,7 +95,7 @@ class TypeTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidType()
+    public static function providerForInvalidType(): array
     {
         return [
             ['int', '1'],

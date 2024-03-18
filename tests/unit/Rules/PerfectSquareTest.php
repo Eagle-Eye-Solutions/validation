@@ -9,43 +9,49 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\PerfectSquareException;
+use Respect\Validation\Rules\PerfectSquare;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\PerfectSquare
- * @covers Respect\Validation\Exceptions\PerfectSquareException
+ * @covers PerfectSquare
+ * @covers PerfectSquareException
  */
-class PerfectSquareTest extends \PHPUnit_Framework_TestCase
+class PerfectSquareTest extends TestCase
 {
     protected $object;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new PerfectSquare();
     }
 
     /**
      * @dataProvider providerForPerfectSquare
+     * @throws \Exception
      */
-    public function testPerfectSquare($input)
+    public function testPerfectSquare($input): void
     {
-        $this->assertTrue($this->object->__invoke($input));
-        $this->assertTrue($this->object->check($input));
-        $this->assertTrue($this->object->assert($input));
+        static::assertTrue($this->object->__invoke($input));
+        static::assertTrue($this->object->check($input));
+        static::assertTrue($this->object->assert($input));
     }
 
     /**
      * @dataProvider providerForNotPerfectSquare
-     * @expectedException Respect\Validation\Exceptions\PerfectSquareException
+     * @throws \Exception
      */
-    public function testNotPerfectSquare($input)
+    public function testNotPerfectSquare($input): void
     {
-        $this->assertFalse($this->object->__invoke($input));
-        $this->assertFalse($this->object->assert($input));
+        $this->expectException(PerfectSquareException::class);
+        static::assertFalse($this->object->__invoke($input));
+        static::assertFalse($this->object->assert($input));
     }
 
-    public function providerForPerfectSquare()
+    public static function providerForPerfectSquare(): array
     {
         return [
             [1],
@@ -61,7 +67,7 @@ class PerfectSquareTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotPerfectSquare()
+    public static function providerForNotPerfectSquare(): array
     {
         return [
             [250],

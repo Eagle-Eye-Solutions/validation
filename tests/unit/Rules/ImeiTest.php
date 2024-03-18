@@ -9,15 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use Respect\Validation\Rules\Imei;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Imei
+ * @covers Imei
  */
 class ImeiTest extends RuleTestCase
 {
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $rule = new Imei();
 
@@ -33,7 +35,7 @@ class ImeiTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $rule = new Imei();
 

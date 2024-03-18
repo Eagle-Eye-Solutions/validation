@@ -14,4 +14,3 @@ v::exists()->check($file->url());
 $splFile = new SplFileInfo($file->url());
 v::exists()->assert($splFile);
 ?>
---EXPECTF--

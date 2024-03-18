@@ -9,4 +9,3 @@ if (!v::alnum()->uppercase()->validate('ASDF')) {
 }
 
 ?>
---EXPECTF--

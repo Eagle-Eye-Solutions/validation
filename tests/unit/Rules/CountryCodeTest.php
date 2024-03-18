@@ -9,35 +9,37 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\CountryCode;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\CountryCode
+ * @covers CountryCode
  */
-class CountryCodeTest extends \PHPUnit_Framework_TestCase
+class CountryCodeTest extends TestCase
 {
-    /**
-     * @expectedException        Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage "whatever" is not a valid country set
-     */
     public function testShouldThrowsExceptionWhenInvalidFormat()
     {
+        $this->expectExceptionMessage("\"whatever\" is not a valid country set");
+        $this->expectException(ComponentException::class);
         new CountryCode('whatever');
     }
 
     public function testShouldUseISO3166Alpha2ByDefault()
     {
         $country = new CountryCode();
-        $this->assertEquals(CountryCode::ALPHA2, $country->set);
+        static::assertEquals(CountryCode::ALPHA2, $country->set);
     }
     public function testShouldDefineACountryFormatOnConstructor()
     {
         $country = new CountryCode(CountryCode::NUMERIC);
-        $this->assertEquals(CountryCode::NUMERIC, $country->set);
+        static::assertSame(CountryCode::NUMERIC, $country->set);
     }
 
-    public function providerForValidCountryCode()
+    public static function providerForValidCountryCode()
     {
         return [
             [CountryCode::ALPHA2,  'BR'],
@@ -52,7 +54,7 @@ class CountryCodeTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidCountryCode()
+    public static function providerForInvalidCountryCode()
     {
         return [
             [CountryCode::ALPHA2,  'USA'],
@@ -68,7 +70,7 @@ class CountryCodeTest extends \PHPUnit_Framework_TestCase
     {
         $rule = new CountryCode($format);
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
     /**
@@ -78,6 +80,6 @@ class CountryCodeTest extends \PHPUnit_Framework_TestCase
     {
         $rule = new CountryCode($format);
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 }

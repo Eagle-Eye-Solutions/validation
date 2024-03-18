@@ -9,16 +9,24 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\PostalCodeException;
+use Respect\Validation\Rules\PostalCode;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\PostalCode
- * @covers Respect\Validation\Exceptions\PostalCodeException
+ * @covers PostalCode
+ * @covers PostalCodeException
  */
-class PostalCodeTest extends \PHPUnit_Framework_TestCase
+class PostalCodeTest extends TestCase
 {
-    public function testShouldUsePatternAccordingToCountryCode()
+    /**
+     * @throws ComponentException
+     */
+    public function testShouldUsePatternAccordingToCountryCode(): void
     {
         $countryCode = 'BR';
 
@@ -27,61 +35,60 @@ class PostalCodeTest extends \PHPUnit_Framework_TestCase
         $actualPattern = $rule->regex;
         $expectedPattern = $rule->postalCodes[$countryCode];
 
-        $this->assertEquals($expectedPattern, $actualPattern);
+        static::assertEquals($expectedPattern, $actualPattern);
     }
 
-    public function testShouldNotBeCaseSensitiveWhenChoosingPatternAccordingToCountryCode()
+    public function testChoosingPatternAccordingToCountryCode()
     {
         $rule1 = new PostalCode('BR');
         $rule2 = new PostalCode('br');
 
-        $this->assertEquals($rule1->regex, $rule2->regex);
+        static::assertSame($rule1->regex, $rule2->regex);
     }
 
-    public function testShouldUseDefaultPatternWhenCountryCodeDoesNotHavePostalCode()
+    public function testCountryCodeDoesNotHavePostalCode(): void
     {
         $rule = new PostalCode('ZW');
 
         $actualPattern = $rule->regex;
         $expectedPattern = PostalCode::DEFAULT_PATTERN;
 
-        $this->assertEquals($expectedPattern, $actualPattern);
+        static::assertSame($expectedPattern, $actualPattern);
     }
 
-    public function testShouldValidateEmptyStringsWhenUsingDefaultPattern()
+    public function testUsingDefaultPatternEmptyString(): void
     {
         $rule = new PostalCode('ZW');
 
-        $this->assertTrue($rule->validate(''));
+        static::assertTrue($rule->validate(''));
     }
 
-    public function testShouldNotValidateNonEmptyStringsWhenUsingDefaultPattern()
+    public function testUsingDefaultPatternNonEmptyString(): void
     {
         $rule = new PostalCode('ZW');
 
-        $this->assertFalse($rule->validate(' '));
+        static::assertFalse($rule->validate(' '));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage Cannot validate postal code from "Whatever" country
-     */
     public function testShouldThrowsExceptionWhenCountryCodeIsNotValid()
     {
+        $this->expectExceptionMessage("Cannot validate postal code from \"Whatever\" country");
+        $this->expectException(ComponentException::class);
         new PostalCode('Whatever');
     }
 
     /**
      * @dataProvider validPostalCodesProvider
+     * @throws ComponentException
      */
-    public function testShouldValidatePatternAccordingToTheDefinedCountryCode($countryCode, $postalCode)
+    public function testPatternAccordingToTheDefinedCountryCode($countryCode, $postalCode): void
     {
         $rule = new PostalCode($countryCode);
 
-        $this->assertTrue($rule->validate($postalCode));
+        static::assertTrue($rule->validate($postalCode));
     }
 
-    public function validPostalCodesProvider()
+    public static function validPostalCodesProvider(): array
     {
         return [
             ['BR', '02179-000'],
@@ -96,25 +103,24 @@ class PostalCodeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider invalidPostalCodesProvider
+     * @throws ComponentException
      */
-    public function testShouldNotValidatePatternAccordingToTheDefinedCountryCode($countryCode, $postalCode)
+    public function testShouldNotValidatePatternAccordingToTheDefinedCountryCode($countryCode, $postalCode): void
     {
         $rule = new PostalCode($countryCode);
 
-        $this->assertFalse($rule->validate($postalCode));
+        static::assertFalse($rule->validate($postalCode));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\PostalCodeException
-     * @expectedExceptionMessage "02179-000" must be a valid postal code on "US"
-     */
-    public function testShouldThrowsPostalCodeExceptionWhenValidationFails()
+    public function testShouldThrowsPostalCodeExceptionWhenValidationFails(): void
     {
+        $this->expectExceptionMessage("\"02179-000\" must be a valid postal code on \"US\"");
+        $this->expectException(PostalCodeException::class);
         $rule = new PostalCode('US');
         $rule->check('02179-000');
     }
 
-    public function invalidPostalCodesProvider()
+    public static function invalidPostalCodesProvider(): array
     {
         return [
             ['BR', '02179'],

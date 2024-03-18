@@ -9,56 +9,63 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\InstanceException;
+use Respect\Validation\Rules\Instance;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Instance
- * @covers Respect\Validation\Exceptions\InstanceException
+ * @covers Instance
+ * @covers InstanceException
  */
-class InstanceTest extends \PHPUnit_Framework_TestCase
+class InstanceTest extends TestCase
 {
-    protected $instanceValidator;
+    protected Instance $instanceValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->instanceValidator = new Instance('ArrayObject');
     }
 
-    public function testInstanceValidationShouldReturnFalseForEmpty()
+    public function testInstanceValidationForEmpty(): void
     {
-        $this->assertFalse($this->instanceValidator->__invoke(''));
+        static::assertFalse($this->instanceValidator->__invoke(''));
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\InstanceException
+     * @throws \Exception
      */
-    public function testInstanceValidationShouldNotAssertEmpty()
+    public function testInstanceValidationAssertEmpty(): void
     {
+        $this->expectException(InstanceException::class);
         $this->instanceValidator->assert('');
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\InstanceException
-     */
-    public function testInstanceValidationShouldNotCheckEmpty()
+    public function testInstanceValidationCheckEmpty(): void
     {
+        $this->expectException(InstanceException::class);
         $this->instanceValidator->check('');
     }
 
-    public function testInstanceValidationShouldReturnTrueForValidInstances()
+    /**
+     * @throws \Exception
+     */
+    public function testInstanceValidation(): void
     {
-        $this->assertTrue($this->instanceValidator->__invoke(new \ArrayObject()));
-        $this->assertTrue($this->instanceValidator->assert(new \ArrayObject()));
-        $this->assertTrue($this->instanceValidator->check(new \ArrayObject()));
+        static::assertTrue($this->instanceValidator->__invoke(new \ArrayObject()));
+        static::assertTrue($this->instanceValidator->assert(new \ArrayObject()));
+        static::assertTrue($this->instanceValidator->check(new \ArrayObject()));
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\InstanceException
+     * @throws \Exception
      */
-    public function testInvalidInstancesShouldThrowInstanceException()
+    public function testInvalidInstances(): void
     {
-        $this->assertFalse($this->instanceValidator->validate(new \stdClass()));
-        $this->assertFalse($this->instanceValidator->assert(new \stdClass()));
+        $this->expectException(InstanceException::class);
+        static::assertFalse($this->instanceValidator->validate(new \stdClass()));
+        static::assertFalse($this->instanceValidator->assert(new \stdClass()));
     }
 }

@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\MacAddressException;
+use Respect\Validation\Rules\MacAddress;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\MacAddress
- * @covers Respect\Validation\Exceptions\MacAddressException
+ * @covers MacAddress
+ * @covers MacAddressException
  */
-class MacAddressTest extends \PHPUnit_Framework_TestCase
+class MacAddressTest extends TestCase
 {
-    protected $macaddressValidator;
+    protected MacAddress $macaddressValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->macaddressValidator = new MacAddress();
     }
@@ -28,24 +32,25 @@ class MacAddressTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForMacAddress
      */
-    public function testValidMacaddressesShouldReturnTrue($input)
+    public function testValidMacaddressesShouldReturnTrue($input): void
     {
-        $this->assertTrue($this->macaddressValidator->__invoke($input));
-        $this->assertTrue($this->macaddressValidator->assert($input));
-        $this->assertTrue($this->macaddressValidator->check($input));
+        static::assertTrue($this->macaddressValidator->__invoke($input));
+        static::assertTrue($this->macaddressValidator->assert($input));
+        static::assertTrue($this->macaddressValidator->check($input));
     }
 
     /**
      * @dataProvider providerForNotMacAddress
-     * @expectedException Respect\Validation\Exceptions\MacAddressException
+     * @throws \Exception
      */
-    public function testInvalidMacaddressShouldThrowMacAddressException($input)
+    public function testInvalidMacaddressShouldThrowMacAddressException($input): void
     {
-        $this->assertFalse($this->macaddressValidator->__invoke($input));
-        $this->assertFalse($this->macaddressValidator->assert($input));
+        $this->expectException(MacAddressException::class);
+        static::assertFalse($this->macaddressValidator->__invoke($input));
+        static::assertFalse($this->macaddressValidator->assert($input));
     }
 
-    public function providerForMacAddress()
+    public static function providerForMacAddress(): array
     {
         return [
             ['00:11:22:33:44:55'],
@@ -55,7 +60,7 @@ class MacAddressTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotMacAddress()
+    public static function providerForNotMacAddress(): array
     {
         return [
             [''],

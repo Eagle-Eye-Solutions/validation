@@ -9,37 +9,39 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\NotOptional;
 use stdClass;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\NotOptional
+ * @covers NotOptional
  */
-class NotOptionalTest extends \PHPUnit_Framework_TestCase
+class NotOptionalTest extends TestCase
 {
     /**
      * @dataProvider providerForNotOptional
      */
-    public function testShouldValidateWhenNotOptional($input)
+    public function testShouldValidateWhenNotOptional($input): void
     {
         $rule = new NotOptional();
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
     /**
      * @dataProvider providerForOptional
      */
-    public function testShouldNotValidateWhenOptional($input)
+    public function testShouldNotValidateWhenOptional($input): void
     {
         $rule = new NotOptional();
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 
-    public function providerForNotOptional()
+    public static function providerForNotOptional(): array
     {
         return [
             [[]],
@@ -59,7 +61,7 @@ class NotOptionalTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForOptional()
+    public static function providerForOptional(): array
     {
         return [
             [null],

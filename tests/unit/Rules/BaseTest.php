@@ -9,60 +9,67 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\BaseException;
+use Respect\Validation\Rules\Base;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Base
- * @covers Respect\Validation\Exceptions\BaseException
+ * @covers Base
+ * @covers BaseException
  */
-class BaseTest extends \PHPUnit_Framework_TestCase
+class BaseTest extends TestCase
 {
     protected $object;
 
     /**
      * @dataProvider providerForBase
+     * @throws \Exception
      */
-    public function testBase($base, $input)
+    public function testBase($base, $input): void
     {
         $object = new Base($base);
-        $this->assertTrue($object->__invoke($input));
-        $this->assertTrue($object->check($input));
-        $this->assertTrue($object->assert($input));
+        static::assertTrue($object->__invoke($input));
+        static::assertTrue($object->check($input));
+        static::assertTrue($object->assert($input));
     }
 
     /**
      * @dataProvider providerForInvalidBase
      */
-    public function testInvalidBase($base, $input)
+    public function testInvalidBase($base, $input): void
     {
         $object = new Base($base);
-        $this->assertFalse($object->__invoke($input));
+        static::assertFalse($object->__invoke($input));
     }
 
     /**
      * @dataProvider providerForExceptionBase
-     * @expectedException Respect\Validation\Exceptions\BaseException
+     * @throws \Exception
      */
-    public function testExceptionBase($base, $input)
+    public function testExceptionBase($base, $input): void
     {
+        $this->expectException(BaseException::class);
         $object = new Base($base);
-        $this->assertTrue($object->__invoke($input));
-        $this->assertTrue($object->assert($input));
+        static::assertTrue($object->__invoke($input));
+        static::assertTrue($object->assert($input));
     }
 
     /**
      * @dataProvider providerForCustomBase
+     * @throws \Exception
      */
-    public function testCustomBase($base, $custom, $input)
+    public function testCustomBase($base, $custom, $input): void
     {
         $object = new Base($base, $custom);
-        $this->assertTrue($object->__invoke($input));
-        $this->assertTrue($object->check($input));
-        $this->assertTrue($object->assert($input));
+        static::assertTrue($object->__invoke($input));
+        static::assertTrue($object->check($input));
+        static::assertTrue($object->assert($input));
     }
 
-    public function providerForBase()
+    public static function providerForBase(): array
     {
         return [
             [2, '011010001'],
@@ -75,7 +82,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidBase()
+    public static function providerForInvalidBase(): array
     {
         return [
             [2, ''],
@@ -95,7 +102,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForCustomBase()
+    public static function providerForCustomBase(): array
     {
         return [
             [2, 'xy', 'xyyxyxxy'],
@@ -103,7 +110,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForExceptionBase()
+    public static function providerForExceptionBase(): array
     {
         return [
             [63, '01210103001'],

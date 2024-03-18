@@ -9,15 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules\Locale;
+namespace Respect\Validation\Test\Rules\Locale;
 
 use malkusch\bav\BAV;
-use Respect\Validation\Rules\LocaleTestCase;
+use Respect\Validation\Exceptions\Locale\GermanBankAccountException;
+use Respect\Validation\Rules\Locale\GermanBankAccount;
+use Respect\Validation\Test\Rules\LocaleTestCase;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Locale\GermanBankAccount
- * @covers Respect\Validation\Exceptions\Locale\GermanBankAccountException
+ * @covers GermanBankAccount
+ * @covers GermanBankAccountException
  */
 class GermanBankAccountTest extends LocaleTestCase
 {
@@ -29,7 +31,7 @@ class GermanBankAccountTest extends LocaleTestCase
         $this->assertSame($bank, $rule->bank);
     }
 
-    public function testShouldAcceptBAVInstanceOnConstructor()
+    public function testShouldAcceptBAVInstanceOnConstructor(): void
     {
         $bank = '10000000';
         $bav = $this->getBavMock();
@@ -38,7 +40,7 @@ class GermanBankAccountTest extends LocaleTestCase
         $this->assertSame($bav, $rule->bav);
     }
 
-    public function testShouldHaveAnInstanceOfBAVByDefault()
+    public function testShouldHaveAnInstanceOfBAVByDefault(): void
     {
         $bank = '10000000';
         $rule = new GermanBankAccount($bank);
@@ -46,7 +48,7 @@ class GermanBankAccountTest extends LocaleTestCase
         $this->assertInstanceOf(BAV::class, $rule->bav);
     }
 
-    public function testShouldUseBAVInstanceToValidate()
+    public function testShouldUseBAVInstanceToValidate(): void
     {
         $bank = '10000000';
         $input = '67067';
@@ -56,41 +58,38 @@ class GermanBankAccountTest extends LocaleTestCase
         $bav->expects($this->once())
             ->method('isValidBankAccount')
             ->with($bank, $input)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $rule->validate($input);
     }
 
-    public function testShouldReturnBAVInstanceResulteWhenValidating()
+    public function testShouldReturnBAVInstanceResulteWhenValidating(): void
     {
         $bank = '10000000';
         $input = '67067';
         $bav = $this->getBavMock();
         $rule = new GermanBankAccount($bank, $bav);
 
-        $bav->expects($this->any())
-            ->method('isValidBankAccount')
+        $bav->method('isValidBankAccount')
             ->with($bank, $input)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\Locale\GermanBankAccountException
-     * @expectedExceptionMessage "67067" must be a german bank account
-     */
     public function testShouldThowsTheRightExceptionWhenChecking()
     {
+        $this->expectExceptionMessage("\"67067\" must be a german bank account");
+        $this->expectException(GermanBankAccountException::class);
         $bank = '10000000';
         $input = '67067';
         $bav = $this->getBavMock();
         $rule = new GermanBankAccount($bank, $bav);
 
-        $bav->expects($this->any())
+        $bav->expects(static::any())
             ->method('isValidBankAccount')
             ->with($bank, $input)
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $rule->check($input);
     }

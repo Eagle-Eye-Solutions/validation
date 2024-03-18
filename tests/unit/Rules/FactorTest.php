@@ -9,63 +9,62 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\FactorException;
 use Respect\Validation\Exceptions\ValidationException;
+use Respect\Validation\Rules\Factor;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Factor
- * @covers Respect\Validation\Exceptions\FactorException
+ * @covers Factor
+ * @covers FactorException
  *
  * @author David Meister <thedavidmeister@gmail.com>
  */
-class FactorTest extends \PHPUnit_Framework_TestCase
+class FactorTest extends TestCase
 {
     /**
      * @dataProvider providerForValidFactor
+     * @throws ComponentException
      */
-    public function testValidFactorShouldReturnTrue($dividend, $input)
+    public function testValidFactorShouldReturnTrue($dividend, $input): void
     {
         $min = new Factor($dividend);
-        $this->assertTrue($min->__invoke($input));
-        $this->assertTrue($min->check($input));
-        $this->assertTrue($min->assert($input));
+        static::assertTrue($min->__invoke($input));
+        static::assertTrue($min->check($input));
+        static::assertTrue($min->assert($input));
     }
 
     /**
      * @dataProvider providerForInvalidFactor
+     * @throws ComponentException
+     * @throws \Exception
      */
-    public function testInvalidFactorShouldThrowFactorException($dividend, $input)
+    public function testInvalidFactorShouldThrowFactorException($dividend, $input): void
     {
-        $this->setExpectedException(
-            FactorException::class,
-            ValidationException::stringify($input).' must be a factor of '.$dividend
-        );
+        $this->expectException(FactorException::class);
+        $this->expectExceptionMessage(ValidationException::stringify($input).' must be a factor of ' . $dividend);
 
         $min = new Factor($dividend);
-        $this->assertFalse($min->__invoke($input));
-        $this->assertFalse($min->assert($input));
+        static::assertFalse($min->__invoke($input));
+        static::assertFalse($min->assert($input));
     }
 
     /**
      * @dataProvider providerForInvalidFactorDividend
      */
-    public function testInvalidDividentShouldThrowComponentException($dividend, $input)
+    public function testInvalidDividentShouldThrowComponentException($dividend, $input): void
     {
-        $this->setExpectedException(
-            ComponentException::class,
-            'Dividend '.ValidationException::stringify($dividend).' must be an integer'
-        );
+        $this->expectException(ComponentException::class);
+        $this->expectExceptionMessage('Dividend '.ValidationException::stringify($dividend) . ' must be an integer');
 
-        // It is enough to simply create a new Factor to trigger the dividend
-        // exceptions in __construct.
         new Factor($dividend);
     }
 
-    public function providerForValidFactor()
+    public static function providerForValidFactor(): array
     {
         $tests = [
             // Run through the first few integers.
@@ -89,14 +88,12 @@ class FactorTest extends \PHPUnit_Framework_TestCase
             [0, mt_rand()],
         ];
 
-        $tests = $this->generateNegativeCombinations($tests);
+        $tests = static::generateNegativeCombinations($tests);
 
-        $tests = $this->generateStringAndFloatCombinations($tests);
-
-        return $tests;
+        return static::generateStringAndFloatCombinations($tests);
     }
 
-    public function providerForInvalidFactor()
+    public static function providerForInvalidFactor(): array
     {
         $tests = [
             // Run through the first few integers.
@@ -110,30 +107,28 @@ class FactorTest extends \PHPUnit_Framework_TestCase
             [2, 0],
         ];
 
-        $tests = $this->generateNegativeCombinations($tests);
+        $tests = static::generateNegativeCombinations($tests);
 
-        $tests = $this->generateStringAndFloatCombinations($tests);
+        $tests = static::generateStringAndFloatCombinations($tests);
 
         // Valid (but random) dividends, invalid inputs.
         $extra_tests = array_map(
-            function ($test) {
+            static function ($test) {
                 return [mt_rand(), $test];
             },
-            $this->thingsThatAreNotIntegers()
+            static::thingsThatAreNotIntegers()
         );
-        $tests = array_merge($tests, $extra_tests);
-
-        return $tests;
+        return array_merge($tests, $extra_tests);
     }
 
-    public function providerForInvalidFactorDividend()
+    public static function providerForInvalidFactorDividend(): array
     {
         // Invalid dividends, valid (but random) inputs.
         $tests = array_map(
-            function ($test) {
+            static function ($test) {
                 return [$test, mt_rand()];
             },
-            $this->thingsThatAreNotIntegers()
+            static::thingsThatAreNotIntegers()
         );
 
         // Also check for an empty dividend string.
@@ -142,7 +137,7 @@ class FactorTest extends \PHPUnit_Framework_TestCase
         return $tests;
     }
 
-    private function thingsThatAreNotIntegers()
+    private static function thingsThatAreNotIntegers(): array
     {
         return [
             0.5,
@@ -151,12 +146,12 @@ class FactorTest extends \PHPUnit_Framework_TestCase
             -1.5,
             PHP_INT_MAX + 1,
             // Non integer values.
-            $this->randomFloatBeweenZeroAndOne(),
-            -$this->randomFloatBeweenZeroAndOne(),
+            static::randomFloatBeweenZeroAndOne(),
+            -static::randomFloatBeweenZeroAndOne(),
             'a',
             'foo',
             // Randomish string.
-            uniqid('a'),
+            uniqid('a', true),
             // Non-scalars.
             [],
             new \StdClass(),
@@ -167,18 +162,21 @@ class FactorTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function randomFloatBeweenZeroAndOne()
+    /**
+     * @return float|int
+     */
+    private static function randomFloatBeweenZeroAndOne()
     {
         return mt_rand(1, mt_getrandmax() - 1) / mt_getrandmax();
     }
 
-    private function generateNegativeCombinations($tests)
+    private static function generateNegativeCombinations($tests): array
     {
         // Negate all the dividends.
         $tests = array_merge(
             $tests,
             array_map(
-                function ($test) {
+                static function ($test) {
                     return [-$test[0], $test[1]];
                 },
                 $tests
@@ -186,20 +184,22 @@ class FactorTest extends \PHPUnit_Framework_TestCase
         );
 
         // Negate all the inputs.
-        $tests = array_merge(
+        return array_merge(
             $tests,
             array_map(
-                function ($test) {
+                static function ($test) {
                     return [$test[0], -$test[1]];
                 },
                 $tests
             )
         );
-
-        return $tests;
     }
 
-    private function generateStringAndFloatCombinations($tests)
+    /**
+     * @param $tests
+     * @return array
+     */
+    private static function generateStringAndFloatCombinations($tests): array
     {
         $base_tests = $tests;
 
@@ -207,7 +207,7 @@ class FactorTest extends \PHPUnit_Framework_TestCase
         $tests = array_merge(
             $tests,
             array_map(
-                function ($test) {
+                static function ($test) {
                     return [(string) $test[0], (string) $test[1]];
                 },
                 $base_tests
@@ -215,16 +215,14 @@ class FactorTest extends \PHPUnit_Framework_TestCase
         );
 
         // Test everything again as a float.
-        $tests = array_merge(
+        return array_merge(
             $tests,
             array_map(
-                function ($test) {
+                static function ($test) {
                     return [(float) $test[0], (float) $test[1]];
                 },
                 $base_tests
             )
         );
-
-        return $tests;
     }
 }

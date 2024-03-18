@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ScalarValException;
+use Respect\Validation\Rules\ScalarVal;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\ScalarVal
- * @covers Respect\Validation\Exceptions\ScalarValException
+ * @covers ScalarVal
+ * @covers ScalarValException
  */
-class ScalarValTest extends \PHPUnit_Framework_TestCase
+class ScalarValTest extends TestCase
 {
     protected $rule;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->rule = new ScalarVal();
     }
@@ -28,29 +32,27 @@ class ScalarValTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForScalar
      */
-    public function testShouldValidateScalarNumbers($input)
+    public function testShouldValidateScalarNumbers($input): void
     {
-        $this->assertTrue($this->rule->validate($input));
+        static::assertTrue($this->rule->validate($input));
     }
 
     /**
      * @dataProvider providerForNonScalar
      */
-    public function testShouldNotValidateNonScalarNumbers($input)
+    public function testShouldNotValidateNonScalarNumbers($input): void
     {
-        $this->assertFalse($this->rule->validate($input));
+        static::assertFalse($this->rule->validate($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ScalarValException
-     * @expectedExceptionMessage null must be a scalar value
-     */
-    public function testShouldThrowScalarExceptionWhenChecking()
+    public function testShouldThrowScalarExceptionWhenChecking(): void
     {
+        $this->expectExceptionMessage("null must be a scalar value");
+        $this->expectException(ScalarValException::class);
         $this->rule->check(null);
     }
 
-    public function providerForScalar()
+    public static function providerForScalar(): array
     {
         return [
             ['6'],
@@ -62,7 +64,7 @@ class ScalarValTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNonScalar()
+    public static function providerForNonScalar()
     {
         return [
             [[]],

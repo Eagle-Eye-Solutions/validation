@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\NegativeException;
+use Respect\Validation\Rules\Negative;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Negative
- * @covers Respect\Validation\Exceptions\NegativeException
+ * @covers Negative
+ * @covers NegativeException
  */
-class NegativeTest extends \PHPUnit_Framework_TestCase
+class NegativeTest extends TestCase
 {
-    protected $negativeValidator;
+    protected Negative $negativeValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->negativeValidator = new Negative();
     }
@@ -28,41 +32,42 @@ class NegativeTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForNegative
      */
-    public function testNegativeShouldPass($input)
+    public function testNegativeShouldPass($input): void
     {
-        $this->assertTrue($this->negativeValidator->assert($input));
-        $this->assertTrue($this->negativeValidator->__invoke($input));
-        $this->assertTrue($this->negativeValidator->check($input));
+        static::assertTrue($this->negativeValidator->assert($input));
+        static::assertTrue($this->negativeValidator->__invoke($input));
+        static::assertTrue($this->negativeValidator->check($input));
     }
 
     /**
      * @dataProvider providerForNotNegative
-     * @expectedException Respect\Validation\Exceptions\NegativeException
+     * @throws \Exception
      */
-    public function testNotNegativeNumbersShouldThrowNegativeException($input)
+    public function testNotNegativeNumbers($input): void
     {
-        $this->assertFalse($this->negativeValidator->__invoke($input));
-        $this->assertFalse($this->negativeValidator->assert($input));
+        $this->expectException(NegativeException::class);
+        static::assertFalse($this->negativeValidator->__invoke($input));
+        static::assertFalse($this->negativeValidator->assert($input));
     }
 
-    public function providerForNegative()
+    public static function providerForNegative(): array
     {
         return [
             ['-1.44'],
             [-1e-5],
             [-10],
+            [''],
+            [' '],
         ];
     }
 
-    public function providerForNotNegative()
+    public static function providerForNotNegative(): array
     {
         return [
-            [''],
             [0],
             [-0],
             [null],
             ['a'],
-            [' '],
             ['Foo'],
             [16],
             ['165'],

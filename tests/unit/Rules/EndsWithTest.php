@@ -9,38 +9,44 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\EndsWithException;
+use Respect\Validation\Rules\EndsWith;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\EndsWith
- * @covers Respect\Validation\Exceptions\EndsWithException
+ * @covers EndsWith
+ * @covers EndsWithException
  */
-class EndsWithTest extends \PHPUnit_Framework_TestCase
+class EndsWithTest extends TestCase
 {
     /**
      * @dataProvider providerForEndsWith
+     * @throws \Exception
      */
-    public function testStringsEndingWithExpectedValueShouldPass($start, $input)
+    public function testStringsEndingWithExpectedValueShouldPass($start, $input): void
     {
         $v = new EndsWith($start);
-        $this->assertTrue($v->__invoke($input));
-        $this->assertTrue($v->check($input));
-        $this->assertTrue($v->assert($input));
+        static::assertTrue($v->__invoke($input));
+        static::assertTrue($v->check($input));
+        static::assertTrue($v->assert($input));
     }
 
     /**
      * @dataProvider providerForNotEndsWith
-     * @expectedException Respect\Validation\Exceptions\EndsWithException
+     * @throws \Exception
      */
-    public function testStringsNotEndingWithExpectedValueShouldNotPass($start, $input, $caseSensitive = false)
+    public function testStringsNotEndingWithExpectedValueShouldNotPass($start, $input, $caseSensitive = false): void
     {
+        $this->expectException(EndsWithException::class);
         $v = new EndsWith($start, $caseSensitive);
-        $this->assertFalse($v->__invoke($input));
-        $this->assertFalse($v->assert($input));
+        static::assertFalse($v->__invoke($input));
+        static::assertFalse($v->assert($input));
     }
 
-    public function providerForEndsWith()
+    public static function providerForEndsWith(): array
     {
         return [
             ['foo', ['bar', 'foo']],
@@ -52,10 +58,10 @@ class EndsWithTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotEndsWith()
+    public static function providerForNotEndsWith(): array
     {
         return [
-            ['foo', ''],
+            ['foo', '0'],
             ['bat', ['bar', 'foo']],
             ['foo', 'barfaabaz'],
             ['foo', 'barbazFOO', true],

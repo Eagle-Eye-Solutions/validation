@@ -9,75 +9,73 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules\Locale;
+namespace Respect\Validation\Test\Rules\Locale;
 
 use malkusch\bav\BAV;
-use Respect\Validation\Rules\LocaleTestCase;
+use Respect\Validation\Exceptions\Locale\GermanBicException;
+use Respect\Validation\Rules\Locale\GermanBic;
+use Respect\Validation\Test\Rules\LocaleTestCase;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Locale\GermanBic
- * @covers Respect\Validation\Exceptions\Locale\GermanBicException
+ * @covers GermanBic
+ * @covers GermanBicException
  */
 class GermanBicTest extends LocaleTestCase
 {
-    public function testShouldAcceptBAVInstanceOnConstrutor()
+    public function testShouldAcceptBAVInstanceOnConstrutor(): void
     {
         $bav = $this->getBavMock();
         $rule = new GermanBic($bav);
 
-        $this->assertSame($bav, $rule->bav);
+        static::assertSame($bav, $rule->bav);
     }
 
-    public function testShouldHaveAnInstanceOfBAVByDefault()
+    public function testShouldHaveAnInstanceOfBAVByDefault(): void
     {
         $rule = new GermanBic();
 
-        $this->assertInstanceOf(BAV::class, $rule->bav);
+        static::assertInstanceOf(BAV::class, $rule->bav);
     }
 
-    public function testShouldUseBAVInstanceToValidate()
+    public function testShouldUseBAVInstanceToValidate(): void
     {
         $input = '10000000';
         $bav = $this->getBavMock();
         $rule = new GermanBic($bav);
 
-        $bav->expects($this->once())
+        $bav->expects(static::once())
             ->method('isValidBIC')
             ->with($input)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $rule->validate($input);
     }
 
-    public function testShouldReturnBAVInstanceResulteWhenValidating()
+    public function testShouldReturnBAVInstanceResulteWhenValidating(): void
     {
         $input = '10000000';
         $bav = $this->getBavMock();
         $rule = new GermanBic($bav);
 
-        $bav->expects($this->any())
-            ->method('isValidBIC')
+        $bav->method('isValidBIC')
             ->with($input)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\Locale\GermanBicException
-     * @expectedExceptionMessage "10000000" must be a german BIC
-     */
     public function testShouldThowsTheRightExceptionWhenChecking()
     {
+        $this->expectExceptionMessage("\"10000000\" must be a german BIC");
+        $this->expectException(GermanBicException::class);
         $input = '10000000';
         $bav = $this->getBavMock();
         $rule = new GermanBic($bav);
 
-        $bav->expects($this->any())
-            ->method('isValidBIC')
+        $bav->method('isValidBIC')
             ->with($input)
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $rule->check($input);
     }

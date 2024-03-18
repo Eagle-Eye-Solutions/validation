@@ -9,85 +9,87 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules\Locale;
+namespace Respect\Validation\Test\Rules\Locale;
 
-use Respect\Validation\Rules\LocaleTestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\Locale\Factory;
+use Respect\Validation\Test\Rules\LocaleTestCase;
 use Respect\Validation\Validatable;
 
 /**
- * @covers Respect\Validation\Rules\Locale\Factory
+ * @covers Factory
  */
 class FactoryTest extends LocaleTestCase
 {
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage Cannot provide BIC validation for country "XX"
-     */
-    public function testShouldThrowExceptionWhenFailedToGetBICRule()
+    public function testShouldThrowExceptionWhenFailedToGetBIC(): void
     {
+        $this->expectExceptionMessage("Cannot provide BIC validation for country \"XX\"");
+        $this->expectException(ComponentException::class);
         $factory = new Factory();
         $factory->bic('XX');
     }
 
-    public function testShouldReturnBICRuleAccordingToCountry()
+    public function testShouldReturnBICRuleAccordingToCountry(): void
     {
         $factory = new Factory();
 
-        $this->assertInstanceOf(Validatable::class, $factory->bic('DE'));
-    }
-
-    public function testShouldNotBeCaseSensitiveToReturnBICRuleAccordingToCountry()
-    {
-        $factory = new Factory();
-
-        $this->assertEquals($factory->bic('DE'), $factory->bic('de'));
+        static::assertInstanceOf(Validatable::class, $factory->bic('DE'));
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage Cannot provide bank validation for country "XX"
+     * @throws ComponentException
      */
-    public function testShouldThrowExceptionWhenFailedToGetBankRule()
+    public function testShouldNotBeCaseSensitiveToReturnBIC(): void
     {
+        $factory = new Factory();
+
+        static::assertEquals($factory->bic('DE'), $factory->bic('de'));
+    }
+
+    public function testShouldThrowExceptionWhenFailedToGetBank(): void
+    {
+        $this->expectExceptionMessage("Cannot provide bank validation for country \"XX\"");
+        $this->expectException(ComponentException::class);
         $factory = new Factory();
         $factory->bank('XX');
     }
 
-    public function testShouldReturnBankRuleAccordingToCountry()
+    public function testShouldReturnBankRuleAccordingToCountry(): void
     {
         $factory = new Factory();
 
         $this->assertInstanceOf(Validatable::class, $factory->bank('DE'));
     }
 
-    public function testShouldNotBeCaseSensitiveToReturnBankRuleAccordingToCountry()
+    /**
+     * @throws ComponentException
+     */
+    public function testShouldNotBeCaseSensitiveToReturnBank(): void
     {
         $factory = new Factory();
 
-        $this->assertEquals($factory->bank('DE'), $factory->bank('de'));
+        static::assertEquals($factory->bank('DE'), $factory->bank('de'));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage Cannot provide bank account validation for country "XX" and bank "123"
-     */
-    public function testShouldThrowExceptionWhenFailedToGetBankAccountRule()
+    public function testShouldThrowExceptionWhenFailedToGetBankAccount(): void
     {
+        $this->expectExceptionMessage("Cannot provide bank account validation for country \"XX\" and bank \"123\"");
+        $this->expectException(ComponentException::class);
         $factory = new Factory();
         $factory->bankAccount('XX', '123');
     }
 
-    public function testShouldReturnBankAccountRuleAccordingToCountry()
+    public function testShouldReturnBankAccountRuleAccordingToCountry(): void
     {
         $factory = new Factory();
 
         $this->assertInstanceOf(Validatable::class, $factory->bankAccount('DE', '123'));
     }
 
-    public function testShouldNotBeCaseSensitiveToReturnBankAccountRuleAccordingToCountry()
+    public function testShouldNotBeCaseSensitiveToReturnBankAccount(): void
     {
         $factory = new Factory();
 
-        $this->assertEquals($factory->bankAccount('DE', '123'), $factory->bankAccount('de', '123'));
+        static::assertEquals($factory->bankAccount('DE', '123'), $factory->bankAccount('de', '123'));
     }
 }
