@@ -13,10 +13,7 @@ class Executable extends AbstractRule
         if ($input instanceof SplFileInfo) {
             return $input->isExecutable();
         }
-        if (!is_scalar($input)) {
-            return false;
-        }
 
-        return is_executable((string)$input);
+        return is_string($input) && is_executable($input);
     }
 }

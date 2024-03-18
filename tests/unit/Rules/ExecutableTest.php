@@ -18,8 +18,8 @@ class ExecutableTest extends RuleTestCase
         $rule = new Executable();
 
         return [
-            [$rule, 'tests/fixtures/executable'],
-            [$rule, new SplFileInfo('tests/fixtures/executable')],
+            [$rule, 'tests/fixtures/executable.php'],
+            [$rule, new SplFileInfo('tests/fixtures/executable.php')],
         ];
     }
 
