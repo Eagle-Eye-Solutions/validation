@@ -33,6 +33,10 @@ class Contains extends AbstractRule
 
     protected function validateEquals($input)
     {
+        if (null === $input) {
+            return false;
+        }
+
         if (is_array($input)) {
             return in_array($this->containsValue, $input);
         }

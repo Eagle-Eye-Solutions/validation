@@ -15,7 +15,6 @@
         "php": ">=8.2.12"
     },
     "require-dev": {
-        "malkusch/bav": "1.0",
         "mikey179/vfsstream": "^2.0.x-dev",
         "phpunit/phpunit": "^9.5",
         "symfony/validator": "^7.0.5"
@@ -23,7 +22,6 @@
     "suggest": {
         "ext-bcmath": "Arbitrary Precision Mathematics",
         "ext-mbstring": "Multibyte String Functions",
-        "malkusch/bav": "German bank account validation",
         "symfony/validator": "Use Symfony validator through Respect\\Validation",
         "fabpot/php-cs-fixer": "Fix PSR2 and other coding style issues"
     },
