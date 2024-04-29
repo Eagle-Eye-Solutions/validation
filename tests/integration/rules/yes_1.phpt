@@ -7,4 +7,3 @@ use Respect\Validation\Validator as v;
 
 v::yes()->check('Yes');
 ?>
---EXPECTF--

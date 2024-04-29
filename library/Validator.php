@@ -86,7 +86,7 @@ use Respect\Validation\Rules\Key;
  * @method static Validator json()
  * @method static Validator key(string $reference, Validatable $referenceValidator = null, bool $mandatory = true)
  * @method static Validator keyNested(string $reference, Validatable $referenceValidator = null, bool $mandatory = true)
- * @method static Validator keySet(Key $rule...)
+ * @method static Validator keySet(Key $rule, Key $rule = null)
  * @method static Validator keyValue(string $comparedKey, string $ruleName, string $baseKey)
  * @method static Validator languageCode(string $set)
  * @method static Validator leapDate(string $format)
@@ -182,10 +182,10 @@ class Validator extends AllOf
      */
     public static function with($rulePrefix, $prepend = false)
     {
-        if (false === $prepend) {
-            self::getFactory()->appendRulePrefix($rulePrefix);
-        } else {
+        if (false !== $prepend) {
             self::getFactory()->prependRulePrefix($rulePrefix);
+        } else {
+            self::getFactory()->appendRulePrefix($rulePrefix);
         }
     }
 

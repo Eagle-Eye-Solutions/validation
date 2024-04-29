@@ -9,14 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\AlnumException;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\Alnum;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Alnum
- * @covers Respect\Validation\Exceptions\AlnumException
+ * @covers Alnum
+ * @covers AlnumException
  */
-class AlnumTest extends \PHPUnit_Framework_TestCase
+class AlnumTest extends TestCase
 {
     /**
      * @dataProvider providerForValidAlnum
@@ -24,39 +29,42 @@ class AlnumTest extends \PHPUnit_Framework_TestCase
     public function testValidAlnumCharsShouldReturnTrue($validAlnum, $additional)
     {
         $validator = new Alnum($additional);
-        $this->assertTrue($validator->validate($validAlnum));
+        static::assertTrue($validator->validate($validAlnum));
     }
 
     /**
      * @dataProvider providerForInvalidAlnum
-     * @expectedException Respect\Validation\Exceptions\AlnumException
+     *
      */
     public function testInvalidAlnumCharsShouldThrowAlnumExceptionAndReturnFalse($invalidAlnum, $additional)
     {
+        $this->expectException(AlnumException::class);
         $validator = new Alnum($additional);
-        $this->assertFalse($validator->validate($invalidAlnum));
-        $this->assertFalse($validator->assert($invalidAlnum));
+        static::assertFalse($validator->validate($invalidAlnum));
+        static::assertFalse($validator->assert($invalidAlnum));
     }
 
     /**
      * @dataProvider providerForInvalidParams
-     * @expectedException Respect\Validation\Exceptions\ComponentException
+     *
      */
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
     {
-        $validator = new Alnum($additional);
+        $this->expectException(ComponentException::class);
+        new Alnum($additional);
     }
 
     /**
      * @dataProvider providerAdditionalChars
+     * @throws ComponentException
      */
-    public function testAdditionalCharsShouldBeRespected($additional, $query)
+    public function testAdditionalCharsShouldBeRespected($additional, $query): void
     {
         $validator = new Alnum($additional);
-        $this->assertTrue($validator->validate($query));
+        static::assertTrue($validator->validate($query));
     }
 
-    public function providerAdditionalChars()
+    public static function providerAdditionalChars()
     {
         return [
             ['!@#$%^&*(){}', '!@#$%^&*(){} abc 123'],
@@ -64,7 +72,7 @@ class AlnumTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidParams()
+    public static function providerForInvalidParams()
     {
         return [
             [new \stdClass()],
@@ -73,7 +81,7 @@ class AlnumTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidAlnum()
+    public static function providerForValidAlnum()
     {
         return [
             ['alganet', ''],
@@ -94,7 +102,7 @@ class AlnumTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidAlnum()
+    public static function providerForInvalidAlnum()
     {
         return [
             ['', ''],

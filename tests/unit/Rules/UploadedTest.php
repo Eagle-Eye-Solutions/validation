@@ -1,70 +1,57 @@
 <?php
 
-/*
- * This file is part of Respect/Validation.
- *
- * (c) Alexandre Gomes Gaigalas <alexandre@gaigalas.net>
- *
- * For the full copyright and license information, please view the "LICENSE.md"
- * file that was distributed with this source code.
- */
+namespace Respect\Validation\Test\Rules;
 
-namespace Respect\Validation\Rules;
-
-$GLOBALS['is_uploaded_file'] = null;
-
-function is_uploaded_file($uploaded)
-{
-    $return = \is_uploaded_file($uploaded); // Running the real function
-    if (null !== $GLOBALS['is_uploaded_file']) {
-        $return = $GLOBALS['is_uploaded_file'];
-        $GLOBALS['is_uploaded_file'] = null;
-    }
-
-    return $return;
-}
+use PHPUnit\Framework\SkippedTestError;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\Uploaded;
+use SplFileInfo;
+use stdClass;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Uploaded
- * @covers Respect\Validation\Exceptions\UploadedException
+ * @covers Uploaded
+ * @covers UploadedException
  */
-class UploadedTest extends \PHPUnit_Framework_TestCase
+class UploadedTest extends RuleTestCase
 {
-    /**
-     * @covers Respect\Validation\Rules\Uploaded::validate
-     */
-    public function testValidUploadedFileShouldReturnTrue()
-    {
-        $GLOBALS['is_uploaded_file'] = true;
+    public const UPLOADED_FILENAME = 'uploaded.ext';
 
+    public function providerForValidInput(): array
+    {
         $rule = new Uploaded();
-        $input = '/path/of/a/valid/uploaded/file.txt';
-        $this->assertTrue($rule->validate($input));
+
+        return [
+            [$rule, self::UPLOADED_FILENAME],
+            [$rule, new SplFileInfo(self::UPLOADED_FILENAME)],
+        ];
     }
 
-    /**
-     * @covers Respect\Validation\Rules\Uploaded::validate
-     */
-    public function testInvalidUploadedFileShouldReturnFalse()
+    public function providerForInvalidInput(): array
     {
-        $GLOBALS['is_uploaded_file'] = false;
-
         $rule = new Uploaded();
-        $input = '/path/of/an/invalid/uploaded/file.txt';
-        $this->assertFalse($rule->validate($input));
+
+        return [
+            [$rule, 'not-uploaded.ext'],
+            [$rule, new SplFileInfo('not-uploaded.ext')],
+            [$rule, []],
+            [$rule, 1],
+            [$rule, new stdClass()],
+        ];
     }
 
-    /**
-     * @covers Respect\Validation\Rules\Uploaded::validate
-     */
-    public function testShouldValidateObjects()
+    protected function setUp(): void
     {
-        $GLOBALS['is_uploaded_file'] = true;
+        if (!extension_loaded('uopz')) {
+            throw new SkippedTestError('Extension "uopz" is required to test "Uploaded" rule');
+        }
 
-        $rule = new Uploaded();
-        $object = new \SplFileInfo('/path/of/an/uploaded/file');
-
-        $this->assertTrue($rule->validate($object));
+        uopz_set_return(
+            'is_uploaded_file',
+            static function (string $filename): bool {
+                return $filename === UploadedTest::UPLOADED_FILENAME;
+            },
+            true
+        );
     }
 }

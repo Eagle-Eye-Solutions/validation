@@ -9,41 +9,43 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
 use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\CreditCard;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\CreditCard
+ * @covers CreditCard
  */
 class CreditCardTest extends RuleTestCase
 {
-    public function testShouldHaveNoCreditCardBrandByDefault()
+    public function testShouldHaveNoCreditCardBrandByDefault(): void
     {
         $rule = new CreditCard();
 
-        $this->assertNull($rule->brand);
+        static::assertNull($rule->brand);
     }
 
-    public function testShouldAcceptCreditCardBrandOnConstructor()
+    public function testShouldAcceptCreditCardBrandOnConstructor(): void
     {
         $rule = new CreditCard(CreditCard::VISA);
 
-        $this->assertSame(CreditCard::VISA, $rule->brand);
+        static::assertSame(CreditCard::VISA, $rule->brand);
     }
 
-    public function testShouldThrowExceptionWhenCreditCardBrandIsNotValid()
+    public function testShouldThrowExceptionWhenCreditCardBrandIsNotValid(): void
     {
         $message = '"RespectCard" is not a valid credit card brand';
         $message .= ' (Available: American Express, Diners Club, Discover, JCB, MasterCard, Visa).';
 
-        $this->setExpectedException(ComponentException::class, $message);
+        $this->expectException(ComponentException::class);
+        $this->expectExceptionMessage($message);
 
         new CreditCard('RespectCard');
     }
 
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $general = new CreditCard();
         $amex = new CreditCard(CreditCard::AMERICAN_EXPRESS);
@@ -71,7 +73,7 @@ class CreditCardTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $general = new CreditCard();
         $amex = new CreditCard(CreditCard::AMERICAN_EXPRESS);

@@ -9,48 +9,49 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\EqualsException;
+use Respect\Validation\Rules\Equals;
 use stdClass;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Equals
- * @covers Respect\Validation\Exceptions\EqualsException
+ * @covers Equals
+ * @covers EqualsException
  */
-class EqualsTest extends \PHPUnit_Framework_TestCase
+class EqualsTest extends TestCase
 {
     /**
      * @dataProvider providerForEquals
      */
-    public function testInputEqualsToExpectedValueShouldPass($compareTo, $input)
+    public function testInputEqualsToExpectedValueShouldPass($compareTo, $input): void
     {
         $rule = new Equals($compareTo);
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
     /**
      * @dataProvider providerForNotEquals
      */
-    public function testInputNotEqualsToExpectedValueShouldPass($compareTo, $input)
+    public function testInputNotEqualsToExpectedValueShouldPass($compareTo, $input): void
     {
         $rule = new Equals($compareTo);
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\EqualsException
-     * @expectedExceptionMessage "24" must be equals 42
-     */
-    public function testShouldThrowTheProperExceptionWhenFailure()
+    public function testShouldThrowTheProperExceptionWhenFailure(): void
     {
+        $this->expectExceptionMessage("\"24\" must be equals 42");
+        $this->expectException(EqualsException::class);
         $rule = new Equals(42);
         $rule->check('24');
     }
 
-    public function providerForEquals()
+    public static function providerForEquals(): array
     {
         return [
             ['foo', 'foo'],
@@ -60,7 +61,7 @@ class EqualsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotEquals()
+    public static function providerForNotEquals(): array
     {
         return [
             ['foo', ''],

@@ -9,24 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ValidationException;
 use Respect\Validation\Validatable;
 
-abstract class RuleTestCase extends \PHPUnit_Framework_TestCase
+abstract class RuleTestCase extends TestCase
 {
-    /**
-     * It is to provide constructor arguments and.
-     *
-     * @return array
-     */
-    abstract public function providerForValidInput();
+    abstract public function providerForValidInput(): array;
 
-    /**
-     * @return array
-     */
-    abstract public function providerForInvalidInput();
+    abstract public function providerForInvalidInput(): array;
 
     /**
      * @param bool             $expectedResult
@@ -34,11 +27,11 @@ abstract class RuleTestCase extends \PHPUnit_Framework_TestCase
      *
      * @return Validatable
      */
-    public function getRuleMock($expectedResult, $mockClassName = '')
+    public function getRuleMock($expectedResult, $mockClassName = ''): Validatable
     {
         $ruleMocked = $this->getMockBuilder(Validatable::class)
             ->disableOriginalConstructor()
-            ->setMethods(
+            ->onlyMethods(
                 [
                     'assert', 'check', 'getName', 'reportError', 'setName', 'setTemplate', 'validate',
                 ]
@@ -46,28 +39,18 @@ abstract class RuleTestCase extends \PHPUnit_Framework_TestCase
             ->setMockClassName($mockClassName)
             ->getMock();
 
-        $ruleMocked
-            ->expects($this->any())
-            ->method('validate')
+        $ruleMocked->method('validate')
             ->willReturn($expectedResult);
 
         if ($expectedResult) {
-            $ruleMocked
-                ->expects($this->any())
-                ->method('check')
+            $ruleMocked->method('check')
                 ->willReturn($expectedResult);
-            $ruleMocked
-                ->expects($this->any())
-                ->method('assert')
+            $ruleMocked->method('assert')
                 ->willReturn($expectedResult);
         } else {
-            $ruleMocked
-                ->expects($this->any())
-                ->method('check')
+            $ruleMocked->method('check')
                 ->willThrowException(new ValidationException('Exception for '.$mockClassName.':check() method'));
-            $ruleMocked
-                ->expects($this->any())
-                ->method('assert')
+            $ruleMocked->method('assert')
                 ->willThrowException(new ValidationException('Exception for '.$mockClassName.':assert() method'));
         }
 
@@ -80,9 +63,9 @@ abstract class RuleTestCase extends \PHPUnit_Framework_TestCase
      * @param Validatable $validator
      * @param mixed       $input
      */
-    public function testShouldValidateValidInput(Validatable $validator, $input)
+    public function testShouldValidateValidInput(Validatable $validator, $input): void
     {
-        $this->assertTrue($validator->validate($input));
+        static::assertTrue($validator->validate($input));
     }
 
     /**
@@ -91,8 +74,8 @@ abstract class RuleTestCase extends \PHPUnit_Framework_TestCase
      * @param Validatable $validator
      * @param mixed       $input
      */
-    public function testShouldValidateInvalidInput(Validatable $validator, $input)
+    public function testShouldValidateInvalidInput(Validatable $validator, $input): void
     {
-        $this->assertFalse($validator->validate($input));
+        static::assertFalse($validator->validate($input));
     }
 }

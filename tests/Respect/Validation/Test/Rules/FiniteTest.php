@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\FiniteException;
+use Respect\Validation\Rules\Finite;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Finite
- * @covers Respect\Validation\Exceptions\FiniteException
+ * @covers Finite
+ * @covers FiniteException
  */
-class FiniteTest extends \PHPUnit_Framework_TestCase
+class FiniteTest extends TestCase
 {
     protected $rule;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->rule = new Finite();
     }
@@ -28,9 +32,9 @@ class FiniteTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForFinite
      */
-    public function testShouldValidateFiniteNumbers($input)
+    public function testShouldValidateFiniteNumbers($input): void
     {
-        $this->assertTrue($this->rule->validate($input));
+        static::assertTrue($this->rule->validate($input));
     }
 
     /**
@@ -38,19 +42,17 @@ class FiniteTest extends \PHPUnit_Framework_TestCase
      */
     public function testShouldNotValidateNonFiniteNumbers($input)
     {
-        $this->assertFalse($this->rule->validate($input));
+        static::assertFalse($this->rule->validate($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\FiniteException
-     * @expectedExceptionMessage INF must be a finite number
-     */
-    public function testShouldThrowFiniteExceptionWhenChecking()
+    public function testShouldThrowFiniteExceptionWhenChecking(): void
     {
+        $this->expectExceptionMessage("INF must be a finite number");
+        $this->expectException(FiniteException::class);
         $this->rule->check(INF);
     }
 
-    public function providerForFinite()
+    public static function providerForFinite(): array
     {
         return [
             ['123456'],
@@ -62,7 +64,7 @@ class FiniteTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNonFinite()
+    public static function providerForNonFinite(): array
     {
         return [
             [' '],

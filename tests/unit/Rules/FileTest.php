@@ -1,71 +1,44 @@
 <?php
 
-/*
- * This file is part of Respect/Validation.
- *
- * (c) Alexandre Gomes Gaigalas <alexandre@gaigalas.net>
- *
- * For the full copyright and license information, please view the "LICENSE.md"
- * file that was distributed with this source code.
- */
+namespace Respect\Validation\Test\Rules;
 
-namespace Respect\Validation\Rules;
-
-$GLOBALS['is_file'] = null;
-
-function is_file($file)
-{
-    $return = \is_file($file); // Running the real function
-    if (null !== $GLOBALS['is_file']) {
-        $return = $GLOBALS['is_file'];
-        $GLOBALS['is_file'] = null;
-    }
-
-    return $return;
-}
+use Respect\Validation\Rules\File;
+use SplFileInfo;
+use SplFileObject;
+use stdClass;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\File
- * @covers Respect\Validation\Exceptions\FileException
+ * @covers File
+ * @covers FileException
  */
-class FileTest extends \PHPUnit_Framework_TestCase
+class FileTest extends RuleTestCase
 {
-    /**
-     * @covers Respect\Validation\Rules\File::validate
-     */
-    public function testValidFileShouldReturnTrue()
+    public function providerForValidInput(): array
     {
-        $GLOBALS['is_file'] = true;
-
-        $rule = new File();
-        $input = '/path/of/a/valid/file.txt';
-        $this->assertTrue($rule->validate($input));
+        $sut = new File();
+        $fixturesDirectory = realpath(__DIR__.'/../../fixtures/');
+        return [
+            'filename' => [$sut, __FILE__],
+            'SplFileInfo' => [$sut, new SplFileInfo($fixturesDirectory . '/valid-image.png')],
+            'SplFileObject' => [$sut, new SplFileObject($fixturesDirectory .'/invalid-image.png')],
+        ];
     }
 
-    /**
-     * @covers Respect\Validation\Rules\File::validate
-     */
-    public function testInvalidFileShouldReturnFalse()
+
+    public function providerForInvalidInput(): array
     {
-        $GLOBALS['is_file'] = false;
+        $sut = new File();
 
-        $rule = new File();
-        $input = '/path/of/an/invalid/file.txt';
-        $this->assertFalse($rule->validate($input));
-    }
-
-    /**
-     * @covers Respect\Validation\Rules\File::validate
-     */
-    public function testShouldValidateObjects()
-    {
-        $rule = new File();
-        $object = $this->createMock('SplFileInfo', ['isFile'], ['somefile.txt']);
-        $object->expects($this->once())
-                ->method('isFile')
-                ->will($this->returnValue(true));
-
-        $this->assertTrue($rule->validate($object));
+        return [
+            'directory' => [$sut, __DIR__],
+            'object' => [$sut, new stdClass()],
+            'array' => [$sut, []],
+            'invalid filename' => [$sut, 'not-a-file-at-all'],
+            'integer' => [$sut, PHP_INT_MAX],
+            'float' => [$sut, 1.222],
+            'boolean true' => [$sut, true],
+            'boolean false' => [$sut, false],
+        ];
     }
 }

@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\InfiniteException;
+use Respect\Validation\Rules\Infinite;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Infinite
- * @covers Respect\Validation\Exceptions\InfiniteException
+ * @covers Infinite
+ * @covers InfiniteException
  */
-class InfiniteTest extends \PHPUnit_Framework_TestCase
+class InfiniteTest extends TestCase
 {
     protected $rule;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->rule = new Infinite();
     }
@@ -28,29 +32,27 @@ class InfiniteTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForInfinite
      */
-    public function testShouldValidateInfiniteNumbers($input)
+    public function testShouldValidateInfiniteNumbers($input): void
     {
-        $this->assertTrue($this->rule->validate($input));
+        static::assertTrue($this->rule->validate($input));
     }
 
     /**
      * @dataProvider providerForNonInfinite
      */
-    public function testShouldNotValidateNonInfiniteNumbers($input)
+    public function testShouldNotValidateNonInfiniteNumbers($input): void
     {
-        $this->assertFalse($this->rule->validate($input));
+        static::assertFalse($this->rule->validate($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\InfiniteException
-     * @expectedExceptionMessage 123456 must be an infinite number
-     */
-    public function testShouldThrowInfiniteExceptionWhenChecking()
+    public function testShouldThrowInfiniteExceptionWhenChecking(): void
     {
+        $this->expectException(InfiniteException::class);
+        $this->expectExceptionMessage("123456 must be an infinite number");
         $this->rule->check(123456);
     }
 
-    public function providerForInfinite()
+    public static function providerForInfinite(): array
     {
         return [
             [INF],
@@ -58,7 +60,7 @@ class InfiniteTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNonInfinite()
+    public static function providerForNonInfinite(): array
     {
         return [
             [' '],

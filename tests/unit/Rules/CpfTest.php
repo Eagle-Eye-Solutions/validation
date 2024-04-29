@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\CpfException;
+use Respect\Validation\Rules\Cpf;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Cpf
- * @covers Respect\Validation\Exceptions\CpfException
+ * @covers Cpf
+ * @covers CpfException
  */
-class CpfTest extends \PHPUnit_Framework_TestCase
+class CpfTest extends TestCase
 {
     protected $cpfValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->cpfValidator = new Cpf();
     }
@@ -30,7 +34,7 @@ class CpfTest extends \PHPUnit_Framework_TestCase
      */
     public function testFormattedCpfsShouldValidate($input)
     {
-        $this->assertTrue($this->cpfValidator->assert($input));
+        static::assertTrue($this->cpfValidator->assert($input));
     }
 
     /**
@@ -38,37 +42,38 @@ class CpfTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnformattedCpfsShouldValidates($input)
     {
-        $this->assertTrue($this->cpfValidator->assert($input));
+        static::assertTrue($this->cpfValidator->assert($input));
     }
 
     /**
      * @dataProvider providerInvalidFormattedCpf
-     * @expectedException Respect\Validation\Exceptions\CpfException
+     *
      */
     public function testInvalidCpfShouldFailWhenFormatted($input)
     {
-        $this->assertFalse($this->cpfValidator->assert($input));
+        $this->expectException(CpfException::class);
+        static::assertFalse($this->cpfValidator->assert($input));
     }
 
     /**
      * @dataProvider providerInvalidUnformattedCpf
-     * @expectedException Respect\Validation\Exceptions\CpfException
      */
     public function testInvalidCpfShouldFailWhenNotFormatted($input)
     {
-        $this->assertFalse($this->cpfValidator->assert($input));
+        $this->expectException(CpfException::class);
+        static::assertFalse($this->cpfValidator->assert($input));
     }
 
     /**
      * @dataProvider providerInvalidFormattedAndUnformattedCpfLength
-     * @expectedException Respect\Validation\Exceptions\CpfException
      */
     public function testCpfsWithIncorrectLengthShouldFail($input)
     {
-        $this->assertFalse($this->cpfValidator->assert($input));
+        $this->expectException(CpfException::class);
+        static::assertFalse($this->cpfValidator->assert($input));
     }
 
-    public function providerValidFormattedCpf()
+    public static function providerValidFormattedCpf()
     {
         return [
             ['342.444.198-88'],
@@ -79,7 +84,7 @@ class CpfTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerValidUnformattedCpf()
+    public static function providerValidUnformattedCpf()
     {
         return [
             ['11598647644'],
@@ -90,7 +95,7 @@ class CpfTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerInvalidFormattedCpf()
+    public static function providerInvalidFormattedCpf()
     {
         return [
             [''],
@@ -103,7 +108,7 @@ class CpfTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerInvalidUnformattedCpf()
+    public static function providerInvalidUnformattedCpf()
     {
         return [
             ['11111111111'],
@@ -115,7 +120,7 @@ class CpfTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerInvalidFormattedAndUnformattedCpfLength()
+    public static function providerInvalidFormattedAndUnformattedCpfLength()
     {
         return [
             ['1'],

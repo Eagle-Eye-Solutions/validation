@@ -9,40 +9,48 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\NullTypeException;
+use Respect\Validation\Rules\NullType;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\NullType
- * @covers Respect\Validation\Exceptions\NullTypeException
+ * @covers NullType
+ * @covers NullTypeException
  */
-class NullTypeTest extends \PHPUnit_Framework_TestCase
+class NullTypeTest extends TestCase
 {
-    protected $object;
+    protected NullType $object;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new NullType();
     }
 
-    public function testNullValue()
+    /**
+     * @throws \Exception
+     */
+    public function testNullValue(): void
     {
-        $this->assertTrue($this->object->assert(null));
-        $this->assertTrue($this->object->__invoke(null));
-        $this->assertTrue($this->object->check(null));
+        static::assertTrue($this->object->assert(null));
+        static::assertTrue($this->object->__invoke(null));
+        static::assertTrue($this->object->check(null));
     }
 
     /**
      * @dataProvider providerForNotNull
-     * @expectedException Respect\Validation\Exceptions\NullTypeException
+     *
      */
-    public function testNotNull($input)
+    public function testNotNull($input): void
     {
-        $this->assertFalse($this->object->__invoke($input));
-        $this->assertFalse($this->object->assert($input));
+        $this->expectException(NullTypeException::class);
+        static::assertFalse($this->object->__invoke($input));
+        static::assertFalse($this->object->assert($input));
     }
 
-    public function providerForNotNull()
+    public static function providerForNotNull(): array
     {
         return [
             [''],

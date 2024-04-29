@@ -9,45 +9,53 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\CharsetException;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\Charset;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Charset
- * @covers Respect\Validation\Exceptions\CharsetException
+ * @covers Charset
+ * @covers CharsetException
  */
-class CharsetTest extends \PHPUnit_Framework_TestCase
+class CharsetTest extends TestCase
 {
     /**
      * @dataProvider providerForValidCharset
+     * @throws ComponentException
      */
     public function testValidDataWithCharsetShouldReturnTrue($charset, $input)
     {
         $validator = new Charset($charset);
-        $this->assertTrue($validator->__invoke($input));
+        static::assertTrue($validator->__invoke($input));
     }
 
     /**
      * @dataProvider providerForInvalidCharset
-     * @expectedException Respect\Validation\Exceptions\CharsetException
+     * @throws ComponentException
      */
     public function testInvalidCharsetShouldFailAndThrowCharsetException($charset, $input)
     {
+        $this->expectException(CharsetException::class);
         $validator = new Charset($charset);
-        $this->assertFalse($validator->__invoke($input));
-        $this->assertFalse($validator->assert($input));
+        static::assertFalse($validator->__invoke($input));
+        static::assertFalse($validator->assert($input));
     }
 
     /**
      * @dataProvider providerForInvalidParams
-     * @expectedException Respect\Validation\Exceptions\ComponentException
+     *
      */
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($charset)
     {
-        $validator = new Charset($charset);
+        $this->expectException(ComponentException::class);
+        new Charset($charset);
     }
 
-    public function providerForInvalidParams()
+    public static function providerForInvalidParams()
     {
         return [
             [new \stdClass()],
@@ -62,7 +70,7 @@ class CharsetTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidCharset()
+    public static function providerForValidCharset()
     {
         return [
             ['UTF-8', ''],
@@ -76,7 +84,7 @@ class CharsetTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidCharset()
+    public static function providerForInvalidCharset()
     {
         return [
             ['ASCII', '日本国'],

@@ -9,151 +9,154 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\AbstractComposite;
 use Respect\Validation\Validatable;
 
-class AbstractCompositeTest extends \PHPUnit_Framework_TestCase
+class AbstractCompositeTest extends TestCase
 {
-    public function testShouldDefineNameForInternalWhenAppendRuleToCompositeRule()
+    /**
+     * @throws Exception
+     */
+    public function testAddedComposite(): void
     {
         $ruleName = 'something';
 
         $simpleRuleMock = $this->createMock(Validatable::class);
         $simpleRuleMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getName')
-            ->will($this->returnValue(null));
+            ->willReturn(null);
         $simpleRuleMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('setName')
             ->with($ruleName);
 
-        $compositeRuleMock = $this
-            ->getMockBuilder(AbstractComposite::class)
-            ->setMethods(['validate'])
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
+            ->onlyMethods(['validate'])
             ->getMockForAbstractClass();
         $compositeRuleMock->setName($ruleName);
         $compositeRuleMock->addRule($simpleRuleMock);
     }
 
-    public function testShouldUpdateInternalRuleNameWhenNameIsUpdated()
+    /**
+     * @throws Exception
+     */
+    public function testNameIsUpdated(): void
     {
         $ruleName1 = 'something';
         $ruleName2 = 'something else';
 
         $simpleRuleMock = $this->createMock(Validatable::class);
-        $simpleRuleMock
-            ->expects($this->at(0))
-            ->method('getName')
-            ->will($this->returnValue(null));
-        $simpleRuleMock
-            ->expects($this->at(2))
-            ->method('getName')
-            ->will($this->returnValue($ruleName1));
-        $simpleRuleMock
-            ->expects($this->at(1))
-            ->method('setName')
-            ->with($ruleName1);
-        $simpleRuleMock
-            ->expects($this->at(3))
-            ->method('setName')
-            ->with($ruleName2);
 
-        $compositeRuleMock = $this
-            ->getMockBuilder(AbstractComposite::class)
-            ->setMethods(['validate'])
+        $simpleRuleMock->expects(self::once())
+            ->method('setName')
+            ->willReturn($ruleName1);
+
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
+            ->onlyMethods(['validate'])
             ->getMockForAbstractClass();
         $compositeRuleMock->setName($ruleName1);
+
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
+            ->onlyMethods(['validate'])
+            ->getMockForAbstractClass();
+        $simpleRuleMock->expects(self::exactly(2))
+            ->method('getName')
+            ->willReturnOnConsecutiveCalls([null, $ruleName1]);
+        $simpleRuleMock->expects(self::once())
+            ->method('setName')
+            ->willReturn($ruleName2);
+
         $compositeRuleMock->addRule($simpleRuleMock);
         $compositeRuleMock->setName($ruleName2);
     }
 
-    public function testShouldNotUpdateInternalRuleAlreadyHasAName()
+    /**
+     * @throws Exception
+     */
+    public function testAlreadyHasAName(): void
     {
         $simpleRuleMock = $this->createMock(Validatable::class);
-        $simpleRuleMock
-            ->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('something'));
-        $simpleRuleMock
-            ->expects($this->never())
+        $simpleRuleMock->method('getName')
+            ->willReturn('something');
+        $simpleRuleMock->expects($this->never())
             ->method('setName');
 
         $compositeRuleMock = $this
             ->getMockBuilder(AbstractComposite::class)
-            ->setMethods(['validate'])
+            ->onlyMethods(['validate'])
             ->getMockForAbstractClass();
         $compositeRuleMock->addRule($simpleRuleMock);
         $compositeRuleMock->setName('Whatever');
     }
 
-    public function testShouldUpdateInternalRuleWhenItsNameIsNull()
+    /**
+     * @throws Exception
+     */
+    public function testItsNameIsNull(): void
     {
         $ruleName = 'something';
 
         $simpleRuleMock = $this->createMock(Validatable::class);
-        $simpleRuleMock
-            ->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue(null));
-        $simpleRuleMock
-            ->expects($this->once())
+        $simpleRuleMock->method('getName')
+            ->willReturn(null);
+        $simpleRuleMock->expects(static::once())
             ->method('setName')
             ->with($ruleName);
 
-        $compositeRuleMock = $this
-            ->getMockBuilder(AbstractComposite::class)
-            ->setMethods(['validate'])
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
+            ->onlyMethods(['validate'])
             ->getMockForAbstractClass();
         $compositeRuleMock->addRule($simpleRuleMock);
         $compositeRuleMock->setName($ruleName);
     }
 
-    public function testShouldDefineNameForInternalRulesWhenItHasNotAName()
+    /**
+     * @throws Exception
+     */
+    public function testItHasNoName(): void
     {
         $ruleName = 'something';
 
         $simpleRuleMock = $this->createMock(Validatable::class);
-        $simpleRuleMock
-            ->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue(null));
-        $simpleRuleMock
-            ->expects($this->once())
+        $simpleRuleMock->method('getName')
+            ->willReturn(null);
+        $simpleRuleMock->expects(static::once())
             ->method('setName')
             ->with($ruleName);
 
-        $compositeRuleMock = $this
-            ->getMockBuilder(AbstractComposite::class)
-            ->setMethods(['validate'])
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
+            ->onlyMethods(['validate'])
             ->getMockForAbstractClass();
         $compositeRuleMock->addRule($simpleRuleMock);
         $compositeRuleMock->setName($ruleName);
     }
 
-    public function testShouldNotDefineNameForInternalRulesWhenItHasAName()
+    public function testItHasAName(): void
     {
         $ruleName = 'something';
 
         $simpleRuleMock = $this->createMock(Validatable::class);
-        $simpleRuleMock
-            ->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue($ruleName));
-        $simpleRuleMock
-            ->expects($this->never())
+        $simpleRuleMock->method('getName')
+            ->willReturn($ruleName);
+        $simpleRuleMock->expects(static::never())
             ->method('setName');
 
-        $compositeRuleMock = $this
-            ->getMockBuilder(AbstractComposite::class)
-            ->setMethods(['validate'])
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
+            ->onlyMethods(['validate'])
             ->getMockForAbstractClass();
         $compositeRuleMock->addRule($simpleRuleMock);
         $compositeRuleMock->setName($ruleName);
     }
 
-    public function testRemoveRulesShouldRemoveAllTheAddedRules()
+    /**
+     * @throws Exception
+     */
+    public function testRemoveRules(): void
     {
         $simpleRuleMock = $this->createMock(Validatable::class);
 
@@ -161,27 +164,36 @@ class AbstractCompositeTest extends \PHPUnit_Framework_TestCase
         $compositeRuleMock->addRule($simpleRuleMock);
         $compositeRuleMock->removeRules();
 
-        $this->assertEmpty($compositeRuleMock->getRules());
+        static::assertEmpty($compositeRuleMock->getRules());
     }
 
-    public function testShouldReturnTheAmountOfAddedRules()
+    /**
+     * @throws Exception
+     */
+    public function testAddedRules(): void
     {
         $compositeRuleMock = $this->getMockForAbstractClass(AbstractComposite::class);
         $compositeRuleMock->addRule($this->createMock(Validatable::class));
         $compositeRuleMock->addRule($this->createMock(Validatable::class));
         $compositeRuleMock->addRule($this->createMock(Validatable::class));
 
-        $this->assertCount(3, $compositeRuleMock->getRules());
+        static::assertCount(3, $compositeRuleMock->getRules());
     }
 
-    public function testHasRuleShouldReturnFalseWhenThereIsNoRuleAppended()
+    /**
+     * @throws Exception
+     */
+    public function testThereIsNoRuleAppended(): void
     {
         $compositeRuleMock = $this->getMockForAbstractClass(AbstractComposite::class);
 
-        $this->assertFalse($compositeRuleMock->hasRule(''));
+        static::assertFalse($compositeRuleMock->hasRule(''));
     }
 
-    public function testHasRuleShouldReturnFalseWhenRuleIsNotFound()
+    /**
+     * @throws Exception
+     */
+    public function testRuleIsNotFound(): void
     {
         $oneSimpleRuleMock = $this->createMock(Validatable::class);
 
@@ -190,30 +202,36 @@ class AbstractCompositeTest extends \PHPUnit_Framework_TestCase
 
         $anotherSimpleRuleMock = $this->createMock(Validatable::class);
 
-        $this->assertFalse($compositeRuleMock->hasRule($anotherSimpleRuleMock));
+        static::assertFalse($compositeRuleMock->hasRule($anotherSimpleRuleMock));
     }
 
-    public function testHasRuleShouldReturnFalseWhenRulePassedAsStringIsNotFound()
+    /**
+     * @throws Exception
+     */
+    public function testRulePassedAsStringIsNotFound(): void
     {
         $simpleRuleMock = $this->createMock(Validatable::class);
 
         $compositeRuleMock = $this->getMockForAbstractClass(AbstractComposite::class);
         $compositeRuleMock->addRule($simpleRuleMock);
 
-        $this->assertFalse($compositeRuleMock->hasRule('SomeRule'));
+        static::assertFalse($compositeRuleMock->hasRule('SomeRule'));
     }
 
-    public function testHasRuleShouldReturnTrueWhenRuleIsFound()
+    public function testTrueWhenRuleIsFound(): void
     {
         $simpleRuleMock = $this->createMock(Validatable::class);
 
         $compositeRuleMock = $this->getMockForAbstractClass(AbstractComposite::class);
         $compositeRuleMock->addRule($simpleRuleMock);
 
-        $this->assertTrue($compositeRuleMock->hasRule($simpleRuleMock));
+        static::assertTrue($compositeRuleMock->hasRule($simpleRuleMock));
     }
 
-    public function testShouldAddRulesByPassingThroughConstructor()
+    /**
+     * @throws Exception
+     */
+    public function testPassingThroughConstructor(): void
     {
         $simpleRuleMock = $this->createMock(Validatable::class);
         $anotherSimpleRuleMock = $this->createMock(Validatable::class);
@@ -223,6 +241,6 @@ class AbstractCompositeTest extends \PHPUnit_Framework_TestCase
             $anotherSimpleRuleMock,
         ]);
 
-        $this->assertCount(2, $compositeRuleMock->getRules());
+        static::assertCount(2, $compositeRuleMock->getRules());
     }
 }

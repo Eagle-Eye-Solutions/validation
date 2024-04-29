@@ -9,34 +9,40 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use Respect\Validation\Exceptions\ValidationException;
+use Respect\Validation\Rules\AlwaysInvalid;
+use Respect\Validation\Rules\When;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\When
+ * @covers When
  */
 class WhenTest extends RuleTestCase
 {
-    public function testShouldConstructAnObjectWithoutElseRule()
+    public function testWithoutElseRule(): void
     {
         $rule = new When($this->getRuleMock(true), $this->getRuleMock(true));
 
-        $this->assertInstanceOf(AlwaysInvalid::class, $rule->else);
+        static::assertInstanceOf(AlwaysInvalid::class, $rule->else);
     }
 
-    public function testShouldConstructAnObjectWithElseRule()
+    public function testWithElseRule(): void
     {
-        $rule = new When($this->getRuleMock(true), $this->getRuleMock(true), $this->getRuleMock(true));
+        $rule = new When(
+            $this->getRuleMock(true),
+            $this->getRuleMock(true),
+            $this->getRuleMock(true)
+        );
 
-        $this->assertNotNull($rule->else);
+        static::assertNotNull($rule->else);
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ValidationException
-     * @expectedExceptionMessage Exception for ThenNotValid:assert() method
-     */
-    public function testShouldThrowExceptionForTheThenRuleWhenTheIfRuleIsValidAndTheThenRuleIsNotOnAssertMethod()
+    public function testIfRuleIsValidAndTheThenRuleIsNotOnAssertMethod(): void
     {
+        $this->expectExceptionMessage("Exception for ThenNotValid:assert() method");
+        $this->expectException(ValidationException::class);
         $if = $this->getRuleMock(true);
         $then = $this->getRuleMock(false, 'ThenNotValid');
         $else = $this->getRuleMock(true);
@@ -45,12 +51,10 @@ class WhenTest extends RuleTestCase
         $rule->assert('');
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ValidationException
-     * @expectedExceptionMessage Exception for ThenNotValid:check() method
-     */
-    public function testShouldThrowExceptionForTheThenRuleWhenTheIfRuleIsValidAndTheThenRuleIsNotOnCheckMethod()
+    public function testTheIfRuleIsValidAndTheThenRuleIsNotOnCheckMethod(): void
     {
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage("Exception for ThenNotValid:check() method");
         $if = $this->getRuleMock(true);
         $then = $this->getRuleMock(false, 'ThenNotValid');
         $else = $this->getRuleMock(true);
@@ -59,12 +63,10 @@ class WhenTest extends RuleTestCase
         $rule->check('');
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ValidationException
-     * @expectedExceptionMessage Exception for ElseNotValid:assert() method
-     */
-    public function testShouldThrowExceptionForTheElseRuleWhenTheIfRuleIsNotValidAndTheElseRuleIsNotOnAssertMethod()
+    public function testIfRuleIsNotValidAndTheElseRuleIsNotOnAssertMethod(): void
     {
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage("Exception for ElseNotValid:assert() method");
         $if = $this->getRuleMock(false);
         $then = $this->getRuleMock(false);
         $else = $this->getRuleMock(false, 'ElseNotValid');
@@ -73,12 +75,10 @@ class WhenTest extends RuleTestCase
         $rule->assert('');
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ValidationException
-     * @expectedExceptionMessage Exception for ElseNotValid:check() method
-     */
-    public function testShouldThrowExceptionForTheElseRuleWhenTheIfRuleIsNotValidAndTheElseRuleIsNotOnCheckMethod()
+    public function testTheIfRuleIsNotValidAndTheElseRuleIsNotOnCheckMethod(): void
     {
+        $this->expectExceptionMessage("Exception for ElseNotValid:check() method");
+        $this->expectException(ValidationException::class);
         $if = $this->getRuleMock(false);
         $then = $this->getRuleMock(false);
         $else = $this->getRuleMock(false, 'ElseNotValid');
@@ -87,12 +87,7 @@ class WhenTest extends RuleTestCase
         $rule->check('');
     }
 
-    /**
-     * It is to provide constructor arguments and.
-     *
-     * @return array
-     */
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         return [
             'int (all true)' => [
@@ -123,14 +118,10 @@ class WhenTest extends RuleTestCase
                 new When($this->getRuleMock(true), $this->getRuleMock(true), $this->getRuleMock(false)),
                 false,
             ],
-
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         return [
             'when = true, then = false, else = false' => [

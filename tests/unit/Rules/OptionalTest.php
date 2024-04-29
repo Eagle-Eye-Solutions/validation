@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\Optional;
 use Respect\Validation\Validatable;
 use stdClass;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Optional
+ * @covers Optional
  */
-class OptionalTest extends \PHPUnit_Framework_TestCase
+class OptionalTest extends TestCase
 {
-    public function providerForOptional()
+    public static function providerForOptional(): array
     {
         return [
             [null],
@@ -28,7 +32,7 @@ class OptionalTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotOptional()
+    public static function providerForNotOptional(): array
     {
         return [
             [1],
@@ -49,99 +53,111 @@ class OptionalTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testShouldAcceptInstanceOfValidatobleOnConstructor()
+    /**
+     * @throws Exception
+     * @throws ComponentException
+     */
+    public function testShouldAcceptInstanceOfValidatobleOnConstructor(): void
     {
         $validatable = $this->createMock(Validatable::class);
         $rule = new Optional($validatable);
 
-        $this->assertSame($validatable, $rule->getValidatable());
+        static::assertSame($validatable, $rule->getValidatable());
     }
 
     /**
      * @dataProvider providerForOptional
+     * @throws Exception
      */
     public function testShouldNotValidateRuleWhenInputIsOptional($input)
     {
         $validatable = $this->createMock(Validatable::class);
-        $validatable
-            ->expects($this->never())
+        $validatable->expects(static::never())
             ->method('validate');
 
         $rule = new Optional($validatable);
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
     /**
      * @dataProvider providerForNotOptional
+     * @throws Exception
      */
-    public function testShouldValidateRuleWhenInputIsNotOptional($input)
+    public function testShouldValidateRuleWhenInputIsNotOptional($input): void
     {
         $validatable = $this->createMock(Validatable::class);
-        $validatable
-            ->expects($this->once())
+        $validatable->expects(static::once())
             ->method('validate')
             ->with($input)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $rule = new Optional($validatable);
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
-    public function testShouldNotAssertRuleWhenInputIsOptional()
+    /**
+     * @throws Exception
+     */
+    public function testShouldNotAssertRuleWhenInputIsOptional(): void
     {
         $validatable = $this->createMock(Validatable::class);
-        $validatable
-            ->expects($this->never())
+        $validatable->expects(static::never())
             ->method('assert');
 
         $rule = new Optional($validatable);
 
-        $this->assertTrue($rule->assert(''));
+        static::assertTrue($rule->assert(''));
     }
 
-    public function testShouldAssertRuleWhenInputIsNotOptional()
+    /**
+     * @throws Exception
+     */
+    public function testShouldAssertRuleWhenInputIsNotOptional(): void
     {
         $input = 'foo';
 
         $validatable = $this->createMock(Validatable::class);
-        $validatable
-            ->expects($this->once())
+        $validatable->expects(static::once())
             ->method('assert')
             ->with($input)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $rule = new Optional($validatable);
 
-        $this->assertTrue($rule->assert($input));
+        static::assertTrue($rule->assert($input));
     }
 
-    public function testShouldNotCheckRuleWhenInputIsOptional()
+    /**
+     * @throws Exception
+     */
+    public function testShouldNotCheckRuleWhenInputIsOptional(): void
     {
         $validatable = $this->createMock(Validatable::class);
-        $validatable
-            ->expects($this->never())
+        $validatable->expects($this->never())
             ->method('check');
 
         $rule = new Optional($validatable);
 
-        $this->assertTrue($rule->check(''));
+        static::assertTrue($rule->check(''));
     }
 
-    public function testShouldCheckRuleWhenInputIsNotOptional()
+    /**
+     * @throws Exception
+     */
+    public function testShouldCheckRuleWhenInputIsNotOptional(): void
     {
         $input = 'foo';
 
         $validatable = $this->createMock(Validatable::class);
-        $validatable
-            ->expects($this->once())
+        $validatable->expects(static::once())
             ->method('check')
             ->with($input)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $rule = new Optional($validatable);
 
-        $this->assertTrue($rule->check($input));
+        static::assertTrue($rule->check($input));
     }
 }

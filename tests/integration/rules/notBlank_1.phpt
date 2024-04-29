@@ -32,4 +32,3 @@ foreach ($notBlankValues as $value) {
 }
 
 ?>
---EXPECTF--

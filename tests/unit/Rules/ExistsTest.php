@@ -9,51 +9,52 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
 use org\bovigo\vfs\content\LargeFileContent;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\Exists;
 use SplFileInfo;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Exists
- * @covers Respect\Validation\Exceptions\ExistsException
+ * @covers Exists
+ * @covers ExistsException
  */
-class ExistsTest extends PHPUnit_Framework_TestCase
+class ExistsTest extends TestCase
 {
     /**
      * @dataProvider fileProvider
-     * @covers Respect\Validation\Rules\Exists::validate
+     * @covers Exists::validate
      */
     public function testExistentFileShouldReturnTrue($file)
     {
         $rule = new Exists();
-        $this->assertTrue($rule->validate($file->url()));
+        static::assertTrue($rule->validate($file->url()));
     }
 
     /**
-     * @covers Respect\Validation\Rules\Exists::validate
+     * @covers Exists::validate
      */
     public function testNonExistentFileShouldReturnFalse()
     {
         $rule = new Exists();
-        $this->assertFalse($rule->validate('/path/of/a/non-existent/file'));
+        static::assertFalse($rule->validate('/path/of/a/non-existent/file'));
     }
 
     /**
      * @dataProvider fileProvider
-     * @covers Respect\Validation\Rules\Exists::validate
+     * @covers Exists::validate
      */
     public function testShouldValidateObjects($file)
     {
         $rule = new Exists();
         $object = new SplFileInfo($file->url());
-        $this->assertTrue($rule->validate($object));
+        static::assertTrue($rule->validate($object));
     }
 
-    public function fileProvider()
+    public static function fileProvider()
     {
         $root = vfsStream::setup();
         $file = vfsStream::newFile('2kb.txt')->withContent(LargeFileContent::withKilobytes(2))->at($root);

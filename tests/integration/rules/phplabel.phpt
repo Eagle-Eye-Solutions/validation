@@ -14,4 +14,3 @@ try {
     echo $e->getMainMessage();
 }
 ?>
---EXPECTF--

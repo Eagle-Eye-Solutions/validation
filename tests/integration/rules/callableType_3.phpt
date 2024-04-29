@@ -35,4 +35,3 @@ try {
     echo $exception->getFullMessage();
 }
 ?>
---EXPECTF--

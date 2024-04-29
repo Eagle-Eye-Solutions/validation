@@ -9,14 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\MaxException;
+use Respect\Validation\Rules\Max;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Max
- * @covers Respect\Validation\Exceptions\MaxException
+ * @covers Max
+ * @covers MaxException
  */
-class MaxTest extends \PHPUnit_Framework_TestCase
+class MaxTest extends TestCase
 {
     /**
      * @dataProvider providerForValidMax
@@ -24,23 +28,24 @@ class MaxTest extends \PHPUnit_Framework_TestCase
     public function testValidMaxInputShouldReturnTrue($maxValue, $inclusive, $input)
     {
         $max = new Max($maxValue, $inclusive);
-        $this->assertTrue($max->validate($input));
-        $this->assertTrue($max->check($input));
-        $this->assertTrue($max->assert($input));
+        static::assertTrue($max->validate($input));
+        static::assertTrue($max->check($input));
+        static::assertTrue($max->assert($input));
     }
 
     /**
      * @dataProvider providerForInvalidMax
-     * @expectedException Respect\Validation\Exceptions\MaxException
+     * @throws \Exception
      */
-    public function testInvalidMaxValueShouldThrowMaxException($maxValue, $inclusive, $input)
+    public function testInvalidMaxValueShouldThrowMaxException($maxValue, $inclusive, $input): void
     {
+        $this->expectException(MaxException::class);
         $max = new Max($maxValue, $inclusive);
-        $this->assertFalse($max->validate($input));
-        $this->assertFalse($max->assert($input));
+        static::assertFalse($max->validate($input));
+        static::assertFalse($max->assert($input));
     }
 
-    public function providerForValidMax()
+    public static function providerForValidMax(): array
     {
         return [
             [200, false, ''],
@@ -55,7 +60,7 @@ class MaxTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidMax()
+    public static function providerForInvalidMax(): array
     {
         return [
             [200, false, 300],

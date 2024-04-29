@@ -9,48 +9,55 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\InException;
+use Respect\Validation\Rules\In;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\In
- * @covers Respect\Validation\Exceptions\InException
+ * @covers In
+ * @covers InException
  */
-class InTest extends \PHPUnit_Framework_TestCase
+class InTest extends TestCase
 {
     /**
      * @dataProvider providerForIn
+     * @throws \Exception
      */
-    public function testSuccessInValidatorCases($input, $options = null)
+    public function testSuccessInValidatorCases($input, $options = null): void
     {
         $v = new In($options);
-        $this->assertTrue($v->__invoke($input));
-        $this->assertTrue($v->check($input));
-        $this->assertTrue($v->assert($input));
+        static::assertTrue($v->__invoke($input));
+        static::assertTrue($v->check($input));
+        static::assertTrue($v->assert($input));
     }
 
     /**
      * @dataProvider providerForNotIn
-     * @expectedException Respect\Validation\Exceptions\InException
+     * @throws \Exception
      */
-    public function testInvalidInChecksShouldThrowInException($input, $options, $strict = false)
+    public function testInvalidInChecksShouldThrowInException($input, $options, $strict = false): void
     {
+        $this->expectException(InException::class);
         $v = new In($options, $strict);
-        $this->assertFalse($v->__invoke($input));
-        $this->assertFalse($v->assert($input));
+        static::assertFalse($v->__invoke($input));
+        static::assertFalse($v->assert($input));
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\InException
-     * @expectedExceptionMessage "x" must be in { "foo", "bar" }
+     * @throws \Exception
      */
-    public function testInCheckExceptionMessageWithArray()
+    public function testInCheckExceptionMessageWithArray(): void
     {
+        $this->expectExceptionMessage("\"x\" must be in { \"foo\", \"bar\" }");
+        $this->expectException(InException::class);
         $v = new In(['foo', 'bar']);
         $v->assert('x');
     }
 
-    public function providerForIn()
+    public static function providerForIn(): array
     {
         return [
             ['', ['']],
@@ -66,7 +73,7 @@ class InTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotIn()
+    public static function providerForNotIn(): array
     {
         return [
             [null, '0'],

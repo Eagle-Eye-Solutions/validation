@@ -9,14 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\DirectoryException;
+use Respect\Validation\Rules\Directory;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Directory
- * @covers Respect\Validation\Exceptions\DirectoryException
+ * @covers Directory
+ * @covers DirectoryException
  */
-class DirectoryTest extends \PHPUnit_Framework_TestCase
+class DirectoryTest extends TestCase
 {
     /**
      * @dataProvider providerForValidDirectory
@@ -24,21 +28,22 @@ class DirectoryTest extends \PHPUnit_Framework_TestCase
     public function testValidDirectoryShouldReturnTrue($input)
     {
         $rule = new Directory();
-        $this->assertTrue($rule->__invoke($input));
-        $this->assertTrue($rule->assert($input));
-        $this->assertTrue($rule->check($input));
+        static::assertTrue($rule->__invoke($input));
+        static::assertTrue($rule->assert($input));
+        static::assertTrue($rule->check($input));
     }
 
     /**
      * @dataProvider providerForInvalidDirectory
-     * @expectedException Respect\Validation\Exceptions\DirectoryException
+     *
      */
     public function testInvalidDirectoryShouldThrowException($input)
     {
+        $this->expectException(DirectoryException::class);
         $rule = new Directory();
-        $this->assertFalse($rule->__invoke($input));
-        $this->assertFalse($rule->assert($input));
-        $this->assertFalse($rule->check($input));
+        static::assertFalse($rule->__invoke($input));
+        static::assertFalse($rule->assert($input));
+        static::assertFalse($rule->check($input));
     }
 
     /**
@@ -47,10 +52,10 @@ class DirectoryTest extends \PHPUnit_Framework_TestCase
     public function testDirectoryWithObjects($object, $valid)
     {
         $rule = new Directory();
-        $this->assertEquals($valid, $rule->validate($object));
+        static::assertEquals($valid, $rule->validate($object));
     }
 
-    public function providerForDirectoryObjects()
+    public static function providerForDirectoryObjects()
     {
         return [
             [new \SplFileInfo(__DIR__), true],
@@ -63,7 +68,7 @@ class DirectoryTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidDirectory()
+    public static function providerForValidDirectory()
     {
         $directories = [
             sys_get_temp_dir().DIRECTORY_SEPARATOR.'dataprovider-1',
@@ -85,7 +90,7 @@ class DirectoryTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function providerForInvalidDirectory()
+    public static function providerForInvalidDirectory()
     {
         return array_chunk(
             [

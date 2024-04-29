@@ -9,54 +9,63 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\SpaceException;
+use Respect\Validation\Rules\Space;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Space
- * @covers Respect\Validation\Exceptions\SpaceException
+ * @covers Space
+ * @covers SpaceException
  */
-class SpaceTest extends \PHPUnit_Framework_TestCase
+class SpaceTest extends TestCase
 {
     /**
      * @dataProvider providerForValidSpace
+     * @throws ComponentException
      */
-    public function testValidDataWithSpaceShouldReturnTrue($validSpace, $additional = '')
+    public function testValidDataWithSpaceShouldReturnTrue($validSpace, $additional = ''): void
     {
         $validator = new Space($additional);
-        $this->assertTrue($validator->validate($validSpace));
+        static::assertTrue($validator->validate($validSpace));
     }
 
     /**
      * @dataProvider providerForInvalidSpace
-     * @expectedException Respect\Validation\Exceptions\SpaceException
+     * @throws ComponentException
      */
-    public function testInvalidSpaceShouldFailAndThrowSpaceException($invalidSpace, $additional = '')
+    public function testInvalidSpaceShouldFailAndThrowSpaceException($invalidSpace, $additional = ''): void
     {
+        $this->expectException(SpaceException::class);
         $validator = new Space($additional);
-        $this->assertFalse($validator->validate($invalidSpace));
-        $this->assertFalse($validator->assert($invalidSpace));
+        static::assertFalse($validator->validate($invalidSpace));
+        static::assertFalse($validator->assert($invalidSpace));
     }
 
     /**
      * @dataProvider providerForInvalidParams
-     * @expectedException Respect\Validation\Exceptions\ComponentException
+
      */
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
     {
-        $validator = new Space($additional);
+        $this->expectException(ComponentException::class);
+        new Space($additional);
     }
 
     /**
      * @dataProvider providerAdditionalChars
+     * @throws ComponentException
      */
-    public function testAdditionalCharsShouldBeRespected($additional, $query)
+    public function testAdditionalCharsShouldBeRespected($additional, $query): void
     {
         $validator = new Space($additional);
-        $this->assertTrue($validator->validate($query));
+        static::assertTrue($validator->validate($query));
     }
 
-    public function providerAdditionalChars()
+    public static function providerAdditionalChars(): array
     {
         return [
             ['!@#$%^&*(){}', '!@#$%^&*(){} '],
@@ -64,7 +73,7 @@ class SpaceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidParams()
+    public static function providerForInvalidParams(): array
     {
         return [
             [new \stdClass()],
@@ -73,7 +82,7 @@ class SpaceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidSpace()
+    public static function providerForValidSpace(): array
     {
         return [
             ["\n"],
@@ -84,7 +93,7 @@ class SpaceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidSpace()
+    public static function providerForInvalidSpace(): array
     {
         return [
             [''],

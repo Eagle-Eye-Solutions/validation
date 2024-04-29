@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\AllOfException;
+use Respect\Validation\Exceptions\EqualsException;
+use Respect\Validation\Exceptions\KeyValueException;
+use Respect\Validation\Rules\KeyValue;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\KeyValue
- * @covers Respect\Validation\Exceptions\KeyValueException
+ * @covers KeyValue
+ * @covers KeyValueException
  */
-class KeyValueTest extends PHPUnit_Framework_TestCase
+class KeyValueTest extends TestCase
 {
-    public function testShouldDefineValuesOnConstructor()
+    public function testShouldDefineValuesOnConstructor(): void
     {
         $comparedKey = 'foo';
         $ruleName = 'equals';
@@ -28,86 +32,80 @@ class KeyValueTest extends PHPUnit_Framework_TestCase
 
         $rule = new KeyValue($comparedKey, $ruleName, $baseKey);
 
-        $this->assertSame($comparedKey, $rule->comparedKey);
-        $this->assertSame($ruleName, $rule->ruleName);
-        $this->assertSame($baseKey, $rule->baseKey);
+        static::assertSame($comparedKey, $rule->comparedKey);
+        static::assertSame($ruleName, $rule->ruleName);
+        static::assertSame($baseKey, $rule->baseKey);
     }
 
     public function testShouldNotValidateWhenComparedKeyDoesNotExist()
     {
         $rule = new KeyValue('foo', 'equals', 'bar');
 
-        $this->assertFalse($rule->validate(['bar' => 42]));
+        static::assertFalse($rule->validate(['bar' => 42]));
     }
 
-    public function testShouldNotValidateWhenBaseKeyDoesNotExist()
+    public function testShouldNotValidateWhenBaseKeyDoesNotExist(): void
     {
         $rule = new KeyValue('foo', 'equals', 'bar');
 
-        $this->assertFalse($rule->validate(['foo' => true]));
+        static::assertFalse($rule->validate(['foo' => true]));
     }
 
-    public function testShouldNotValidateRuleIsNotValid()
+    public function testShouldNotValidateRuleIsNotValid(): void
     {
         $rule = new KeyValue('foo', 'probably_not_a_rule', 'bar');
 
-        $this->assertFalse($rule->validate(['foo' => true, 'bar' => false]));
+        static::assertFalse($rule->validate(['foo' => true, 'bar' => false]));
     }
 
-    public function testShouldValidateWhenDefinedValuesMatch()
+    public function testShouldValidateWhenDefinedValuesMatch(): void
     {
         $rule = new KeyValue('foo', 'equals', 'bar');
 
-        $this->assertTrue($rule->validate(['foo' => 42, 'bar' => 42]));
+        static::assertTrue($rule->validate(['foo' => 42, 'bar' => 42]));
     }
 
     public function testShouldValidateWhenDefinedValuesDoesNotMatch()
     {
         $rule = new KeyValue('foo', 'equals', 'bar');
 
-        $this->assertFalse($rule->validate(['foo' => 43, 'bar' => 42]));
+        static::assertFalse($rule->validate(['foo' => 43, 'bar' => 42]));
     }
 
     public function testShouldAssertWhenDefinedValuesMatch()
     {
         $rule = new KeyValue('foo', 'equals', 'bar');
 
-        $this->assertTrue($rule->assert(['foo' => 42, 'bar' => 42]));
+        static::assertTrue($rule->assert(['foo' => 42, 'bar' => 42]));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\AllOfException
-     * @expectedExceptionMessage All of the required rules must pass for foo
-     */
-    public function testShouldAssertWhenDefinedValuesDoesNotMatch()
+    public function testShouldAssertWhenDefinedValuesDoesNotMatch(): void
     {
+        $this->expectException(AllOfException::class);
+        $this->expectExceptionMessage("All of the required rules must pass for foo");
         $rule = new KeyValue('foo', 'equals', 'bar');
         $rule->assert(['foo' => 43, 'bar' => 42]);
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\KeyValueException
-     * @expectedExceptionMessage "bar" must be valid to validate "foo"
-     */
-    public function testShouldNotAssertWhenRuleIsNotValid()
+    public function testShouldNotAssertWhenRuleIsNotValid(): void
     {
+        $this->expectExceptionMessage("\"bar\" must be valid to validate \"foo\"");
+        $this->expectException(KeyValueException::class);
         $rule = new KeyValue('foo', 'probably_not_a_rule', 'bar');
         $rule->assert(['foo' => 43, 'bar' => 42]);
     }
 
-    public function testShouldCheckWhenDefinedValuesMatch()
+    public function testShouldCheckWhenDefinedValuesMatch(): void
     {
         $rule = new KeyValue('foo', 'equals', 'bar');
 
-        $this->assertTrue($rule->check(['foo' => 42, 'bar' => 42]));
+        static::assertTrue($rule->check(['foo' => 42, 'bar' => 42]));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\EqualsException
-     * @expectedExceptionMessage foo must be equals "bar"
-     */
-    public function testShouldCheckWhenDefinedValuesDoesNotMatch()
+    public function testShouldCheckWhenDefinedValuesDoesNotMatch(): void
     {
+        $this->expectExceptionMessage("foo must be equals \"bar\"");
+        $this->expectException(EqualsException::class);
         $rule = new KeyValue('foo', 'equals', 'bar');
         $rule->check(['foo' => 43, 'bar' => 42]);
     }

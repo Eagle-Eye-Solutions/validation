@@ -9,40 +9,44 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
 use DateTime;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\MinException;
+use Respect\Validation\Rules\Min;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Min
- * @covers Respect\Validation\Exceptions\MinException
+ * @covers Min
+ * @covers MinException
  */
-class MinTest extends \PHPUnit_Framework_TestCase
+class MinTest extends TestCase
 {
     /**
      * @dataProvider providerForValidMin
      */
-    public function testValidMinShouldReturnTrue($minValue, $inclusive, $input)
+    public function testValidMinShouldReturnTrue($minValue, $inclusive, $input): void
     {
         $min = new Min($minValue, $inclusive);
-        $this->assertTrue($min->__invoke($input));
-        $this->assertTrue($min->check($input));
-        $this->assertTrue($min->assert($input));
+        static::assertTrue($min->__invoke($input));
+        static::assertTrue($min->check($input));
+        static::assertTrue($min->assert($input));
     }
 
     /**
      * @dataProvider providerForInvalidMin
-     * @expectedException Respect\Validation\Exceptions\MinException
+     * @throws \Exception
      */
-    public function testInvalidMinShouldThrowMinException($minValue, $inclusive, $input)
+    public function testInvalidMinShouldThrowMinException($minValue, $inclusive, $input): void
     {
+        $this->expectException(MinException::class);
         $min = new Min($minValue, $inclusive);
-        $this->assertFalse($min->__invoke($input));
-        $this->assertFalse($min->assert($input));
+        static::assertFalse($min->__invoke($input));
+        static::assertFalse($min->assert($input));
     }
 
-    public function providerForValidMin()
+    public static function providerForValidMin(): array
     {
         return [
             [100, false, 165.0],
@@ -61,7 +65,7 @@ class MinTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidMin()
+    public static function providerForInvalidMin(): array
     {
         return [
             [100, true, ''],

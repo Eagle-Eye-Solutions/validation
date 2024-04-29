@@ -9,43 +9,49 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\PrimeNumberException;
+use Respect\Validation\Rules\PrimeNumber;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\PrimeNumber
- * @covers Respect\Validation\Exceptions\PrimeNumberException
+ * @covers PrimeNumber
+ * @covers PrimeNumberException
  */
-class PrimeNumberTest extends \PHPUnit_Framework_TestCase
+class PrimeNumberTest extends TestCase
 {
-    protected $object;
+    protected PrimeNumber $object;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new PrimeNumber();
     }
 
     /**
      * @dataProvider providerForPrimeNumber
+     * @throws \Exception
      */
-    public function testPrimeNumber($input)
+    public function testPrimeNumber($input): void
     {
-        $this->assertTrue($this->object->__invoke($input));
-        $this->assertTrue($this->object->check($input));
-        $this->assertTrue($this->object->assert($input));
+        static::assertTrue($this->object->__invoke($input));
+        static::assertTrue($this->object->check($input));
+        static::assertTrue($this->object->assert($input));
     }
 
     /**
      * @dataProvider providerForNotPrimeNumber
-     * @expectedException Respect\Validation\Exceptions\PrimeNumberException
+     * @throws \Exception
      */
-    public function testNotPrimeNumber($input)
+    public function testNotPrimeNumber($input): void
     {
-        $this->assertFalse($this->object->__invoke($input));
-        $this->assertFalse($this->object->assert($input));
+        $this->expectException(PrimeNumberException::class);
+        static::assertFalse($this->object->__invoke($input));
+        static::assertFalse($this->object->assert($input));
     }
 
-    public function providerForPrimeNumber()
+    public static function providerForPrimeNumber(): array
     {
         return [
             [3],
@@ -57,7 +63,7 @@ class PrimeNumberTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotPrimeNumber()
+    public static function providerForNotPrimeNumber(): array
     {
         return [
             [''],

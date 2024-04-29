@@ -52,6 +52,9 @@ class KeyNested extends AbstractRelated
         return $object->{$property};
     }
 
+    /**
+     * @throws ComponentException
+     */
     private function getValue($value, $key)
     {
         if (is_array($value) || $value instanceof ArrayAccess) {

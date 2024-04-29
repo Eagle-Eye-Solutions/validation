@@ -9,13 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ValidationException;
+use Respect\Validation\Rules\AbstractRule;
 
-class AbstractRuleTest extends \PHPUnit_Framework_TestCase
+class AbstractRuleTest extends TestCase
 {
-    public function providerForTrueAndFalse()
+    public static function providerForTrueAndFalse(): array
     {
         return [
             [true],
@@ -25,98 +27,89 @@ class AbstractRuleTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerForTrueAndFalse
-     * @covers       Respect\Validation\Rules\AbstractRule::__invoke
+     * @covers       AbstractRule::__invoke
      */
-    public function testMagicMethodInvokeCallsValidateWithInput($booleanResult)
+    public function testMagicMethodInvokeCallsValidateWithInput($booleanResult): void
     {
         $input = 'something';
 
-        $abstractRuleMock = $this
-            ->getMockBuilder(AbstractRule::class)
-            ->setMethods(['validate'])
+        $abstractRuleMock = $this->getMockBuilder(AbstractRule::class)
+            ->onlyMethods(['validate'])
             ->getMockForAbstractClass();
 
-        $abstractRuleMock
-            ->expects($this->once())
+        $abstractRuleMock->expects(static::once())
             ->method('validate')
             ->with($input)
-            ->will($this->returnValue($booleanResult));
+            ->willReturn($booleanResult);
 
-        $this->assertEquals(
-            $booleanResult,
-            // Invoking it to trigger __invoke
-            $abstractRuleMock($input),
-            'When invoking an instance of AbstractRule, the method validate should be called with the same input and return the same result.'
-        );
+        static::assertSame($booleanResult, $abstractRuleMock($input));
     }
 
     /**
-     * @covers Respect\Validation\Rules\AbstractRule::assert
+     * @covers AbstractRule::assert
+     * @throws \Exception
      */
-    public function testAssertInvokesValidateOnSuccess()
+    public function testAssertInvokesValidateOnSuccess(): void
     {
         $input = 'something';
 
         $abstractRuleMock = $this
             ->getMockBuilder(AbstractRule::class)
-            ->setMethods(['validate', 'reportError'])
+            ->onlyMethods(['validate', 'reportError'])
             ->getMockForAbstractClass();
 
-        $abstractRuleMock
-            ->expects($this->once())
+        $abstractRuleMock->expects(static::once())
             ->method('validate')
             ->with($input)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $abstractRuleMock
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('reportError');
 
         $abstractRuleMock->assert($input);
     }
 
     /**
-     * @covers            Respect\Validation\Rules\AbstractRule::assert
-     * @expectedException Respect\Validation\Exceptions\ValidationException
+     * @covers AbstractRule::assert
+     * @throws \Exception
      */
-    public function testAssertInvokesValidateAndReportErrorOnFailure()
+    public function testAssertInvokesValidateAndReportErrorOnFailure(): void
     {
+        $this->expectException(ValidationException::class);
         $input = 'something';
 
-        $abstractRuleMock = $this
-            ->getMockBuilder(AbstractRule::class)
-            ->setMethods(['validate', 'reportError'])
+        $abstractRuleMock = $this->getMockBuilder(AbstractRule::class)
+            ->onlyMethods(['validate', 'reportError'])
             ->getMockForAbstractClass();
 
-        $abstractRuleMock
-            ->expects($this->once())
+        $abstractRuleMock->expects(static::once())
             ->method('validate')
             ->with($input)
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
-        $abstractRuleMock
-            ->expects($this->once())
+        $abstractRuleMock->expects(static::once())
             ->method('reportError')
             ->with($input)
-            ->will($this->throwException(new ValidationException()));
+            ->will(static::throwException(new ValidationException()));
 
         $abstractRuleMock->assert($input);
     }
 
     /**
-     * @covers Respect\Validation\Rules\AbstractRule::check
+     * @covers AbstractRule::check
      */
-    public function testCheckInvokesAssertToPerformTheValidationByDefault()
+    public function testCheckInvokesAssertToPerformTheValidationByDefault(): void
     {
         $input = 'something';
 
         $abstractRuleMock = $this
             ->getMockBuilder(AbstractRule::class)
-            ->setMethods(['assert'])
+            ->onlyMethods(['assert'])
             ->getMockForAbstractClass();
 
         $abstractRuleMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('assert')
             ->with($input);
 
@@ -124,13 +117,13 @@ class AbstractRuleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Respect\Validation\Rules\AbstractRule::reportError
-     * @covers Respect\Validation\Rules\AbstractRule::createException
+     * @covers AbstractRule::reportError
+     * @covers AbstractRule::createException
      */
     public function testShouldCreateExceptionBasedOnTheCurrentClassName()
     {
         if (defined('HHVM_VERSION')) {
-            return $this->markTestSkipped('If you are a HHVM user, and you are in the mood, please fix it');
+            $this->markTestSkipped('If you are a HHVM user, and you are in the mood, please fix it');
         }
 
         $exceptionMock = $this
@@ -145,79 +138,73 @@ class AbstractRuleTest extends \PHPUnit_Framework_TestCase
 
         $exception = $abstractRuleMock->reportError('something');
 
-        $this->assertInstanceOf(get_class($exceptionMock), $exception);
+        static::assertInstanceOf(get_class($exceptionMock), $exception);
     }
 
     /**
-     * @covers Respect\Validation\Rules\AbstractRule::reportError
-     * @covers Respect\Validation\Rules\AbstractRule::setTemplate
+     * @covers AbstractRule::reportError
+     * @covers AbstractRule::setTemplate
      */
-    public function testShouldUseDefinedTemplateOnCreatedException()
+    public function testShouldUseDefinedTemplateOnCreatedException(): void
     {
         $template = 'This is my template';
 
         $exceptionMock = $this
             ->getMockBuilder(ValidationException::class)
-            ->setMethods(['setTemplate'])
+            ->onlyMethods(['setTemplate'])
             ->getMock();
 
-        $exceptionMock
-            ->expects($this->once())
+        $exceptionMock->expects(static::once())
             ->method('setTemplate')
             ->with($template);
 
-        $abstractRuleMock = $this
-            ->getMockBuilder(AbstractRule::class)
-            ->setMethods(['createException'])
+        $abstractRuleMock = $this->getMockBuilder(AbstractRule::class)
+            ->onlyMethods(['createException'])
             ->getMockForAbstractClass();
 
-        $abstractRuleMock
-            ->expects($this->once())
+        $abstractRuleMock->expects(static::once())
             ->method('createException')
-            ->will($this->returnValue($exceptionMock));
+            ->willReturn($exceptionMock);
 
         $abstractRuleMock->setTemplate($template);
         $abstractRuleMock->reportError('something');
     }
 
     /**
-     * @covers Respect\Validation\Rules\AbstractRule::setTemplate
+     * @covers AbstractRule::setTemplate
      */
-    public function testShouldReturnTheCurrentObjectWhenDefinigTemplate()
+    public function testShouldReturnTheCurrentObjectWhenDefinigTemplate(): void
     {
-        $abstractRuleMock = $this
-            ->getMockBuilder(AbstractRule::class)
+        $abstractRuleMock = $this->getMockBuilder(AbstractRule::class)
             ->getMockForAbstractClass();
 
-        $this->assertSame($abstractRuleMock, $abstractRuleMock->setTemplate('whatever'));
+        static::assertSame($abstractRuleMock, $abstractRuleMock->setTemplate('whatever'));
     }
 
     /**
-     * @covers Respect\Validation\Rules\AbstractRule::setName
+     * @covers AbstractRule::setName
      */
-    public function testShouldReturnTheCurrentObjectWhenDefinigName()
+    public function testShouldReturnTheCurrentObjectWhenDefinigName(): void
     {
-        $abstractRuleMock = $this
-            ->getMockBuilder(AbstractRule::class)
+        $abstractRuleMock = $this->getMockBuilder(AbstractRule::class)
             ->getMockForAbstractClass();
 
-        $this->assertSame($abstractRuleMock, $abstractRuleMock->setName('whatever'));
+        static::assertSame($abstractRuleMock, $abstractRuleMock->setName('whatever'));
     }
 
     /**
-     * @covers Respect\Validation\Rules\AbstractRule::setName
-     * @covers Respect\Validation\Rules\AbstractRule::getName
+     * @covers AbstractRule::setName
+     * @covers AbstractRule::getName
      */
-    public function testShouldBeAbleToDefineAndRetrivedRuleName()
+    public function testShouldBeAbleToDefineAndRetrivedRuleName(): void
     {
-        $abstractRuleMock = $this
-            ->getMockBuilder(AbstractRule::class)
+        $abstractRuleMock = $this->getMockBuilder(AbstractRule::class)
             ->getMockForAbstractClass();
 
         $name = 'something';
 
         $abstractRuleMock->setName($name);
 
-        $this->assertSame($name, $abstractRuleMock->getName());
+        static::assertSame($name, $abstractRuleMock->getName());
     }
 }

@@ -10,4 +10,3 @@ v::countryCode(CountryCode::ALPHA3)->assert('DEU');
 v::countryCode(CountryCode::ALPHA3)->check('BRA');
 v::countryCode(CountryCode::ALPHA3)->check('DEU');
 ?>
---EXPECTF--

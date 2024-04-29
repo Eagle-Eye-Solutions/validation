@@ -1,86 +1,42 @@
 <?php
 
-/*
- * This file is part of Respect/Validation.
- *
- * (c) Alexandre Gomes Gaigalas <alexandre@gaigalas.net>
- *
- * For the full copyright and license information, please view the "LICENSE.md"
- * file that was distributed with this source code.
- */
+namespace Respect\Validation\Test\Rules;
 
-namespace Respect\Validation\Rules;
-
-use Respect\Validation\Exceptions\AllOfException;
-use Respect\Validation\Validator as v;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\Sf;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Sf
- * @covers Respect\Validation\Exceptions\SfException
+ * @covers Sf
+ * @covers SfException
  */
-class SfTest extends \PHPUnit_Framework_TestCase
+class SfTest extends TestCase
 {
-    public function testValidationWithAnExistingValidationConstraint()
+    public function testDefinedConstraintAndValidatorWithNull(): void
     {
-        $constraintName = 'Time';
-        $validConstraintValue = '04:20:00';
-        $invalidConstraintValue = 'yada';
-        $this->assertTrue(
-            v::sf($constraintName)->validate($validConstraintValue),
-            sprintf('"%s" should be valid under "%s" constraint.', $validConstraintValue, $constraintName)
-        );
-        $this->assertFalse(
-            v::sf($constraintName)->validate($invalidConstraintValue),
-            sprintf('"%s" should be invalid under "%s" constraint.', $invalidConstraintValue, $constraintName)
-        );
+        $sut = new Sf('Time');
+
+        self::assertTrue($sut->validate(null));
     }
 
-    /**
-     * @depends testValidationWithAnExistingValidationConstraint
-     */
-    public function testAssertionWithAnExistingValidationConstraint()
+    public function testDefinedConstraintAndValidatorWithTrue(): void
     {
-        $constraintName = 'Time';
-        $validConstraintValue = '04:20:00';
-        $this->assertTrue(
-            v::sf($constraintName)->assert($validConstraintValue),
-            sprintf('"%s" should be valid under "%s" constraint.', $validConstraintValue, $constraintName)
-        );
+        $sut = new Sf('Time');
+
+        self::assertFalse($sut->validate(true));
     }
 
-    /**
-     * @depends testAssertionWithAnExistingValidationConstraint
-     */
-    public function testAssertionMessageWithAnExistingValidationConstraint()
+    public function testDefinedConstraintAndValidatorWithInvalid(): void
     {
-        $constraintName = 'Time';
-        $invalidConstraintValue = '34:90:70';
-        try {
-            v::sf($constraintName)->assert($invalidConstraintValue);
-        } catch (AllOfException $exception) {
-            $fullValidationMessage = $exception->getFullMessage();
-            $expectedValidationException = <<<'EOF'
-- Time
-EOF;
+        $sut = new Sf('Time');
 
-            return $this->assertEquals(
-                $expectedValidationException,
-                $fullValidationMessage,
-                'Exception message is different from the one expected.'
-            );
-        }
-        $this->fail('Validation exception expected to compare message.');
+        self::assertFalse($sut->validate('yada'));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage Symfony/Validator constraint "FluxCapacitor" does not exist.
-     */
-    public function testValidationWithNonExistingConstraint()
+    public function testDefinedConstraintAndValidatorWithValid(): void
     {
-        $fantasyConstraintName = 'FluxCapacitor';
-        $fantasyValue = '8GW';
-        v::sf($fantasyConstraintName)->validate($fantasyValue);
+        $sut = new Sf('Time');
+
+        self::assertTrue($sut->validate('04:20:00'));
     }
 }

@@ -9,36 +9,39 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\Url;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Url
- * @covers Respect\Validation\Exceptions\UrlException
+ * @covers Url
+ * @covers UrlException
  */
-class UrlTest extends \PHPUnit_Framework_TestCase
+class UrlTest extends TestCase
 {
     /**
      * @dataProvider providerForValidUrl
      */
-    public function testShouldValidateValidUrls($validUrl)
+    public function testShouldValidateValidUrls($validUrl): void
     {
         $validator = new Url();
 
-        $this->assertTrue($validator->validate($validUrl));
+        static::assertTrue($validator->validate($validUrl));
     }
 
     /**
      * @dataProvider providerForInvalidUrl
      */
-    public function testShouldNotValidateInvalidUrls($invalidUrl)
+    public function testShouldNotValidateInvalidUrls($invalidUrl): void
     {
         $validator = new Url();
 
-        $this->assertFalse($validator->validate($invalidUrl));
+        static::assertFalse($validator->validate($invalidUrl));
     }
 
-    public function providerForValidUrl()
+    public static function providerForValidUrl(): array
     {
         return [
             ['ftp://ftp.is.co.za.example.org/rfc/rfc1808.txt'],
@@ -56,7 +59,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidUrl()
+    public static function providerForInvalidUrl(): array
     {
         return [
             ['example.com'],

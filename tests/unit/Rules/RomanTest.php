@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\RomanException;
+use Respect\Validation\Rules\Roman;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Roman
- * @covers Respect\Validation\Exceptions\RomanException
+ * @covers Roman
+ * @covers RomanException
  */
-class RomanTest extends \PHPUnit_Framework_TestCase
+class RomanTest extends TestCase
 {
     protected $romanValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->romanValidator = new Roman();
     }
@@ -30,22 +34,23 @@ class RomanTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidRomansShouldReturnTrue($input)
     {
-        $this->assertTrue($this->romanValidator->__invoke($input));
-        $this->assertTrue($this->romanValidator->assert($input));
-        $this->assertTrue($this->romanValidator->check($input));
+        static::assertTrue($this->romanValidator->__invoke($input));
+        static::assertTrue($this->romanValidator->assert($input));
+        static::assertTrue($this->romanValidator->check($input));
     }
 
     /**
      * @dataProvider providerForNotRoman
-     * @expectedException Respect\Validation\Exceptions\RomanException
+     *
      */
     public function testInvalidRomansShouldThrowRomanException($input)
     {
-        $this->assertFalse($this->romanValidator->__invoke($input));
-        $this->assertFalse($this->romanValidator->assert($input));
+        $this->expectException(RomanException::class);
+        static::assertFalse($this->romanValidator->__invoke($input));
+        static::assertFalse($this->romanValidator->assert($input));
     }
 
-    public function providerForRoman()
+    public static function providerForRoman()
     {
         return [
             [''],
@@ -64,7 +69,7 @@ class RomanTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotRoman()
+    public static function providerForNotRoman()
     {
         return [
             [' '],

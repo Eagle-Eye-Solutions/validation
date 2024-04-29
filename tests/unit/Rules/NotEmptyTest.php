@@ -9,40 +9,45 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\NotEmptyException;
+use Respect\Validation\Rules\NotEmpty;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\NotEmpty
- * @covers Respect\Validation\Exceptions\NotEmptyException
+ * @covers NotEmpty
+ * @covers NotEmptyException
  */
-class NotEmptyTest extends \PHPUnit_Framework_TestCase
+class NotEmptyTest extends TestCase
 {
     protected $object;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new NotEmpty();
     }
 
     /**
      * @dataProvider providerForNotEmpty
+     * @throws \Exception
      */
-    public function testStringNotEmpty($input)
+    public function testStringNotEmpty($input): void
     {
-        $this->assertTrue($this->object->assert($input));
+        static::assertTrue($this->object->assert($input));
     }
 
     /**
      * @dataProvider providerForEmpty
-     * @expectedException Respect\Validation\Exceptions\NotEmptyException
      */
-    public function testStringEmpty($input)
+    public function testStringEmpty($input): void
     {
-        $this->assertFalse($this->object->assert($input));
+        $this->expectException(NotEmptyException::class);
+        static::assertFalse($this->object->assert($input));
     }
 
-    public function providerForNotEmpty()
+    public static function providerForNotEmpty(): array
     {
         return [
             [1],
@@ -53,7 +58,7 @@ class NotEmptyTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForEmpty()
+    public static function providerForEmpty(): array
     {
         return [
             [''],

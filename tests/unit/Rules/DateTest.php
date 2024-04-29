@@ -9,127 +9,143 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
 use DateTime;
 use DateTimeImmutable;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\DateException;
+use Respect\Validation\Rules\Date;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Date
- * @covers Respect\Validation\Exceptions\DateException
+ * @covers Date
+ * @covers DateException
  */
-class DateTest extends \PHPUnit_Framework_TestCase
+class DateTest extends TestCase
 {
     protected $dateValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dateValidator = new Date();
     }
 
-    public function testDateEmptyShouldNotValidate()
+    public function testDateEmptyShouldNotValidate(): void
     {
-        $this->assertFalse($this->dateValidator->__invoke(''));
+        static::assertFalse($this->dateValidator->__invoke(''));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\DateException
-     */
     public function testDateEmptyShouldNotCheck()
     {
+        $this->expectException(DateException::class);
         $this->dateValidator->check('');
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\DateException
+     * @throws \Exception
      */
-    public function testDateEmptyShouldNotAssert()
+    public function testDateEmptyShouldNotAssert(): void
     {
+        $this->expectException(DateException::class);
         $this->dateValidator->assert('');
     }
 
-    public function testDateWithoutFormatShouldValidate()
+    public function testDateWithoutFormatShouldValidate(): void
     {
-        $this->assertTrue($this->dateValidator->__invoke('today'));
+        static::assertTrue($this->dateValidator->__invoke('today'));
     }
 
-    public function testDateTimeInstancesShouldAlwaysValidate()
+    public function testDateTimeInstancesShouldAlwaysValidate(): void
     {
-        $this->assertTrue($this->dateValidator->__invoke(new DateTime('today')));
+        static::assertTrue($this->dateValidator->__invoke(new DateTime('today')));
     }
 
-    public function testDateTimeImmutableInterfaceInstancesShouldAlwaysValidate()
+    public function testDateTimeImmutableInterfaceInstancesShouldAlwaysValidate(): void
     {
         if (!class_exists('DateTimeImmutable')) {
-            return $this->markTestSkipped('DateTimeImmutable does not exist');
+            $this->markTestSkipped('DateTimeImmutable does not exist');
         }
 
-        $this->assertTrue($this->dateValidator->validate(new DateTimeImmutable('today')));
+        static::assertTrue($this->dateValidator->validate(new DateTimeImmutable('today')));
     }
 
-    public function testInvalidDateShouldFail()
+    public function testInvalidDateShouldFail(): void
     {
-        $this->assertFalse($this->dateValidator->__invoke('aids'));
+        static::assertFalse($this->dateValidator->__invoke('aids'));
     }
-    public function testInvalidDateShouldFail_on_invalid_conversions()
+    public function testInvalidDateShouldFail_on_invalid_conversions(): void
     {
         $this->dateValidator->format = 'Y-m-d';
-        $this->assertFalse($this->dateValidator->__invoke('2009-12-00'));
+        static::assertFalse($this->dateValidator->__invoke('2009-12-00'));
     }
 
-    public function testAnyObjectExceptDateTimeInstancesShouldFail()
+    public function testAnyObjectExceptDateTimeInstancesShouldFail(): void
     {
-        $this->assertFalse($this->dateValidator->__invoke(new \stdClass()));
+        static::assertFalse($this->dateValidator->__invoke(new \stdClass()));
     }
 
-    public function testFormatsShouldValidateDateStrings()
+    public function testFormatsShouldValidateDateStrings(): void
     {
         $this->dateValidator = new Date('Y-m-d');
-        $this->assertTrue($this->dateValidator->assert('2009-09-09'));
+        static::assertTrue($this->dateValidator->assert('2009-09-09'));
     }
-    public function testFormatsShouldValidateDateStrings_with_any_formats()
+
+    /**
+     * @throws \Exception
+     */
+    public function testFormatsShouldValidateDateStringsWithAnyFormats(): void
     {
         $this->dateValidator = new Date('d/m/Y');
-        $this->assertTrue($this->dateValidator->assert('23/05/1987'));
+        static::assertTrue($this->dateValidator->assert('23/05/1987'));
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\DateException
+     * @throws \Exception
      */
-    public function testFormatsShouldValidateDateStrings_and_throw_DateException_on_failure()
+    public function testOnfailure()
     {
+        $this->expectException(DateException::class);
         $this->dateValidator = new Date('y-m-d');
-        $this->assertFalse($this->dateValidator->assert('2009-09-09'));
+        static::assertFalse($this->dateValidator->assert('2009-09-09'));
     }
 
-    public function testDateTimeExceptionalFormatsThatShouldBeValid()
+    /**
+     * @throws \Exception
+     */
+    public function testOnFailurePHP8(): void
+    {
+        $this->expectException(DateException::class);
+        $this->dateValidator = new Date('z');
+        static::assertFalse($this->dateValidator->assert(320));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testDateTimeExceptionalFormatsThatShouldBeValid(): void
     {
         $this->dateValidator = new Date('c');
-        $this->assertTrue($this->dateValidator->assert('2004-02-12T15:19:21+00:00'));
+        static::assertTrue($this->dateValidator->assert('2004-02-12T15:19:21+00:00'));
 
         $this->dateValidator = new Date('r');
-        $this->assertTrue($this->dateValidator->assert('Thu, 29 Dec 2005 01:02:03 +0000'));
+        static::assertTrue($this->dateValidator->assert('Thu, 29 Dec 2005 01:02:03 +0000'));
     }
 
     /**
-     * Test that datetime strings with timezone information are valid independent on the system's timezone setting.
-     *
      * @param string $systemTimezone
      * @param string $input
      * @dataProvider providerForDateTimeTimezoneStrings
+     * @throws \Exception
      */
-    public function testDateTimeSystemTimezoneIndependent($systemTimezone, $format, $input)
+    public function testDateTimeSystemTimezoneIndependent($systemTimezone, $format, $input): void
     {
         date_default_timezone_set($systemTimezone);
         $this->dateValidator = new Date($format);
-        $this->assertTrue($this->dateValidator->assert($input));
+        static::assertTrue($this->dateValidator->assert($input));
     }
 
-    /**
-     * @return array
-     */
-    public function providerForDateTimeTimezoneStrings()
+    public static function providerForDateTimeTimezoneStrings(): array
     {
         return [
                 ['UTC', 'Ym', '202302'],
@@ -147,7 +163,6 @@ class DateTest extends \PHPUnit_Framework_TestCase
                 ['UTC', 'U', 1464399539],
                 ['UTC', 'g', 0],
                 ['UTC', 'h', 6],
-                ['UTC', 'z', 320],
         ];
     }
 }

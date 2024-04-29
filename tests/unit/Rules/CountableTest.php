@@ -9,15 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use Respect\Validation\Rules\Countable;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Countable
+ * @covers Countable
  */
 class CountableTest extends RuleTestCase
 {
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $rule = new Countable();
 
@@ -28,7 +30,7 @@ class CountableTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $rule = new Countable();
 

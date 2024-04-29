@@ -9,63 +9,73 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\CnhException;
+use Respect\Validation\Rules\Cnh;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Cnh
- * @covers Respect\Validation\Exceptions\CnhException
+ * @covers Cnh
+ * @covers CnhException
  */
-class CnhTest extends \PHPUnit_Framework_TestCase
+class CnhTest extends TestCase
 {
     protected $cnhValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->cnhValidator = new Cnh();
     }
 
     /**
      * @dataProvider validCnhProvider
+     * @throws \Exception
      */
-    public function testValidCnh($cnh)
+    public function testValidCnh($cnh): void
     {
-        $this->assertTrue($this->cnhValidator->assert($cnh));
-        $this->assertTrue($this->cnhValidator->__invoke($cnh));
-        $this->assertTrue($this->cnhValidator->check($cnh));
+        static::assertTrue($this->cnhValidator->assert($cnh));
+        static::assertTrue($this->cnhValidator->__invoke($cnh));
+        static::assertTrue($this->cnhValidator->check($cnh));
     }
 
     /**
      * @dataProvider invalidCnhProvider
-     * @expectedException Respect\Validation\Exceptions\CnhException
+     *
+     * @throws \Exception
      */
-    public function testInvalidCnh($cnh)
+    public function testInvalidCnh($cnh): void
     {
+        $this->expectException(CnhException::class);
         $expectedInvalid = $this->cnhValidator->assert($cnh);
-        $this->assertFalse($expectedInvalid);
+        static::assertFalse($expectedInvalid);
     }
 
     /**
      * @dataProvider notIntegerCnhProvider
-     * @expectedException Respect\Validation\Exceptions\CnhException
+     * @throws \Exception
      */
-    public function testNotIntegerCnh($cnh)
+    public function testNotIntegerCnh($cnh): void
     {
+        $this->expectException(CnhException::class);
         $expectedInvalid = $this->cnhValidator->assert($cnh);
-        $this->assertFalse($expectedInvalid);
+        static::assertFalse($expectedInvalid);
     }
 
     /**
      * @dataProvider invalidCnhLengthProvider
-     * @expectedException Respect\Validation\Exceptions\CnhException
+     *
+     * @throws \Exception
      */
-    public function testInvalidLengthCnh($cnh)
+    public function testInvalidLengthCnh($cnh): void
     {
+        $this->expectException(CnhException::class);
         $expectedInvalid = $this->cnhValidator->assert($cnh);
-        $this->assertFalse($expectedInvalid);
+        static::assertFalse($expectedInvalid);
     }
 
-    public function validCnhProvider()
+    public static function validCnhProvider(): array
     {
         return [
                ['02650306461'],
@@ -95,7 +105,7 @@ class CnhTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function invalidCnhProvider()
+    public static function invalidCnhProvider(): array
     {
         return [
                [[]],
@@ -127,7 +137,7 @@ class CnhTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function notIntegerCnhProvider()
+    public static function notIntegerCnhProvider(): array
     {
         return [
                [''],
@@ -158,7 +168,7 @@ class CnhTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function invalidCnhLengthProvider()
+    public static function invalidCnhLengthProvider(): array
     {
         return [
                ['00265003006461'],

@@ -9,20 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use Respect\Validation\Rules\Nif;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Nif
- *
- * @author Julián Gutiérrez <juliangut@gmail.com>
+ * @covers Nif
  */
-final class NifTest extends RuleTestCase
+class NifTest extends RuleTestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $rule = new Nif();
 
@@ -50,10 +47,7 @@ final class NifTest extends RuleTestCase
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $rule = new Nif();
 

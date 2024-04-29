@@ -9,20 +9,24 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\DomainException;
+use Respect\Validation\Exceptions\ValidationException;
+use Respect\Validation\Rules\Domain;
 use Respect\Validation\Validator as v;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Domain
- * @covers Respect\Validation\Exceptions\DomainException
+ * @covers Domain
+ * @covers DomainException
  */
-class DomainTest extends \PHPUnit_Framework_TestCase
+class DomainTest extends TestCase
 {
     protected $object;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new Domain();
     }
@@ -30,35 +34,36 @@ class DomainTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForDomain
      */
-    public function testValidDomainsShouldReturnTrue($input, $tldcheck = true)
+    public function testValidDomainsShouldReturnTrue($input, $tldcheck = true): void
     {
         $this->object->tldCheck($tldcheck);
-        $this->assertTrue($this->object->__invoke($input));
-        $this->assertTrue($this->object->assert($input));
-        $this->assertTrue($this->object->check($input));
+        static::assertTrue($this->object->__invoke($input));
+        static::assertTrue($this->object->assert($input));
+        static::assertTrue($this->object->check($input));
     }
 
     /**
      * @dataProvider providerForNotDomain
-     * @expectedException Respect\Validation\Exceptions\ValidationException
+
      */
     public function testNotDomain($input, $tldcheck = true)
     {
+        $this->expectException(ValidationException::class);
         $this->object->tldCheck($tldcheck);
-        $this->assertFalse($this->object->check($input));
+        static::assertFalse($this->object->check($input));
     }
 
     /**
      * @dataProvider providerForNotDomain
-     * @expectedException Respect\Validation\Exceptions\DomainException
      */
-    public function testNotDomainCheck($input, $tldcheck = true)
+    public function testNotDomainCheck($input, $tldcheck = true): void
     {
+        $this->expectException(DomainException::class);
         $this->object->tldCheck($tldcheck);
-        $this->assertFalse($this->object->assert($input));
+        static::assertFalse($this->object->assert($input));
     }
 
-    public function providerForDomain()
+    public static function providerForDomain(): array
     {
         return [
             ['111111111111domain.local', false],
@@ -70,7 +75,7 @@ class DomainTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotDomain()
+    public static function providerForNotDomain(): array
     {
         return [
             [null],
@@ -88,9 +93,9 @@ class DomainTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForDomain
      */
-    public function testBuilder($validDomain, $checkTLD = true)
+    public function testBuilder($validDomain, $checkTLD = true): void
     {
-        $this->assertTrue(
+        static::assertTrue(
             v::domain($checkTLD)->validate($validDomain),
             sprintf('Domain "%s" should be valid. (Check TLD: %s)', $validDomain, var_export($checkTLD, true))
         );

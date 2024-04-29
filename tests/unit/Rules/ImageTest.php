@@ -9,34 +9,35 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
 use finfo;
+use Respect\Validation\Rules\Image;
 use SplFileInfo;
 use SplFileObject;
 
 /**
  * @group rule
- * @covers Respect\Validation\Rules\Image
+ * @covers Image
  */
 class ImageTest extends RuleTestCase
 {
-    public function testShouldAcceptAnInstanceOfFinfoOnConstructor()
+    public function testShouldAcceptAnInstanceOfInfoOnConstructor(): void
     {
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $rule = new Image($finfo);
 
-        $this->assertSame($rule->fileInfo, $finfo);
+        static::assertSame($rule->fileInfo, $finfo);
     }
 
-    public function testShouldHaveAnInstanceOfFinfoByDefault()
+    public function testShouldHaveAnInstanceOfInfoByDefault(): void
     {
         $rule = new Image();
 
-        $this->assertInstanceOf('finfo', $rule->fileInfo);
+        static::assertInstanceOf('finfo', $rule->fileInfo);
     }
 
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $rule = new Image();
         $fixturesDirectory = realpath(__DIR__.'/../../fixtures/');
@@ -51,7 +52,7 @@ class ImageTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $rule = new Image();
         $fixturesDirectory = realpath(__DIR__.'/../../fixtures/');

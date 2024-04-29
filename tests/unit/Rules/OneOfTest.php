@@ -9,16 +9,28 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\OneOfException;
+use Respect\Validation\Exceptions\XdigitException;
+use Respect\Validation\Rules\Alnum;
+use Respect\Validation\Rules\Callback;
+use Respect\Validation\Rules\OneOf;
+use Respect\Validation\Rules\Xdigit;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\OneOf
- * @covers Respect\Validation\Exceptions\OneOfException
+ * @covers OneOf
+ * @covers OneOfException
  */
-class OneOfTest extends \PHPUnit_Framework_TestCase
+class OneOfTest extends TestCase
 {
-    public function testValid()
+    /**
+     * @throws ComponentException
+     */
+    public function testValid(): void
     {
         $valid1 = new Callback(function () {
             return false;
@@ -30,16 +42,17 @@ class OneOfTest extends \PHPUnit_Framework_TestCase
             return false;
         });
         $o = new OneOf($valid1, $valid2, $valid3);
-        $this->assertTrue($o->validate('any'));
-        $this->assertTrue($o->assert('any'));
-        $this->assertTrue($o->check('any'));
+        static::assertTrue($o->validate('any'));
+        static::assertTrue($o->assert('any'));
+        static::assertTrue($o->check('any'));
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\OneOfException
+     * @throws ComponentException
      */
-    public function testInvalid()
+    public function testInvalid(): void
     {
+        $this->expectException(OneOfException::class);
         $valid1 = new Callback(function () {
             return false;
         });
@@ -50,17 +63,18 @@ class OneOfTest extends \PHPUnit_Framework_TestCase
             return false;
         });
         $o = new OneOf($valid1, $valid2, $valid3);
-        $this->assertFalse($o->validate('any'));
-        $this->assertFalse($o->assert('any'));
+        static::assertFalse($o->validate('any'));
+        static::assertFalse($o->assert('any'));
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\XdigitException
+     * @throws \Exception
      */
-    public function testInvalidCheck()
+    public function testInvalidCheck(): void
     {
+        $this->expectException(XdigitException::class);
         $o = new OneOf(new Xdigit(), new Alnum());
-        $this->assertFalse($o->validate(-10));
-        $this->assertFalse($o->check(-10));
+        static::assertFalse($o->validate(-10));
+        static::assertFalse($o->check(-10));
     }
 }

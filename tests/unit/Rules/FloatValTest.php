@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\FloatValException;
+use Respect\Validation\Rules\FloatVal;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\FloatVal
- * @covers Respect\Validation\Exceptions\FloatValException
+ * @covers FloatVal
+ * @covers FloatValException
  */
-class FloatValTest extends \PHPUnit_Framework_TestCase
+class FloatValTest extends TestCase
 {
     protected $floatValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->floatValidator = new FloatVal();
     }
@@ -28,24 +32,25 @@ class FloatValTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForFloat
      */
-    public function testFloatNumbersShouldPass($input)
+    public function testFloatNumbersShouldPass($input): void
     {
-        $this->assertTrue($this->floatValidator->assert($input));
-        $this->assertTrue($this->floatValidator->__invoke($input));
-        $this->assertTrue($this->floatValidator->check($input));
+        static::assertTrue($this->floatValidator->assert($input));
+        static::assertTrue($this->floatValidator->__invoke($input));
+        static::assertTrue($this->floatValidator->check($input));
     }
 
     /**
      * @dataProvider providerForNotFloat
-     * @expectedException Respect\Validation\Exceptions\FloatValException
+     *
      */
-    public function testNotFloatNumbersShouldFail($input)
+    public function testNotFloatNumbersShouldFail($input): void
     {
-        $this->assertFalse($this->floatValidator->__invoke($input));
-        $this->assertFalse($this->floatValidator->assert($input));
+        $this->expectException(FloatValException::class);
+        static::assertFalse($this->floatValidator->__invoke($input));
+        static::assertFalse($this->floatValidator->assert($input));
     }
 
-    public function providerForFloat()
+    public static function providerForFloat(): array
     {
         return [
             [165],
@@ -60,7 +65,7 @@ class FloatValTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotFloat()
+    public static function providerForNotFloat(): array
     {
         return [
             [''],

@@ -9,54 +9,49 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_TestCase;
+use Respect\Validation\Rules\Bsn;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Bsn
- * @covers Respect\Validation\Exceptions\BsnException
+ * @covers Bsn
+ * @covers BsnException
  */
-class BsnTest extends PHPUnit_Framework_TestCase
+class BsnTest extends TestCase
 {
     /**
      * @var Bsn
      */
-    private $rule;
+    private Bsn $rule;
 
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->rule = new Bsn();
     }
 
     /**
      * @dataProvider providerForBsn
-     *
-     * @param string $input
      */
-    public function testShouldValidateBsn($input)
+    public function testShouldValidateBsn(string $input): void
     {
-        $this->assertTrue($this->rule->validate($input));
+        static::assertTrue($this->rule->validate($input));
     }
 
     /**
      * @dataProvider providerForInvalidBsn
-     *
-     * @param string $input
      */
-    public function testShouldNotValidateBsn($input)
+    public function testShouldNotValidateBsn(string $input): void
     {
-        $this->assertFalse($this->rule->validate($input));
+        static::assertFalse($this->rule->validate($input));
     }
 
-    /**
-     * @return array
-     */
-    public function providerForBsn()
+    public static function providerForBsn(): array
     {
         return [
             ['612890053'],
@@ -72,10 +67,7 @@ class BsnTest extends PHPUnit_Framework_TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function providerForInvalidBsn()
+    public static function providerForInvalidBsn(): array
     {
         return [
             ['1234567890'],

@@ -9,18 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules\Locale;
+namespace Respect\Validation\Test\Rules\Locale;
 
-use Respect\Validation\Rules\RuleTestCase;
+use Respect\Validation\Rules\Locale\PlVatin;
+use Respect\Validation\Test\Rules\RuleTestCase;
 use stdClass;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Locale\PlVatin
+ * @covers PlVatin
  */
 class PlVatinTest extends RuleTestCase
 {
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $rule = new PlVatin();
 
@@ -31,7 +32,7 @@ class PlVatinTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $rule = new PlVatin();
 

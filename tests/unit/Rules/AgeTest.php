@@ -9,44 +9,43 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
 use DateTime;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\AgeException;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\Age;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Age
- * @covers Respect\Validation\Exceptions\AgeException
+ * @covers Age
+ * @covers AgeException
  */
-class AgeTest extends \PHPUnit_Framework_TestCase
+class AgeTest extends TestCase
 {
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage An age interval must be provided
-     */
     public function testShouldThrowsExceptionWhenThereIsNoArgumentsOnConstructor()
     {
+        $this->expectException(ComponentException::class);
+        $this->expectExceptionMessage("An age interval must be provided");
         new Age();
     }
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage 20 cannot be greater than or equals to 10
-     */
+
     public function testShouldThrowsExceptionWhenMinimumAgeIsLessThenMaximumAge()
     {
+        $this->expectExceptionMessage("20 cannot be greater than or equals to 10");
+        $this->expectException(ComponentException::class);
         new Age(20, 10);
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage 20 cannot be greater than or equals to 20
-     */
     public function testShouldThrowsExceptionWhenMinimumAgeIsEqualsToMaximumAge()
     {
+        $this->expectException(ComponentException::class);
+        $this->expectExceptionMessage("20 cannot be greater than or equals to 20");
         new Age(20, 20);
     }
 
-    public function providerForValidAge()
+    public static function providerForValidAge()
     {
         return [
             [18, null, date('Y-m-d', strtotime('-18 years'))],
@@ -68,15 +67,16 @@ class AgeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerForValidAge
+     * @throws ComponentException
      */
-    public function testShouldValidateValidAge($minAge, $maxAge, $input)
+    public function testShouldValidateValidAge($minAge, $maxAge, $input): void
     {
         $rule = new Age($minAge, $maxAge);
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
-    public function providerForInvalidAge()
+    public static function providerForInvalidAge()
     {
         return [
             [18, null, date('Y-m-d', strtotime('-17 years'))],
@@ -95,45 +95,43 @@ class AgeTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForInvalidAge
      */
-    public function testShouldValidateInvalidAge($minAge, $maxAge, $input)
+    public function testShouldValidateInvalidAge($minAge, $maxAge, $input): void
     {
         $rule = new Age($minAge, $maxAge);
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 
     /**
      * @depends testShouldValidateInvalidAge
-     *
-     * @expectedException Respect\Validation\Exceptions\AgeException
-     * @expectedExceptionMessage "today" must be lower than 18 years ago
+     * @throws ComponentException
      */
-    public function testShouldThrowsExceptionWhenMinimumAgeFails()
+    public function testShouldThrowsExceptionWhenMinimumAgeFails(): void
     {
+        $this->expectExceptionMessage("\"today\" must be lower than 18 years ago");
+        $this->expectException(AgeException::class);
         $rule = new Age(18);
         $rule->assert('today');
     }
 
     /**
      * @depends testShouldValidateInvalidAge
-     *
-     * @expectedException Respect\Validation\Exceptions\AgeException
-     * @expectedExceptionMessage "51 years ago" must be greater than 50 years ago
      */
     public function testShouldThrowsExceptionWhenMaximunAgeFails()
     {
+        $this->expectExceptionMessage("\"51 years ago\" must be greater than 50 years ago");
+        $this->expectException(AgeException::class);
         $rule = new Age(null, 50);
         $rule->assert('51 years ago');
     }
 
     /**
      * @depends testShouldValidateInvalidAge
-     *
-     * @expectedException Respect\Validation\Exceptions\AgeException
-     * @expectedExceptionMessage "today" must be between 18 and 50 years ago
      */
     public function testShouldThrowsExceptionWhenMinimunAndMaximunAgeFails()
     {
+        $this->expectException(AgeException::class);
+        $this->expectExceptionMessage("\"today\" must be between 18 and 50 years ago");
         $rule = new Age(18, 50);
         $rule->assert('today');
     }

@@ -9,16 +9,25 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\NoneOfException;
+use Respect\Validation\Rules\Callback;
+use Respect\Validation\Rules\NoneOf;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\NoneOf
- * @covers Respect\Validation\Exceptions\NoneOfException
+ * @covers NoneOf
+ * @covers NoneOfException
  */
-class NoneOfTest extends \PHPUnit_Framework_TestCase
+class NoneOfTest extends TestCase
 {
-    public function testValid()
+    /**
+     * @throws ComponentException
+     */
+    public function testValid(): void
     {
         $valid1 = new Callback(function () {
             return false;
@@ -30,16 +39,17 @@ class NoneOfTest extends \PHPUnit_Framework_TestCase
             return false;
         });
         $o = new NoneOf($valid1, $valid2, $valid3);
-        $this->assertTrue($o->validate('any'));
-        $this->assertTrue($o->assert('any'));
-        $this->assertTrue($o->check('any'));
+        static::assertTrue($o->validate('any'));
+        static::assertTrue($o->assert('any'));
+        static::assertTrue($o->check('any'));
     }
 
     /**
-     * @expectedException Respect\Validation\Exceptions\NoneOfException
+     * @throws ComponentException
      */
-    public function testInvalid()
+    public function testInvalid(): void
     {
+        $this->expectException(NoneOfException::class);
         $valid1 = new Callback(function () {
             return false;
         });
@@ -50,7 +60,7 @@ class NoneOfTest extends \PHPUnit_Framework_TestCase
             return true;
         });
         $o = new NoneOf($valid1, $valid2, $valid3);
-        $this->assertFalse($o->validate('any'));
-        $this->assertFalse($o->assert('any'));
+        static::assertFalse($o->validate('any'));
+        static::assertFalse($o->assert('any'));
     }
 }

@@ -29,7 +29,7 @@ class DateException extends ValidationException
     public function configure($name, array $params = [])
     {
         $params['format'] = date(
-            $params['format'],
+            $params['format'] ?? 'Y-m-d',
             strtotime('2005-12-30 01:02:03')
         );
 
