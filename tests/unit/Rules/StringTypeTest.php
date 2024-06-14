@@ -9,36 +9,39 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\StringType;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\StringType
- * @covers Respect\Validation\Exceptions\StringTypeException
+ * @covers StringType
+ * @covers StringTypeException
  */
-class StringTypeTest extends \PHPUnit_Framework_TestCase
+class StringTypeTest extends TestCase
 {
     /**
      * @dataProvider providerForString
      */
-    public function testString($input)
+    public function testString($input): void
     {
         $rule = new StringType();
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
     /**
      * @dataProvider providerForNotString
      */
-    public function testNotString($input)
+    public function testNotString($input): void
     {
         $rule = new StringType();
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 
-    public function providerForString()
+    public static function providerForString(): array
     {
         return [
             [''],
@@ -46,7 +49,7 @@ class StringTypeTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotString()
+    public static function providerForNotString(): array
     {
         return [
             [null],

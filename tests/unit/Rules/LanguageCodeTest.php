@@ -9,15 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use Respect\Validation\Rules\LanguageCode;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\LanguageCode
+ * @covers LanguageCode
  */
 class LanguageCodeTest extends RuleTestCase
 {
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $ruleAlpha2 = new LanguageCode();
         $ruleAlpha3 = new LanguageCode('alpha-3');
@@ -34,7 +36,7 @@ class LanguageCodeTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $ruleAlpha2 = new LanguageCode();
         $ruleAlpha3 = new LanguageCode('alpha-3');

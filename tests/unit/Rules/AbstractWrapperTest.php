@@ -9,19 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\TestCase;
 use ReflectionObject;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\AbstractWrapper;
 use Respect\Validation\Validatable;
 
-class AbstractWrapperTest extends \PHPUnit_Framework_TestCase
+class AbstractWrapperTest extends TestCase
 {
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage There is no defined validatable
-     */
     public function testShouldThrowsAnExceptionWhenWrappedValidatableIsNotDefined()
     {
+        $this->expectException(ComponentException::class);
+        $this->expectExceptionMessage("There is no defined validatable");
         $wrapper = $this->getMockForAbstractClass(AbstractWrapper::class);
         $wrapper->getValidatable();
     }
@@ -34,81 +36,90 @@ class AbstractWrapperTest extends \PHPUnit_Framework_TestCase
         $reflectionProperty->setValue($wrapper, $validatable);
     }
 
-    public function testShouldReturnDefinedValidatable()
+    /**
+     * @throws Exception
+     * @throws ComponentException
+     */
+    public function testShouldReturnDefinedValidatable(): void
     {
         $validatable = $this->createMock(Validatable::class);
 
         $wrapper = $this->getMockForAbstractClass(AbstractWrapper::class);
         $this->bindValidatable($wrapper, $validatable);
 
-        $this->assertSame($validatable, $wrapper->getValidatable());
+        static::assertSame($validatable, $wrapper->getValidatable());
     }
 
-    public function testShouldUseWrappedToValidate()
+    /**
+     * @throws Exception
+     */
+    public function testShouldUseWrappedToValidate(): void
     {
         $input = 'Whatever';
 
         $validatable = $this->createMock(Validatable::class);
-        $validatable
-            ->expects($this->once())
+        $validatable->expects($this->once())
             ->method('validate')
             ->with($input)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $wrapper = $this->getMockForAbstractClass(AbstractWrapper::class);
         $this->bindValidatable($wrapper, $validatable);
 
-        $this->assertTrue($wrapper->validate($input));
+        static::assertTrue($wrapper->validate($input));
     }
 
-    public function testShouldUseWrappedToAssert()
+    /**
+     * @throws Exception
+     */
+    public function testShouldUseWrappedToAssert(): void
     {
         $input = 'Whatever';
 
         $validatable = $this->createMock(Validatable::class);
-        $validatable
-            ->expects($this->once())
+        $validatable->expects(static::once())
             ->method('assert')
             ->with($input)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $wrapper = $this->getMockForAbstractClass(AbstractWrapper::class);
         $this->bindValidatable($wrapper, $validatable);
 
-        $this->assertTrue($wrapper->assert($input));
+        static::assertTrue($wrapper->assert($input));
     }
 
-    public function testShouldUseWrappedToCheck()
+    public function testShouldUseWrappedToCheck(): void
     {
         $input = 'Whatever';
 
         $validatable = $this->createMock(Validatable::class);
-        $validatable
-            ->expects($this->once())
+        $validatable->expects($this->once())
             ->method('check')
             ->with($input)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $wrapper = $this->getMockForAbstractClass(AbstractWrapper::class);
         $this->bindValidatable($wrapper, $validatable);
 
-        $this->assertTrue($wrapper->check($input));
+        static::assertTrue($wrapper->check($input));
     }
 
+    /**
+     * @throws Exception
+     */
     public function testShouldPassNameOnToWrapped()
     {
         $name = 'Whatever';
 
         $validatable = $this->createMock(Validatable::class);
-        $validatable
-            ->expects($this->once())
+        $validatable->expects($this->once())
             ->method('setName')
             ->with($name)
-            ->will($this->returnValue($validatable));
+            ->willReturn($validatable);
 
         $wrapper = $this->getMockForAbstractClass(AbstractWrapper::class);
         $this->bindValidatable($wrapper, $validatable);
 
-        $this->assertSame($wrapper, $wrapper->setName($name));
+        static::assertSame($wrapper, $wrapper->setName($name));
     }
 }

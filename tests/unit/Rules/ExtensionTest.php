@@ -9,20 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ExtensionException;
+use Respect\Validation\Rules\Extension;
 use SplFileInfo;
 
 /**
- * @author Henrique Moody <henriquemoody@gmail.com>
  * @group  rule
- * @covers Respect\Validation\Rules\Extension
- * @covers Respect\Validation\Exceptions\ExtensionException
+ * @covers Extension
+ * @covers ExtensionException
  */
-class ExtensionTest extends PHPUnit_Framework_TestCase
+class ExtensionTest extends TestCase
 {
-    public function providerValidExtension()
+    public static function providerValidExtension(): array
     {
         return [
             ['filename.txt', 'txt'],
@@ -35,37 +36,35 @@ class ExtensionTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerValidExtension
      */
-    public function testShouldValidateExtension($filename, $extension)
+    public function testShouldValidateExtension($filename, $extension): void
     {
         $rule = new Extension($extension);
 
-        $this->assertTrue($rule->validate($filename));
+        static::assertTrue($rule->validate($filename));
     }
 
-    public function testShouldAcceptSplFileInfo()
+    public function testShouldAcceptSplFileInfo(): void
     {
         $fileInfo = new SplFileInfo(__FILE__);
 
         $rule = new Extension('php');
 
-        $this->assertTrue($rule->validate($fileInfo));
+        static::assertTrue($rule->validate($fileInfo));
     }
 
-    public function testShouldInvalidWhenNotStringNorSplFileInfo()
+    public function testShouldInvalidWhenNotStringNorSplFileInfo(): void
     {
         $nonFile = [__FILE__];
 
         $rule = new Extension('php');
 
-        $this->assertFalse($rule->validate($nonFile));
+        static::assertFalse($rule->validate($nonFile));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ExtensionException
-     * @expectedExceptionMessage "filename.jpg" must have "png" extension
-     */
     public function testShouldThrowExtensionExceptionWhenCheckingValue()
     {
+        $this->expectException(ExtensionException::class);
+        $this->expectExceptionMessage("\"filename.jpg\" must have \"png\" extension");
         $rule = new Extension('png');
         $rule->check('filename.jpg');
     }

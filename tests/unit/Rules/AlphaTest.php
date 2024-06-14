@@ -9,14 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\AlphaException;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\Alpha;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Alpha
- * @covers Respect\Validation\Exceptions\AlphaException
+ * @covers Alpha
+ * @covers AlphaException
  */
-class AlphaTest extends \PHPUnit_Framework_TestCase
+class AlphaTest extends TestCase
 {
     /**
      * @dataProvider providerForValidAlpha
@@ -24,29 +29,31 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
     public function testValidAlphanumericCharsShouldReturnTrue($validAlpha, $additional)
     {
         $validator = new Alpha($additional);
-        $this->assertTrue($validator->validate($validAlpha));
-        $this->assertTrue($validator->check($validAlpha));
-        $this->assertTrue($validator->assert($validAlpha));
+        static::assertTrue($validator->validate($validAlpha));
+        static::assertTrue($validator->check($validAlpha));
+        static::assertTrue($validator->assert($validAlpha));
     }
 
     /**
      * @dataProvider providerForInvalidAlpha
-     * @expectedException Respect\Validation\Exceptions\AlphaException
+     *
      */
     public function testInvalidAlphanumericCharsShouldThrowAlphaException($invalidAlpha, $additional)
     {
+        $this->expectException(AlphaException::class);
         $validator = new Alpha($additional);
-        $this->assertFalse($validator->validate($invalidAlpha));
-        $this->assertFalse($validator->assert($invalidAlpha));
+        static::assertFalse($validator->validate($invalidAlpha));
+        static::assertFalse($validator->assert($invalidAlpha));
     }
 
     /**
      * @dataProvider providerForInvalidParams
-     * @expectedException Respect\Validation\Exceptions\ComponentException
+     *
      */
     public function testInvalidConstructorParamsShouldThrowComponentException($additional)
     {
-        $validator = new Alpha($additional);
+        $this->expectException(ComponentException::class);
+         new Alpha($additional);
     }
 
     /**
@@ -55,10 +62,10 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
     public function testAdditionalCharsShouldBeRespected($additional, $query)
     {
         $validator = new Alpha($additional);
-        $this->assertTrue($validator->validate($query));
+        static::assertTrue($validator->validate($query));
     }
 
-    public function providerAdditionalChars()
+    public static function providerAdditionalChars()
     {
         return [
             ['!@#$%^&*(){}', '!@#$%^&*(){} abc'],
@@ -66,7 +73,7 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidParams()
+    public static function providerForInvalidParams()
     {
         return [
             [new \stdClass()],
@@ -75,7 +82,7 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidAlpha()
+    public static function providerForValidAlpha()
     {
         return [
             ['alganet', ''],
@@ -94,7 +101,7 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidAlpha()
+    public static function providerForInvalidAlpha()
     {
         return [
             ['', ''],

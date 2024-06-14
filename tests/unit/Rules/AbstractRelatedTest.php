@@ -9,13 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\AbstractRelated;
 use Respect\Validation\Validatable;
 
-final class AbstractRelatedTest extends \PHPUnit_Framework_TestCase
+class AbstractRelatedTest extends TestCase
 {
-    public function providerForOperations()
+    public static function providerForOperations(): array
     {
         return [
             ['validate'],
@@ -24,90 +27,95 @@ final class AbstractRelatedTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testConstructionOfAbstractRelatedClass()
+    /**
+     * @throws Exception
+     */
+    public function testConstructionOfAbstractRelatedClass(): void
     {
         $validatableMock = $this->createMock(Validatable::class);
         $relatedRuleMock = $this->getMockForAbstractClass(AbstractRelated::class, ['foo', $validatableMock]);
 
-        $this->assertEquals('foo', $relatedRuleMock->getName());
-        $this->assertEquals('foo', $relatedRuleMock->reference);
-        $this->assertTrue($relatedRuleMock->mandatory);
-        $this->assertInstanceOf(Validatable::class, $relatedRuleMock->validator);
+        static::assertSame('foo', $relatedRuleMock->getName());
+        static::assertEquals('foo', $relatedRuleMock->reference);
+        static::assertTrue($relatedRuleMock->mandatory);
+        static::assertInstanceOf(Validatable::class, $relatedRuleMock->validator);
     }
 
     /**
      * @dataProvider providerForOperations
+     * @throws Exception
      */
-    public function testOperationsShouldReturnTrueWhenReferenceValidatesItsValue($method)
+    public function testReferenceValidatesItsValue($method): void
     {
         $validatableMock = $this->createMock(Validatable::class);
-        $validatableMock->expects($this->any())
+        $validatableMock->expects(self::once())
             ->method($method)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $relatedRuleMock = $this->getMockForAbstractClass(AbstractRelated::class, ['foo', $validatableMock]);
-        $relatedRuleMock->expects($this->any())
+        $relatedRuleMock->expects(self::once())
             ->method('hasReference')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        $this->assertTrue($relatedRuleMock->$method('foo'));
+        static::assertTrue($relatedRuleMock->$method('foo'));
     }
 
-    public function testValidateShouldReturnFalseWhenIsMandatoryAndThereIsNoReference()
+    /**
+     * @throws Exception
+     */
+    public function testIsMandatoryAndThereIsNoReference(): void
     {
         $relatedRuleMock = $this->getMockForAbstractClass(AbstractRelated::class, ['foo']);
-        $relatedRuleMock->expects($this->any())
+        $relatedRuleMock->expects(self::once())
             ->method('hasReference')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
-        $this->assertFalse($relatedRuleMock->validate('foo'));
+        static::assertFalse($relatedRuleMock->validate('foo'));
     }
 
-    public function testShouldAcceptReferenceOnConstructor()
+    public function testAcceptReferenceOnConstructor(): void
     {
         $reference = 'something';
 
-        $abstractMock = $this
-            ->getMockBuilder(AbstractRelated::class)
+        $abstractMock = $this->getMockBuilder(AbstractRelated::class)
             ->setConstructorArgs([$reference])
             ->getMock();
 
-        $this->assertSame($reference, $abstractMock->reference);
+        static::assertSame($reference, $abstractMock->reference);
     }
 
-    public function testShouldBeMandatoryByDefault()
+    public function testShouldBeMandatoryByDefault(): void
     {
-        $abstractMock = $this
-            ->getMockBuilder(AbstractRelated::class)
+        $abstractMock = $this->getMockBuilder(AbstractRelated::class)
             ->setConstructorArgs(['something'])
             ->getMock();
 
-        $this->assertTrue($abstractMock->mandatory);
+        static::assertTrue($abstractMock->mandatory);
     }
 
-    public function testShouldAcceptReferenceAndRuleOnConstructor()
+    /**
+     * @throws Exception
+     */
+    public function testShouldAcceptReferenceAndRuleOnConstructor(): void
     {
         $ruleMock = $this->createMock(Validatable::class);
 
-        $abstractMock = $this
-            ->getMockBuilder(AbstractRelated::class)
+        $abstractMock = $this->getMockBuilder(AbstractRelated::class)
             ->setConstructorArgs(['something', $ruleMock])
             ->getMock();
 
-        $this->assertSame($ruleMock, $abstractMock->validator);
+        static::assertSame($ruleMock, $abstractMock->validator);
     }
 
-    public function testShouldDefineRuleNameAsReferenceWhenRuleDoesNotHaveAName()
+    public function testShouldDefineRuleNameAsReferenceWhenRuleDoesNotHaveAName(): void
     {
         $reference = 'something';
 
         $ruleMock = $this->createMock(Validatable::class);
-        $ruleMock
-            ->expects($this->at(0))
+        $ruleMock->expects(self::once())
             ->method('getName')
-            ->will($this->returnValue(null));
-        $ruleMock
-            ->expects($this->at(1))
+            ->willReturn(null);
+        $ruleMock->expects(self::once())
             ->method('setName')
             ->with($reference);
 
@@ -116,31 +124,32 @@ final class AbstractRelatedTest extends \PHPUnit_Framework_TestCase
             ->setConstructorArgs(['something', $ruleMock])
             ->getMock();
 
-        $this->assertSame($ruleMock, $abstractMock->validator);
+        static::assertSame($ruleMock, $abstractMock->validator);
     }
 
-    public function testShouldNotDefineRuleNameAsReferenceWhenRuleDoesHaveAName()
+    /**
+     * @throws Exception
+     */
+    public function testShouldNotDefineRuleNameAsReferenceWhenRuleDoesHaveAName(): void
     {
-        $reference = 'something';
-
         $ruleMock = $this->createMock(Validatable::class);
-        $ruleMock
-            ->expects($this->at(0))
+        $ruleMock->expects(self::once())
             ->method('getName')
-            ->will($this->returnValue('something else'));
-        $ruleMock
-            ->expects($this->never())
+            ->willReturn('something else');
+        $ruleMock->expects(static::never())
             ->method('setName');
 
-        $abstractMock = $this
-            ->getMockBuilder(AbstractRelated::class)
+        $abstractMock = $this->getMockBuilder(AbstractRelated::class)
             ->setConstructorArgs(['something', $ruleMock])
             ->getMock();
 
-        $this->assertSame($ruleMock, $abstractMock->validator);
+        static::assertSame($ruleMock, $abstractMock->validator);
     }
 
-    public function testShouldAcceptMandatoryFlagOnConstructor()
+    /**
+     * @throws Exception
+     */
+    public function testShouldAcceptMandatoryFlagOnConstructor(): void
     {
         $mandatory = false;
 
@@ -149,26 +158,24 @@ final class AbstractRelatedTest extends \PHPUnit_Framework_TestCase
             ->setConstructorArgs(['something', $this->createMock(Validatable::class), $mandatory])
             ->getMock();
 
-        $this->assertSame($mandatory, $abstractMock->mandatory);
+        static::assertSame($mandatory, $abstractMock->mandatory);
     }
 
-    public function testShouldDefineChildNameWhenDefiningTheNameOfTheParent()
+    /**
+     * @throws Exception
+     */
+    public function testShouldDefineChildNameWhenDefiningTheNameOfTheParent(): void
     {
         $name = 'My new name';
-        $reference = 'something';
-
         $ruleMock = $this->createMock(Validatable::class);
-        $ruleMock
-            ->expects($this->at(0))
+        $ruleMock->expects(self::once())
             ->method('getName')
-            ->will($this->returnValue('something else'));
-        $ruleMock
-            ->expects($this->at(1))
+            ->willReturn('something else');
+        $ruleMock->expects(self::once())
             ->method('setName')
             ->with($name);
 
-        $abstractMock = $this
-            ->getMockBuilder(AbstractRelated::class)
+        $this->getMockBuilder(AbstractRelated::class)
             ->setConstructorArgs(['something', $ruleMock])
             ->getMock();
 

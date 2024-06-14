@@ -9,13 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\Slug;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Slug
+ * @covers Slug
  */
-class SlugTest extends \PHPUnit_Framework_TestCase
+class SlugTest extends TestCase
 {
     /**
      * @dataProvider providerValidSlug
@@ -24,7 +27,7 @@ class SlugTest extends \PHPUnit_Framework_TestCase
     {
         $rule = new Slug();
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
     /**
@@ -34,10 +37,10 @@ class SlugTest extends \PHPUnit_Framework_TestCase
     {
         $rule = new Slug();
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 
-    public function providerValidSlug()
+    public static function providerValidSlug()
     {
         return [
             ['o-rato-roeu-o-rei-de-roma'],
@@ -47,7 +50,7 @@ class SlugTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerInvalidSlug()
+    public static function providerInvalidSlug()
     {
         return [
             [''],

@@ -9,38 +9,44 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\VersionException;
+use Respect\Validation\Rules\Version;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Version
- * @covers Respect\Validation\Exceptions\VersionException
+ * @covers Version
+ * @covers VersionException
  */
-class VersionTest extends \PHPUnit_Framework_TestCase
+class VersionTest extends TestCase
 {
     /**
      * @dataProvider providerForValidVersion
      */
-    public function testValidVersionShouldReturnTrue($input)
+    public function testValidVersionShouldReturnTrue($input): void
     {
         $rule = new Version();
-        $this->assertTrue($rule->__invoke($input));
-        $this->assertTrue($rule->assert($input));
-        $this->assertTrue($rule->check($input));
+        static::assertTrue($rule->__invoke($input));
+        static::assertTrue($rule->assert($input));
+        static::assertTrue($rule->check($input));
     }
 
     /**
      * @dataProvider providerForInvalidVersion
-     * @expectedException Respect\Validation\Exceptions\VersionException
+     *
+     * @throws \Exception
      */
-    public function testInvalidVersionShouldThrowException($input)
+    public function testInvalidVersionShouldThrowException($input): void
     {
+        $this->expectException(VersionException::class);
         $rule = new Version();
-        $this->assertFalse($rule->__invoke($input));
-        $this->assertFalse($rule->assert($input));
+        static::assertFalse($rule->__invoke($input));
+        static::assertFalse($rule->assert($input));
     }
 
-    public function providerForValidVersion()
+    public static function providerForValidVersion(): array
     {
         return [
             ['1.0.0'],
@@ -53,7 +59,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidVersion()
+    public static function providerForInvalidVersion()
     {
         return [
             [''],

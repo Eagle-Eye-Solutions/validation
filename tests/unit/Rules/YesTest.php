@@ -9,31 +9,32 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\Yes;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Yes
- * @covers Respect\Validation\Exceptions\YesException
+ * @covers Yes
+ * @covers YesException
  */
-class YesTest extends \PHPUnit_Framework_TestCase
+class YesTest extends TestCase
 {
-    public function testShouldUseDefaultPattern()
+    public function testShouldUseDefaultPattern(): void
     {
         $rule = new Yes();
 
         $actualPattern = $rule->regex;
         $expectedPattern = '/^y(eah?|ep|es)?$/i';
 
-        $this->assertEquals($expectedPattern, $actualPattern);
+        static::assertSame($expectedPattern, $actualPattern);
     }
 
-    public function testShouldUseLocalPatternForYesExpressionWhenDefined()
+    public function testShouldUseLocalPatternForYesExpressionWhenDefined(): void
     {
         if (!defined('YESEXPR')) {
-            $this->markTestSkipped('Constant YESEXPR is not defined');
-
-            return;
+            static::markTestSkipped('Constant YESEXPR is not defined');
         }
 
         $rule = new Yes(true);
@@ -41,20 +42,20 @@ class YesTest extends \PHPUnit_Framework_TestCase
         $actualPattern = $rule->regex;
         $expectedPattern = '/'.nl_langinfo(YESEXPR).'/i';
 
-        $this->assertEquals($expectedPattern, $actualPattern);
+        static::assertSame($expectedPattern, $actualPattern);
     }
 
     /**
      * @dataProvider validYesProvider
      */
-    public function testShouldValidatePatternAccordingToTheDefinedLocale($input)
+    public function testShouldValidatePatternAccordingToTheDefinedLocale($input): void
     {
         $rule = new Yes();
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
-    public function validYesProvider()
+    public static function validYesProvider(): array
     {
         return [
             ['Y'],
@@ -68,14 +69,14 @@ class YesTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider invalidYesProvider
      */
-    public function testShouldNotValidatePatternAccordingToTheDefinedLocale($input)
+    public function testShouldNotValidatePatternAccordingToTheDefinedLocale($input): void
     {
         $rule = new Yes();
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 
-    public function invalidYesProvider()
+    public static function invalidYesProvider(): array
     {
         return [
             ['Si'],

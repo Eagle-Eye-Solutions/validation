@@ -9,4 +9,4 @@ v::countryCode()->assert('DE');
 v::countryCode()->check('BR');
 v::countryCode()->check('DE');
 ?>
---EXPECTF--
+

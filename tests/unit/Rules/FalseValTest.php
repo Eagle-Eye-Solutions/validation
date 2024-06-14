@@ -9,26 +9,29 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\FalseVal;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\FalseVal
- * @covers Respect\Validation\Exceptions\FalseValException
+ * @covers FalseVal
+ * @covers FalseValException
  */
-class FalseValTest extends \PHPUnit_Framework_TestCase
+class FalseValTest extends TestCase
 {
     /**
      * @dataProvider validFalseProvider
      */
-    public function testShouldValidatePatternAccordingToTheDefinedLocale($input)
+    public function testValidatePatternAccordingToTheDefinedLocale($input): void
     {
         $rule = new FalseVal();
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
-    public function validFalseProvider()
+    public static function validFalseProvider(): array
     {
         return [
             [false],
@@ -49,14 +52,14 @@ class FalseValTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider invalidFalseProvider
      */
-    public function testShouldNotValidatePatternAccordingToTheDefinedLocale($input)
+    public function testNotValidatePatternAccordingToTheDefinedLocale($input): void
     {
         $rule = new FalseVal();
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 
-    public function invalidFalseProvider()
+    public static function invalidFalseProvider(): array
     {
         return [
             [true],

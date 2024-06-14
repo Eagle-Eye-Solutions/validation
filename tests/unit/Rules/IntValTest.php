@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\IntValException;
+use Respect\Validation\Rules\IntVal;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\IntVal
- * @covers Respect\Validation\Exceptions\IntValException
+ * @covers IntVal
+ * @covers IntValException
  */
-class IntValTest extends \PHPUnit_Framework_TestCase
+class IntValTest extends TestCase
 {
-    protected $intValidator;
+    protected IntVal $intValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->intValidator = new IntVal();
     }
@@ -28,24 +32,25 @@ class IntValTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForInt
      */
-    public function testValidIntegersShouldReturnTrue($input)
+    public function testValidIntegersShouldReturnTrue($input): void
     {
-        $this->assertTrue($this->intValidator->__invoke($input));
-        $this->assertTrue($this->intValidator->check($input));
-        $this->assertTrue($this->intValidator->assert($input));
+        static::assertTrue($this->intValidator->__invoke($input));
+        static::assertTrue($this->intValidator->check($input));
+        static::assertTrue($this->intValidator->assert($input));
     }
 
     /**
      * @dataProvider providerForNotInt
-     * @expectedException Respect\Validation\Exceptions\IntValException
+     *
      */
     public function testInvalidIntegersShouldThrowIntException($input)
     {
-        $this->assertFalse($this->intValidator->__invoke($input));
-        $this->assertFalse($this->intValidator->assert($input));
+        $this->expectException(IntValException::class);
+        static::assertFalse($this->intValidator->__invoke($input));
+        static::assertFalse($this->intValidator->assert($input));
     }
 
-    public function providerForInt()
+    public static function providerForInt(): array
     {
         return [
             [16],
@@ -55,7 +60,7 @@ class IntValTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotInt()
+    public static function providerForNotInt(): array
     {
         return [
             [''],

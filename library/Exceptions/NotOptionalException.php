@@ -27,6 +27,9 @@ class NotOptionalException extends ValidationException
         ],
     ];
 
+    /**
+     * @return int
+     */
     public function chooseTemplate()
     {
         return $this->getName() == '' ? static::STANDARD : static::NAMED;

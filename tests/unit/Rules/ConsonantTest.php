@@ -9,54 +9,64 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\ConsonantException;
+use Respect\Validation\Rules\Consonant;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Consonant
- * @covers Respect\Validation\Exceptions\ConsonantException
+ * @covers Consonant
+ * @covers ConsonantException
  */
-class ConsonantTest extends \PHPUnit_Framework_TestCase
+class ConsonantTest extends TestCase
 {
     /**
      * @dataProvider providerForValidConsonants
+     * @throws ComponentException
      */
-    public function testValidDataWithConsonantsShouldReturnTrue($validConsonants, $additional = '')
+    public function testValidDataWithConsonants($validConsonants, $additional = ''): void
     {
         $validator = new Consonant($additional);
-        $this->assertTrue($validator->validate($validConsonants));
+        static::assertTrue($validator->validate($validConsonants));
     }
 
     /**
      * @dataProvider providerForInvalidConsonants
-     * @expectedException Respect\Validation\Exceptions\ConsonantException
+     *
+     * @throws ComponentException
+     * @throws \Exception
      */
-    public function testInvalidConsonantsShouldFailAndThrowConsonantException($invalidConsonants, $additional = '')
+    public function testInvalidConsonants($invalidConsonants, $additional = '')
     {
+        $this->expectException(ConsonantException::class);
         $validator = new Consonant($additional);
-        $this->assertFalse($validator->validate($invalidConsonants));
-        $this->assertFalse($validator->assert($invalidConsonants));
+        static::assertFalse($validator->validate($invalidConsonants));
+        static::assertFalse($validator->assert($invalidConsonants));
     }
 
     /**
      * @dataProvider providerForInvalidParams
-     * @expectedException Respect\Validation\Exceptions\ComponentException
      */
-    public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
+    public function testInvalidConstructorParams($additional): void
     {
-        $validator = new Consonant($additional);
+        $this->expectException(ComponentException::class);
+        new Consonant($additional);
     }
 
     /**
      * @dataProvider providerAdditionalChars
+     * @throws ComponentException
      */
-    public function testAdditionalCharsShouldBeRespected($additional, $query)
+    public function testAdditionalCharsd($additional, $query)
     {
         $validator = new Consonant($additional);
-        $this->assertTrue($validator->validate($query));
+        static::assertTrue($validator->validate($query));
     }
 
-    public function providerAdditionalChars()
+    public static function providerAdditionalChars(): array
     {
         return [
             ['!@#$%^&*(){}', '!@#$%^&*(){} bc dfg'],
@@ -64,7 +74,7 @@ class ConsonantTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidParams()
+    public static function providerForInvalidParams(): array
     {
         return [
             [new \stdClass()],
@@ -73,7 +83,7 @@ class ConsonantTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidConsonants()
+    public static function providerForValidConsonants(): array
     {
         return [
             ['b'],
@@ -90,7 +100,7 @@ class ConsonantTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidConsonants()
+    public static function providerForInvalidConsonants(): array
     {
         return [
             [''],

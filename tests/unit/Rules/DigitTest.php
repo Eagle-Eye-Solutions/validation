@@ -9,14 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\DigitException;
+use Respect\Validation\Rules\Digit;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Digit
- * @covers Respect\Validation\Exceptions\DigitException
+ * @covers Digit
+ * @covers DigitException
  */
-class DigitTest extends \PHPUnit_Framework_TestCase
+class DigitTest extends TestCase
 {
     /**
      * @dataProvider providerForValidDigits
@@ -24,27 +29,28 @@ class DigitTest extends \PHPUnit_Framework_TestCase
     public function testValidDataWithDigitsShouldReturnTrue($validDigits, $additional = '')
     {
         $validator = new Digit($additional);
-        $this->assertTrue($validator->validate($validDigits));
+        static::assertTrue($validator->validate($validDigits));
     }
 
     /**
      * @dataProvider providerForInvalidDigits
-     * @expectedException Respect\Validation\Exceptions\DigitException
+     *
      */
     public function testInvalidDigitsShouldFailAndThrowDigitException($invalidDigits, $additional = '')
     {
+        $this->expectException(DigitException::class);
         $validator = new Digit($additional);
-        $this->assertFalse($validator->validate($invalidDigits));
-        $this->assertFalse($validator->assert($invalidDigits));
+        static::assertFalse($validator->validate($invalidDigits));
+        static::assertFalse($validator->assert($invalidDigits));
     }
 
     /**
      * @dataProvider providerForInvalidParams
-     * @expectedException Respect\Validation\Exceptions\ComponentException
      */
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
     {
-        $validator = new Digit($additional);
+        $this->expectException(ComponentException::class);
+        new Digit($additional);
     }
 
     /**
@@ -53,10 +59,10 @@ class DigitTest extends \PHPUnit_Framework_TestCase
     public function testAdditionalCharsShouldBeRespected($additional, $query)
     {
         $validator = new Digit($additional);
-        $this->assertTrue($validator->validate($query));
+        static::assertTrue($validator->validate($query));
     }
 
-    public function providerAdditionalChars()
+    public static function providerAdditionalChars()
     {
         return [
             ['!@#$%^&*(){}', '!@#$%^&*(){} 123'],
@@ -64,7 +70,7 @@ class DigitTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidParams()
+    public static function providerForInvalidParams()
     {
         return [
             [new \stdClass()],
@@ -73,7 +79,7 @@ class DigitTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidDigits()
+    public static function providerForValidDigits()
     {
         return [
             ["\n\t"],
@@ -89,7 +95,7 @@ class DigitTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidDigits()
+    public static function providerForInvalidDigits()
     {
         return [
             [''],

@@ -9,7 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Exceptions;
+namespace Respect\Validation\Test\Exceptions;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\AttributeException;
+use Respect\Validation\Exceptions\IntValException;
+use Respect\Validation\Exceptions\NestedValidationException;
 
 /**
  * phpunit has an issue with mocking exceptions when in HHVM:
@@ -19,29 +24,29 @@ class PrivateNestedValidationException extends NestedValidationException
 {
 }
 
-class NestedValidationExceptionTest extends \PHPUnit_Framework_TestCase
+class NestedValidationExceptionTest extends TestCase
 {
-    public function testGetRelatedShouldReturnExceptionAddedByAddRelated()
+    public function testGetRelatedAddedByAddRelated(): void
     {
         $composite = new AttributeException();
         $node = new IntValException();
         $composite->addRelated($node);
-        $this->assertEquals(1, count($composite->getRelated(true)));
-        $this->assertContainsOnly($node, $composite->getRelated());
+        static::assertCount(1, $composite->getRelated());
+        static::assertContainsEquals($node, $composite->getRelated());
     }
 
-    public function testAddingTheSameInstanceShouldAddJustASingleReference()
+    public function testAddingTheSameInstance(): void
     {
         $composite = new AttributeException();
         $node = new IntValException();
         $composite->addRelated($node);
         $composite->addRelated($node);
         $composite->addRelated($node);
-        $this->assertEquals(1, count($composite->getRelated(true)));
-        $this->assertContainsOnly($node, $composite->getRelated());
+        static::assertCount(1, $composite->getRelated());
+        static::assertContainsEquals($node, $composite->getRelated());
     }
 
-    public function testFindRelatedShouldFindCompositeExceptions()
+    public function testFindRelatedShouldFindCompositeExceptions(): void
     {
         $foo = new AttributeException();
         $bar = new AttributeException();
@@ -54,12 +59,12 @@ class NestedValidationExceptionTest extends \PHPUnit_Framework_TestCase
         $foo->addRelated($bar);
         $bar->addRelated($baz);
         $baz->addRelated($bat);
-        $this->assertSame($bar, $foo->findRelated('bar'));
-        $this->assertSame($baz, $foo->findRelated('baz'));
-        $this->assertSame($baz, $foo->findRelated('bar.baz'));
-        $this->assertSame($baz, $foo->findRelated('baz'));
-        $this->assertSame($bat, $foo->findRelated('bar.bat'));
-        $this->assertNull($foo->findRelated('none'));
-        $this->assertNull($foo->findRelated('bar.none'));
+        static::assertSame($bar, $foo->findRelated('bar'));
+        static::assertSame($baz, $foo->findRelated('baz'));
+        static::assertSame($baz, $foo->findRelated('bar.baz'));
+        static::assertSame($baz, $foo->findRelated('baz'));
+        static::assertSame($bat, $foo->findRelated('bar.bat'));
+        static::assertNull($foo->findRelated('none'));
+        static::assertNull($foo->findRelated('bar.none'));
     }
 }

@@ -9,43 +9,49 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ObjectTypeException;
+use Respect\Validation\Rules\ObjectType;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\ObjectType
- * @covers Respect\Validation\Exceptions\ObjectTypeException
+ * @covers ObjectType
+ * @covers ObjectTypeException
  */
-class ObjectTypeTest extends \PHPUnit_Framework_TestCase
+class ObjectTypeTest extends TestCase
 {
     protected $object;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new ObjectType();
     }
 
     /**
      * @dataProvider providerForObject
+     * @throws \Exception
      */
-    public function testObject($input)
+    public function testObject($input): void
     {
-        $this->assertTrue($this->object->__invoke($input));
-        $this->assertTrue($this->object->assert($input));
-        $this->assertTrue($this->object->check($input));
+        static::assertTrue($this->object->__invoke($input));
+        static::assertTrue($this->object->assert($input));
+        static::assertTrue($this->object->check($input));
     }
 
     /**
      * @dataProvider providerForNotObject
-     * @expectedException Respect\Validation\Exceptions\ObjectTypeException
+     *
      */
-    public function testNotObject($input)
+    public function testNotObject($input): void
     {
-        $this->assertFalse($this->object->__invoke($input));
-        $this->assertFalse($this->object->assert($input));
+        $this->expectException(ObjectTypeException::class);
+        static::assertFalse($this->object->__invoke($input));
+        static::assertFalse($this->object->assert($input));
     }
 
-    public function providerForObject()
+    public static function providerForObject(): array
     {
         return [
             [new \stdClass()],
@@ -53,7 +59,7 @@ class ObjectTypeTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotObject()
+    public static function providerForNotObject(): array
     {
         return [
             [''],

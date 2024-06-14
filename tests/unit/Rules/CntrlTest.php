@@ -9,14 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\CntrlException;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\Cntrl;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Cntrl
- * @covers Respect\Validation\Exceptions\CntrlException
+ * @covers Cntrl
+ * @covers CntrlException
  */
-class CntrlTest extends \PHPUnit_Framework_TestCase
+class CntrlTest extends TestCase
 {
     /**
      * @dataProvider providerForValidCntrl
@@ -24,39 +29,41 @@ class CntrlTest extends \PHPUnit_Framework_TestCase
     public function testValidDataWithCntrlShouldReturnTrue($validCntrl, $additional = '')
     {
         $validator = new Cntrl($additional);
-        $this->assertTrue($validator->validate($validCntrl));
+        static::assertTrue($validator->validate($validCntrl));
     }
 
     /**
      * @dataProvider providerForInvalidCntrl
-     * @expectedException Respect\Validation\Exceptions\CntrlException
      */
     public function testInvalidCntrlShouldFailAndThrowCntrlException($invalidCntrl, $additional = '')
     {
+        $this->expectException(CntrlException::class);
         $validator = new Cntrl($additional);
-        $this->assertFalse($validator->validate($invalidCntrl));
-        $this->assertFalse($validator->assert($invalidCntrl));
+        static::assertFalse($validator->validate($invalidCntrl));
+        static::assertFalse($validator->assert($invalidCntrl));
     }
 
     /**
      * @dataProvider providerForInvalidParams
-     * @expectedException Respect\Validation\Exceptions\ComponentException
+     * @throws ComponentException
      */
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
     {
-        $validator = new Cntrl($additional);
+        $this->expectException(ComponentException::class);
+        new Cntrl($additional);
     }
 
     /**
      * @dataProvider providerAdditionalChars
+     * @throws ComponentException
      */
     public function testAdditionalCharsShouldBeRespected($additional, $query)
     {
         $validator = new Cntrl($additional);
-        $this->assertTrue($validator->validate($query));
+        static::assertTrue($validator->validate($query));
     }
 
-    public function providerAdditionalChars()
+    public static function providerAdditionalChars(): array
     {
         return [
             ['!@#$%^&*(){} ', '!@#$%^&*(){} '],
@@ -64,7 +71,7 @@ class CntrlTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidParams()
+    public static function providerForInvalidParams(): array
     {
         return [
             [new \stdClass()],
@@ -73,18 +80,17 @@ class CntrlTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidCntrl()
+    public static function providerForValidCntrl(): array
     {
         return [
             ["\n"],
             ["\r"],
             ["\t"],
             ["\n\r\t"],
-//            array("\n \n", ' '), TODO Verify this
         ];
     }
 
-    public function providerForInvalidCntrl()
+    public static function providerForInvalidCntrl(): array
     {
         return [
             [''],

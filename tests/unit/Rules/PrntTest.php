@@ -9,54 +9,61 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException as ComponentExceptionAlias;
+use Respect\Validation\Exceptions\PrntException;
+use Respect\Validation\Rules\Prnt;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Prnt
- * @covers Respect\Validation\Exceptions\PrntException
+ * @covers Prnt
+ * @covers PrntException
  */
-class PrntTest extends \PHPUnit_Framework_TestCase
+class PrntTest extends TestCase
 {
     /**
      * @dataProvider providerForValidPrint
      */
-    public function testValidDataWithPrintCharsShouldReturnTrue($validPrint, $additional = '')
+    public function testValidDataWithPrintCharsShouldReturnTrue($validPrint, $additional = ''): void
     {
         $validator = new Prnt($additional);
-        $this->assertTrue($validator->validate($validPrint));
+        static::assertTrue($validator->validate($validPrint));
     }
 
     /**
      * @dataProvider providerForInvalidPrint
-     * @expectedException Respect\Validation\Exceptions\PrntException
+     * @throws ComponentExceptionAlias
      */
-    public function testInvalidPrintShouldFailAndThrowPrntException($invalidPrint, $additional = '')
+    public function testInvalidPrintShouldFailAndThrowPrntException($invalidPrint, $additional = ''): void
     {
+        $this->expectException(PrntException::class);
         $validator = new Prnt($additional);
-        $this->assertFalse($validator->validate($invalidPrint));
-        $this->assertFalse($validator->assert($invalidPrint));
+        static::assertFalse($validator->validate($invalidPrint));
+        static::assertFalse($validator->assert($invalidPrint));
     }
 
     /**
      * @dataProvider providerForInvalidParams
-     * @expectedException Respect\Validation\Exceptions\ComponentException
      */
-    public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
+    public function testInvalidConstructorParamsn($additional): void
     {
-        $validator = new Prnt($additional);
+        $this->expectException(ComponentExceptionAlias::class);
+        new Prnt($additional);
     }
 
     /**
      * @dataProvider providerAdditionalChars
+     * @throws ComponentExceptionAlias
      */
-    public function testAdditionalCharsShouldBeRespected($additional, $query)
+    public function testAdditionalCharsShouldBeRespected($additional, $query): void
     {
         $validator = new Prnt($additional);
-        $this->assertTrue($validator->validate($query));
+        static::assertTrue($validator->validate($query));
     }
 
-    public function providerAdditionalChars()
+    public static function providerAdditionalChars(): array
     {
         return [
             ["\t\n", "\t\n "],
@@ -64,7 +71,7 @@ class PrntTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidParams()
+    public static function providerForInvalidParams(): array
     {
         return [
             [new \stdClass()],
@@ -73,7 +80,7 @@ class PrntTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidPrint()
+    public static function providerForValidPrint(): array
     {
         return [
             [' '],
@@ -86,7 +93,7 @@ class PrntTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidPrint()
+    public static function providerForInvalidPrint(): array
     {
         return [
             [''],

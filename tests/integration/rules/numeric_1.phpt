@@ -8,4 +8,3 @@ v::numericVal()->assert(123);
 v::numericVal()->check(123);
 
 ?>
---EXPECTF--

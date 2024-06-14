@@ -9,49 +9,60 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ValidationException;
+use Respect\Validation\Rules\AllOf;
+use Respect\Validation\Rules\Digit;
+use Respect\Validation\Rules\IntVal;
+use Respect\Validation\Rules\NoneOf;
+use Respect\Validation\Rules\Not;
+use Respect\Validation\Rules\NoWhitespace;
+use Respect\Validation\Rules\NumericVal;
+use Respect\Validation\Rules\OneOf;
 use Respect\Validation\Validator;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Not
- * @covers Respect\Validation\Exceptions\NotException
+ * @covers Not
+ * @covers NotException
  */
-class NotTest extends \PHPUnit_Framework_TestCase
+class NotTest extends TestCase
 {
     /**
      * @dataProvider providerForValidNot
      */
-    public function testNot($v, $input)
+    public function testNot($v, $input): void
     {
         $not = new Not($v);
-        $this->assertTrue($not->assert($input));
+        static::assertTrue($not->assert($input));
     }
 
     /**
      * @dataProvider providerForInvalidNot
-     * @expectedException Respect\Validation\Exceptions\ValidationException
+     *
      */
-    public function testNotNotHaha($v, $input)
+    public function testNotNotHaha($v, $input): void
     {
+        $this->expectException(ValidationException::class);
         $not = new Not($v);
-        $this->assertFalse($not->assert($input));
+        static::assertFalse($not->assert($input));
     }
 
     /**
      * @dataProvider providerForSetName
      */
-    public function testNotSetName($v)
+    public function testNotSetName($v): void
     {
         $not = new Not($v);
         $not->setName('Foo');
 
-        $this->assertEquals('Foo', $not->getName());
-        $this->assertEquals('Foo', $v->getName());
+        static::assertSame('Foo', $not->getName());
+        static::assertSame('Foo', $v->getName());
     }
 
-    public function providerForValidNot()
+    public static function providerForValidNot(): array
     {
         return [
             [new IntVal(), ''],
@@ -65,7 +76,7 @@ class NotTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidNot()
+    public static function providerForInvalidNot(): array
     {
         return [
             [new IntVal(), 123],
@@ -75,7 +86,7 @@ class NotTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForSetName()
+    public static function providerForSetName(): array
     {
         return [
             [new IntVal()],

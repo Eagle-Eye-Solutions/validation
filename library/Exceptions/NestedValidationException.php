@@ -93,7 +93,8 @@ class NestedValidationException extends ValidationException implements IteratorA
     }
 
     /**
-     * @return Exception
+     * @param $path
+     * @return $this|NestedValidationException|ValidationException
      */
     public function findRelated($path)
     {
@@ -114,12 +115,10 @@ class NestedValidationException extends ValidationException implements IteratorA
     private function getRecursiveIterator()
     {
         $exceptionIterator = new RecursiveExceptionIterator($this);
-        $recursiveIteratorIterator = new RecursiveIteratorIterator(
+        return new RecursiveIteratorIterator(
             $exceptionIterator,
             RecursiveIteratorIterator::SELF_FIRST
         );
-
-        return $recursiveIteratorIterator;
     }
 
     /**

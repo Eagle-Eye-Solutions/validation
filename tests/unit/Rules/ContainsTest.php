@@ -9,14 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Rules\Contains;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Contains
- * @covers Respect\Validation\Exceptions\ContainsException
+ * @covers Contains
+ * @covers ContainsException
  */
-class ContainsTest extends \PHPUnit_Framework_TestCase
+class ContainsTest extends TestCase
 {
     /**
      * @dataProvider providerForContainsIdentical
@@ -24,7 +27,7 @@ class ContainsTest extends \PHPUnit_Framework_TestCase
     public function testStringsContainingExpectedIdenticalValueShouldPass($start, $input)
     {
         $v = new Contains($start, true);
-        $this->assertTrue($v->validate($input));
+        static::assertTrue($v->validate($input));
     }
 
     /**
@@ -33,7 +36,7 @@ class ContainsTest extends \PHPUnit_Framework_TestCase
     public function testStringsContainingExpectedValueShouldPass($start, $input)
     {
         $v = new Contains($start, false);
-        $this->assertTrue($v->validate($input));
+        static::assertTrue($v->validate($input));
     }
 
     /**
@@ -42,7 +45,7 @@ class ContainsTest extends \PHPUnit_Framework_TestCase
     public function testStringsNotContainsExpectedIdenticalValueShouldNotPass($start, $input)
     {
         $v = new Contains($start, true);
-        $this->assertFalse($v->validate($input));
+        static::assertFalse($v->validate($input));
     }
 
     /**
@@ -51,10 +54,10 @@ class ContainsTest extends \PHPUnit_Framework_TestCase
     public function testStringsNotContainsExpectedValueShouldNotPass($start, $input)
     {
         $v = new Contains($start, false);
-        $this->assertFalse($v->validate($input));
+        static::assertFalse($v->validate($input));
     }
 
-    public function providerForContains()
+    public static function providerForContains()
     {
         return [
             ['foo', ['bar', 'foo']],
@@ -66,7 +69,7 @@ class ContainsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForContainsIdentical()
+    public static function providerForContainsIdentical()
     {
         return [
             ['foo', ['fool', 'foo']],
@@ -77,7 +80,7 @@ class ContainsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotContains()
+    public static function providerForNotContains()
     {
         return [
             ['foo', ''],
@@ -87,7 +90,7 @@ class ContainsTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotContainsIdentical()
+    public static function providerForNotContainsIdentical()
     {
         return [
             ['foo', ''],

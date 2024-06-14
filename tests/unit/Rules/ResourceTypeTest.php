@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ResourceTypeException;
+use Respect\Validation\Rules\ResourceType;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\ResourceType
- * @covers Respect\Validation\Exceptions\ResourceTypeException
+ * @covers ResourceType
+ * @covers ResourceTypeException
  */
-class ResourceTypeTest extends \PHPUnit_Framework_TestCase
+class ResourceTypeTest extends TestCase
 {
     protected $rule;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->rule = new ResourceType();
     }
@@ -28,38 +32,35 @@ class ResourceTypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForResource
      */
-    public function testShouldValidateResourceNumbers($input)
+    public function testShouldValidateResourceNumbers($input): void
     {
-        $this->assertTrue($this->rule->validate($input));
+        static::assertTrue($this->rule->validate($input));
     }
 
     /**
      * @dataProvider providerForNonResource
      */
-    public function testShouldNotValidateNonResourceNumbers($input)
+    public function testShouldNotValidateNonResourceNumbers($input): void
     {
-        $this->assertFalse($this->rule->validate($input));
+        static::assertFalse($this->rule->validate($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ResourceTypeException
-     * @expectedExceptionMessage "Something" must be a resource
-     */
-    public function testShouldThrowResourceExceptionWhenChecking()
+    public function testShouldThrowResourceExceptionWhenChecking(): void
     {
+        $this->expectExceptionMessage("\"Something\" must be a resource");
+        $this->expectException(ResourceTypeException::class);
         $this->rule->check('Something');
     }
 
-    public function providerForResource()
+    public static function providerForResource(): array
     {
         return [
             [stream_context_create()],
             [tmpfile()],
-            [xml_parser_create()],
         ];
     }
 
-    public function providerForNonResource()
+    public static function providerForNonResource(): array
     {
         return [
             ['String'],
@@ -69,6 +70,7 @@ class ResourceTypeTest extends \PHPUnit_Framework_TestCase
             }],
             [new \stdClass()],
             [null],
+            [xml_parser_create()],
         ];
     }
 }

@@ -88,7 +88,7 @@ class Domain extends AbstractComposite
             $this->collectAssertException($e, $chk, $input);
         }
 
-        if (count($parts = explode('.', $input)) >= 2) {
+        if (count($parts = explode('.', $input ?? '')) >= 2) {
             $this->collectAssertException($e, $this->tld, array_pop($parts));
         }
 

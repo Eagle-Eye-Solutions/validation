@@ -9,38 +9,45 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\LowercaseException;
+use Respect\Validation\Rules\Lowercase;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Lowercase
- * @covers Respect\Validation\Exceptions\LowercaseException
+ * @covers Lowercase
+ * @covers LowercaseException
  */
-class LowercaseTest extends \PHPUnit_Framework_TestCase
+class LowercaseTest extends TestCase
 {
     /**
      * @dataProvider providerForValidLowercase
+     * @throws \Exception
      */
-    public function testValidLowercaseShouldReturnTrue($input)
+    public function testValidLowercaseShouldReturnTrue($input): void
     {
         $lowercase = new Lowercase();
-        $this->assertTrue($lowercase->__invoke($input));
-        $this->assertTrue($lowercase->assert($input));
-        $this->assertTrue($lowercase->check($input));
+        static::assertTrue($lowercase->__invoke($input));
+        static::assertTrue($lowercase->assert($input));
+        static::assertTrue($lowercase->check($input));
     }
 
     /**
      * @dataProvider providerForInvalidLowercase
-     * @expectedException Respect\Validation\Exceptions\LowercaseException
+     *
+     * @throws \Exception
      */
-    public function testInvalidLowercaseShouldThrowException($input)
+    public function testInvalidLowercaseShouldThrowException($input): void
     {
+        $this->expectException(LowercaseException::class);
         $lowercase = new Lowercase();
-        $this->assertFalse($lowercase->__invoke($input));
-        $this->assertFalse($lowercase->assert($input));
+        static::assertFalse($lowercase->__invoke($input));
+        static::assertFalse($lowercase->assert($input));
     }
 
-    public function providerForValidLowercase()
+    public static function providerForValidLowercase(): array
     {
         return [
             [''],
@@ -54,7 +61,7 @@ class LowercaseTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidLowercase()
+    public static function providerForInvalidLowercase(): array
     {
         return [
             ['UPPERCASE'],

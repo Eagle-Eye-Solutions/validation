@@ -9,43 +9,49 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\NumericValException;
+use Respect\Validation\Rules\NumericVal;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\NumericVal
- * @covers Respect\Validation\Exceptions\NumericValException
+ * @covers NumericVal
+ * @covers NumericValException
  */
-class NumericValTest extends \PHPUnit_Framework_TestCase
+class NumericValTest extends TestCase
 {
-    protected $object;
+    protected NumericVal $object;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new NumericVal();
     }
 
     /**
      * @dataProvider providerForNumeric
+     * @throws \Exception
      */
-    public function testNumeric($input)
+    public function testNumeric($input): void
     {
-        $this->assertTrue($this->object->__invoke($input));
-        $this->assertTrue($this->object->check($input));
-        $this->assertTrue($this->object->assert($input));
+        static::assertTrue($this->object->__invoke($input));
+        static::assertTrue($this->object->check($input));
+        static::assertTrue($this->object->assert($input));
     }
 
     /**
      * @dataProvider providerForNotNumeric
-     * @expectedException Respect\Validation\Exceptions\NumericValException
+     * @throws \Exception
      */
-    public function testNotNumeric($input)
+    public function testNotNumeric($input): void
     {
-        $this->assertFalse($this->object->__invoke($input));
-        $this->assertFalse($this->object->assert($input));
+        $this->expectException(NumericValException::class);
+        static::assertFalse($this->object->__invoke($input));
+        static::assertFalse($this->object->assert($input));
     }
 
-    public function providerForNumeric()
+    public static function providerForNumeric(): array
     {
         return [
             [165],
@@ -57,7 +63,7 @@ class NumericValTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotNumeric()
+    public static function providerForNotNumeric(): array
     {
         return [
             [''],

@@ -53,11 +53,12 @@ class CreditCard extends AbstractRule
         $this->brand = $brand;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validate($input)
+    public function validate($input): bool
     {
+        if (empty($input)) {
+            return false;
+        }
+
         $input = preg_replace('([^0-9])', '', $input);
 
         if (empty($input)) {

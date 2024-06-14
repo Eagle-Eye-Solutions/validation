@@ -9,16 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Exceptions;
+namespace Respect\Validation\Test\Exceptions;
 
 use DirectoryIterator;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use Respect\Validation\Exceptions\ValidationException;
 
-class CheckExceptionsTest extends \PHPUnit_Framework_TestCase
+class CheckExceptionsTest extends TestCase
 {
-    protected $deprecateds = [];
-
-    public function provideListOfRuleNames()
+    /**
+     * @throws \ReflectionException
+     */
+    public static function provideListOfRuleNames(): array
     {
         $rulesDirectory = 'library/Rules';
         $rulesDirectoryIterator = new DirectoryIterator($rulesDirectory);
@@ -29,9 +32,8 @@ class CheckExceptionsTest extends \PHPUnit_Framework_TestCase
             }
 
             $ruleName = mb_substr($fileInfo->getBasename(), 0, -4);
-            $ruleIsDeprecated = in_array($ruleName, $this->deprecateds);
-            $isRuleClassFile = (bool) ($fileInfo->getExtension() !== 'php');
-            if ($ruleIsDeprecated || $isRuleClassFile) {
+            $isRuleClassFile = $fileInfo->getExtension() !== 'php';
+            if ($isRuleClassFile) {
                 continue;
             }
 
@@ -50,10 +52,10 @@ class CheckExceptionsTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideListOfRuleNames
      */
-    public function testRuleHasAnExceptionWhichHasValidApi($ruleName)
+    public function testRuleHasAnExceptionWhichHasValidApi($ruleName): void
     {
         $exceptionClass = 'Respect\\Validation\\Exceptions\\'.$ruleName.'Exception';
-        $this->assertTrue(
+        static::assertTrue(
             class_exists($exceptionClass),
             sprintf('Expected exception class to exist: %s.', $ruleName)
         );

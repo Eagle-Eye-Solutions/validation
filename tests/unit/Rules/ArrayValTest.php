@@ -9,15 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use Respect\Validation\Rules\ArrayVal;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\ArrayVal
+ * @covers ArrayVal
  */
 class ArrayValTest extends RuleTestCase
 {
-    public function providerForValidInput()
+    public function providerForValidInput(): array
     {
         $rule = new ArrayVal();
 
@@ -28,7 +30,7 @@ class ArrayValTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput()
+    public function providerForInvalidInput(): array
     {
         $rule = new ArrayVal();
 

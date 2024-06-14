@@ -2,34 +2,29 @@ sudo: false
 
 language: php
 
-cache:
-  directories:
-    - $HOME/.composer/cache
+os: linux
+dist: focal
 
-matrix:
-  include:
-    - php: 7.0
-      env: COMPOSER_ARGUMENTS="--prefer-lowest --prefer-stable"
-    - php: 7.0
-    - php: 7.1
-    - php: nightly
-  allow_failures:
-    - php: nightly
-  fast_finish: true
+php:
+  - '8.2.13'
+  - '8.3.2'
 
 before_script:
-  - composer update --prefer-dist ${COMPOSER_ARGUMENTS}
+  - composer config -g http-basic.repo.packagist.com token $PACKAGIST_AUTHENTICATION_TOKEN
+  - if [ ! -z "$TRAVIS_PULL_REQUEST_BRANCH" ]; then
+    composer global require olivertappin/phpcs-diff;
+    sudo ln -s ~/.config/composer/vendor/bin/phpcs-diff /usr/bin/phpcs-diff;
+    git fetch `git remote get-url origin` $TRAVIS_BRANCH\:refs/remotes/origin/$TRAVIS_BRANCH;
+    fi;
+  - php -dmemory_limit=-1 $HOME/.phpenv/versions/$TRAVIS_PHP_VERSION/bin/composer install --no-interaction
+  - export APP_ENV="local"
 
 script:
-  - vendor/bin/phpunit --configuration phpunit.xml.dist --colors --coverage-clover=coverage.clover
-  - |
-    if [[ "${TRAVIS_PHP_VERSION}" == "7.1" ]]; then
-      vendor/bin/docheader check library tests
-    fi
+  - php -dxdebug.mode=coverage vendor/bin/phpunit --configuration phpunit.xml --colors --coverage-clover=coverage.clover
 
 after_script:
   - |
-    if [[ "${TRAVIS_PHP_VERSION}" == "7.1" ]]; then
+    if [[ "${TRAVIS_PHP_VERSION}" == "8.2" ]]; then
       wget https://scrutinizer-ci.com/ocular.phar
       php ocular.phar code-coverage:upload --format=php-clover coverage.clover
     fi

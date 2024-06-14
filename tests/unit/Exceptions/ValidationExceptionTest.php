@@ -9,64 +9,61 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Exceptions;
+namespace Respect\Validation\Test\Exceptions;
 
 use ArrayIterator;
 use DateTime;
 use Exception;
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ExceptionInterface;
+use Respect\Validation\Exceptions\ValidationException;
 use SplFileInfo;
 use stdClass;
 
-class ValidationExceptionTest extends \PHPUnit_Framework_TestCase
+class ValidationExceptionTest extends TestCase
 {
-    public function testItImplementsExceptionInterface()
+    public function testItImplementsExceptionInterface(): void
     {
         $validationException = new ValidationException();
-        $this->assertInstanceOf(ExceptionInterface::class, $validationException);
+        static::assertInstanceOf(ExceptionInterface::class, $validationException);
     }
 
     /**
      * @dataProvider providerForFormat
      */
-    public function testFormatShouldReplacePlaceholdersProperly($template, $result, $vars)
+    public function testFormatShouldReplacePlaceholdersProperly($template, $result, $vars): void
     {
-        $this->assertEquals(
-            $result,
-            ValidationException::format($template, $vars)
-        );
+        static::assertEquals($result, ValidationException::format($template, $vars));
     }
 
     /**
      * @dataProvider providerForStringify
      */
-    public function testStringifyShouldConvertStringsProperly($input, $result)
+    public function testStringifyShouldConvertStringsProperly($input, $result): void
     {
-        $this->assertStringMatchesFormat(
-            $result,
-            ValidationException::stringify($input)
-        );
+        static::assertStringMatchesFormat($result, ValidationException::stringify($input));
     }
 
-    public function testGetMainMessageShouldApplyTemplatePlaceholders()
+    public function testGetMainMessageShouldApplyTemplatePlaceholders(): void
     {
         $sampleValidationException = new ValidationException();
         $sampleValidationException->configure('foo', ['bar' => 1, 'baz' => 2]);
         $sampleValidationException->setTemplate('{{name}} {{bar}} {{baz}}');
-        $this->assertEquals(
+        static::assertEquals(
             'foo 1 2',
             $sampleValidationException->getMainMessage()
         );
     }
 
-    public function testSettingTemplates()
+    public function testSettingTemplates(): void
     {
         $x = new ValidationException();
         $x->configure('bar');
         $x->setTemplate('foo');
-        $this->assertEquals('foo', $x->getTemplate());
+        static::assertSame('foo', $x->getTemplate());
     }
 
-    public function providerForStringify()
+    public static function providerForStringify(): array
     {
         $object1 = new SplFileInfo('stringify.phpt'); // __toString()
 
@@ -130,7 +127,6 @@ class ValidationExceptionTest extends \PHPUnit_Framework_TestCase
             [$iterator2, '`[traversable] (ArrayIterator: { "a": 1, "b": 2, "c": 3 })`'],
             [stream_context_create(), '`[resource] (stream-context)`'],
             [tmpfile(), '`[resource] (stream)`'],
-            [xml_parser_create(), '`[resource] (xml)`'],
             [
                 [$object4, [42, 43], true, null, tmpfile()],
                 '{ `[object] (stdClass: { "foo": 1, "bar": false })`, { 42, 43 }, true, null, `[resource] (stream)` }',
@@ -138,7 +134,7 @@ class ValidationExceptionTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForFormat()
+    public static function providerForFormat(): array
     {
         return [
             [

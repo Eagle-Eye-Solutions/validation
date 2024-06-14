@@ -11,4 +11,4 @@ v::alwaysValid()->check(false);
 v::alwaysValid()->assert('string');
 v::alwaysValid()->assert(new stdClass());
 ?>
---EXPECTF--
+

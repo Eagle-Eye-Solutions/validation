@@ -9,64 +9,64 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Rules\FilterVar;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\FilterVar
- * @covers Respect\Validation\Exceptions\FilterVarException
+ * @covers FilterVar
+ * @covers FilterVarException
  */
-class FilterVarTest extends \PHPUnit_Framework_TestCase
+class FilterVarTest extends TestCase
 {
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage Cannot validate without filter flag
-     */
     public function testShouldThrowsExceptionWhenFilterIsNotDefined()
     {
+        $this->expectException(ComponentException::class);
+        $this->expectExceptionMessage("Cannot validate without filter flag");
         new FilterVar();
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\ComponentException
-     * @expectedExceptionMessage Cannot accept the given filter
-     */
     public function testShouldThrowsExceptionWhenFilterIsNotValid()
     {
+        $this->expectExceptionMessage("Cannot accept the given filter");
+        $this->expectException(ComponentException::class);
         new FilterVar(FILTER_SANITIZE_EMAIL);
     }
 
-    public function testShouldDefineFilterOnConstructor()
+    public function testShouldDefineFilterOnConstructor(): void
     {
         $rule = new FilterVar(FILTER_VALIDATE_REGEXP);
 
         $actualArguments = $rule->arguments;
         $expectedArguments = [FILTER_VALIDATE_REGEXP];
 
-        $this->assertEquals($expectedArguments, $actualArguments);
+        static::assertEquals($expectedArguments, $actualArguments);
     }
 
-    public function testShouldDefineFilterOptionsOnConstructor()
+    public function testShouldDefineFilterOptionsOnConstructor(): void
     {
         $rule = new FilterVar(FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED);
 
         $actualArguments = $rule->arguments;
         $expectedArguments = [FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED];
 
-        $this->assertEquals($expectedArguments, $actualArguments);
+        static::assertEquals($expectedArguments, $actualArguments);
     }
 
-    public function testShouldUseDefineFilterToValidate()
+    public function testShouldUseDefineFilterToValidate(): void
     {
         $rule = new FilterVar(FILTER_VALIDATE_EMAIL);
 
-        $this->assertTrue($rule->validate('henriquemoody@users.noreply.github.com'));
+        static::assertTrue($rule->validate('henriquemoody@users.noreply.github.com'));
     }
 
     public function testShouldUseDefineFilterOptionsToValidate()
     {
         $rule = new FilterVar(FILTER_VALIDATE_URL, FILTER_FLAG_QUERY_REQUIRED);
 
-        $this->assertTrue($rule->validate('http://example.com?foo=bar'));
+        static::assertTrue($rule->validate('http://example.com?foo=bar'));
     }
 }

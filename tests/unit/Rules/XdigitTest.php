@@ -9,18 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\XdigitException;
+use Respect\Validation\Rules\Xdigit;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Xdigit
- * @covers Respect\Validation\Exceptions\XdigitException
+ * @covers Xdigit
+ * @covers XdigitException
  */
-class XdigitTest extends \PHPUnit_Framework_TestCase
+class XdigitTest extends TestCase
 {
-    protected $xdigitsValidator;
+    protected Xdigit $xdigitsValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->xdigitsValidator = new Xdigit();
     }
@@ -28,33 +33,36 @@ class XdigitTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForXdigit
      */
-    public function testValidateValidHexasdecimalDigits($input)
+    public function testValidateValidHexasdecimalDigits($input): void
     {
-        $this->assertTrue($this->xdigitsValidator->assert($input));
-        $this->assertTrue($this->xdigitsValidator->check($input));
-        $this->assertTrue($this->xdigitsValidator->validate($input));
+        static::assertTrue($this->xdigitsValidator->assert($input));
+        static::assertTrue($this->xdigitsValidator->check($input));
+        static::assertTrue($this->xdigitsValidator->validate($input));
     }
 
     /**
      * @dataProvider providerForNotXdigit
-     * @expectedException Respect\Validation\Exceptions\XdigitException
+     *
+     * @throws \Exception
      */
-    public function testInvalidHexadecimalDigitsShouldThrowXdigitException($input)
+    public function testInvalidHexadecimalDigitsShouldThrowXdigitException($input): void
     {
-        $this->assertFalse($this->xdigitsValidator->validate($input));
-        $this->assertFalse($this->xdigitsValidator->assert($input));
+        $this->expectException(XdigitException::class);
+        static::assertFalse($this->xdigitsValidator->validate($input));
+        static::assertFalse($this->xdigitsValidator->assert($input));
     }
 
     /**
      * @dataProvider providerAdditionalChars
+     * @throws ComponentException
      */
-    public function testAdditionalCharsShouldBeRespected($additional, $query)
+    public function testAdditionalCharsShouldBeRespected($additional, $query): void
     {
         $validator = new Xdigit($additional);
-        $this->assertTrue($validator->validate($query));
+        static::assertTrue($validator->validate($query));
     }
 
-    public function providerAdditionalChars()
+    public static function providerAdditionalChars(): array
     {
         return [
             ['!@#$%^&*(){} ', '!@#$%^&*(){} abc 123'],
@@ -62,7 +70,7 @@ class XdigitTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForXdigit()
+    public static function providerForXdigit(): array
     {
         return [
             ['FFF'],
@@ -73,7 +81,7 @@ class XdigitTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotXdigit()
+    public static function providerForNotXdigit(): array
     {
         return [
             [''],

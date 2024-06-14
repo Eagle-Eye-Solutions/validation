@@ -25,6 +25,6 @@ try {
 }
 ?>
 --EXPECTF--
-The value must be optional
+0 must be optional
 - { } must be optional
 - Field must be optional

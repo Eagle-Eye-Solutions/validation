@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\EvenException;
+use Respect\Validation\Rules\Even;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Even
- * @covers Respect\Validation\Exceptions\EvenException
+ * @covers Even
+ * @covers EvenException
  */
-class EvenTest extends \PHPUnit_Framework_TestCase
+class EvenTest extends TestCase
 {
     protected $evenValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->evenValidator = new Even();
     }
@@ -28,24 +32,25 @@ class EvenTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerForEven
      */
-    public function testEvenNumbersShouldPass($input)
+    public function testEvenNumbersShouldPass($input): void
     {
-        $this->assertTrue($this->evenValidator->validate($input));
-        $this->assertTrue($this->evenValidator->check($input));
-        $this->assertTrue($this->evenValidator->assert($input));
+        static::assertTrue($this->evenValidator->validate($input));
+        static::assertTrue($this->evenValidator->check($input));
+        static::assertTrue($this->evenValidator->assert($input));
     }
 
     /**
      * @dataProvider providerForNotEven
-     * @expectedException Respect\Validation\Exceptions\EvenException
+     * @throws \Exception
      */
-    public function testNotEvenNumbersShouldFail($input)
+    public function testNotEvenNumbersShouldFail($input): void
     {
-        $this->assertFalse($this->evenValidator->validate($input));
-        $this->assertFalse($this->evenValidator->assert($input));
+        $this->expectException(EvenException::class);
+        static::assertFalse($this->evenValidator->validate($input));
+        static::assertFalse($this->evenValidator->assert($input));
     }
 
-    public function providerForEven()
+    public static function providerForEven(): array
     {
         return [
             [''],
@@ -56,7 +61,7 @@ class EvenTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotEven()
+    public static function providerForNotEven(): array
     {
         return [
             [-5],

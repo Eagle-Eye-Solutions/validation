@@ -9,14 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\PunctException;
+use Respect\Validation\Rules\Punct;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Punct
- * @covers Respect\Validation\Exceptions\PunctException
+ * @covers Punct
+ * @covers PunctException
  */
-class PunctTest extends \PHPUnit_Framework_TestCase
+class PunctTest extends TestCase
 {
     /**
      * @dataProvider providerForValidPunct
@@ -24,27 +29,29 @@ class PunctTest extends \PHPUnit_Framework_TestCase
     public function testValidDataWithPunctShouldReturnTrue($validPunct, $additional = '')
     {
         $validator = new Punct($additional);
-        $this->assertTrue($validator->validate($validPunct));
+        static::assertTrue($validator->validate($validPunct));
     }
 
     /**
      * @dataProvider providerForInvalidPunct
-     * @expectedException Respect\Validation\Exceptions\PunctException
+     *
      */
     public function testInvalidPunctShouldFailAndThrowPunctException($invalidPunct, $additional = '')
     {
+        $this->expectException(PunctException::class);
         $validator = new Punct($additional);
-        $this->assertFalse($validator->validate($invalidPunct));
-        $this->assertFalse($validator->assert($invalidPunct));
+        static::assertFalse($validator->validate($invalidPunct));
+        static::assertFalse($validator->assert($invalidPunct));
     }
 
     /**
      * @dataProvider providerForInvalidParams
-     * @expectedException Respect\Validation\Exceptions\ComponentException
+     *
      */
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
     {
-        $validator = new Punct($additional);
+        $this->expectException(ComponentException::class);
+        new Punct($additional);
     }
 
     /**
@@ -53,10 +60,10 @@ class PunctTest extends \PHPUnit_Framework_TestCase
     public function testAdditionalCharsShouldBeRespected($additional, $query)
     {
         $validator = new Punct($additional);
-        $this->assertTrue($validator->validate($query));
+        static::assertTrue($validator->validate($query));
     }
 
-    public function providerAdditionalChars()
+    public static function providerAdditionalChars()
     {
         return [
             ['abc123 ', '!@#$%^&*(){} abc 123'],
@@ -64,7 +71,7 @@ class PunctTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidParams()
+    public static function providerForInvalidParams()
     {
         return [
             [new \stdClass()],
@@ -73,7 +80,7 @@ class PunctTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForValidPunct()
+    public static function providerForValidPunct()
     {
         return [
             ['.'],
@@ -83,7 +90,7 @@ class PunctTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForInvalidPunct()
+    public static function providerForInvalidPunct()
     {
         return [
             [''],

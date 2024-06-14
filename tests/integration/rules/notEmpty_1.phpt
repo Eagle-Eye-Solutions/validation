@@ -21,4 +21,3 @@ v::notEmpty()->assert([1]);
 v::notEmpty()->check([1]);
 
 ?>
---EXPECTF--

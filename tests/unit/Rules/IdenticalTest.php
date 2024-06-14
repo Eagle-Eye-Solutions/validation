@@ -9,48 +9,49 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\IdenticalException;
+use Respect\Validation\Rules\Identical;
 use stdClass;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Identical
- * @covers Respect\Validation\Exceptions\IdenticalException
+ * @covers Identical
+ * @covers IdenticalException
  */
-class IdenticalTest extends \PHPUnit_Framework_TestCase
+class IdenticalTest extends TestCase
 {
     /**
      * @dataProvider providerForIdentical
      */
-    public function testInputIdenticalToExpectedValueShouldPass($compareTo, $input)
+    public function testInputIdenticalToExpectedValueShouldPass($compareTo, $input): void
     {
         $rule = new Identical($compareTo);
 
-        $this->assertTrue($rule->validate($input));
+        static::assertTrue($rule->validate($input));
     }
 
     /**
      * @dataProvider providerForNotIdentical
      */
-    public function testInputNotIdenticalToExpectedValueShouldPass($compareTo, $input)
+    public function testInputNotIdenticalToExpectedValueShouldPass($compareTo, $input): void
     {
         $rule = new Identical($compareTo);
 
-        $this->assertFalse($rule->validate($input));
+        static::assertFalse($rule->validate($input));
     }
 
-    /**
-     * @expectedException Respect\Validation\Exceptions\IdenticalException
-     * @expectedExceptionMessage "42" must be identical as 42
-     */
-    public function testShouldThrowTheProperExceptionWhenFailure()
+    public function testShouldThrowTheProperExceptionWhenFailure(): void
     {
+        $this->expectException(IdenticalException::class);
+        $this->expectExceptionMessage("\"42\" must be identical as 42");
         $rule = new Identical(42);
         $rule->check('42');
     }
 
-    public function providerForIdentical()
+    public static function providerForIdentical(): array
     {
         $object = new stdClass();
 
@@ -62,7 +63,7 @@ class IdenticalTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotIdentical()
+    public static function providerForNotIdentical(): array
     {
         return [
             [42, '42'],

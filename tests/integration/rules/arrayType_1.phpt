@@ -7,4 +7,4 @@ use Respect\Validation\Validator as v;
 v::arrayType()->assert([]);
 v::arrayType()->check([1, 2, 3]);
 ?>
---EXPECTF--
+

@@ -1,71 +1,50 @@
 <?php
 
-/*
- * This file is part of Respect/Validation.
- *
- * (c) Alexandre Gomes Gaigalas <alexandre@gaigalas.net>
- *
- * For the full copyright and license information, please view the "LICENSE.md"
- * file that was distributed with this source code.
- */
+namespace Respect\Validation\Test\Rules;
 
-namespace Respect\Validation\Rules;
+use Respect\Validation\Rules\Writable;
+use SplFileInfo;
+use SplFileObject;
+use stdClass;
 
-$GLOBALS['is_writable'] = null;
-
-function is_writable($writable)
+class WritableTest extends RuleTestCase
 {
-    $return = \is_writable($writable); // Running the real function
-    if (null !== $GLOBALS['is_writable']) {
-        $return = $GLOBALS['is_writable'];
-        $GLOBALS['is_writable'] = null;
+    public function providerForValidInput(): array
+    {
+        $sut = new Writable();
+        $directory = 'tests/fixtures/';
+        $filename = 'tests/fixtures/valid-image.png';
+
+        chmod($filename, 0644);
+        chmod($directory, 0755);
+
+        return [
+            'writable file' => [$sut, $filename],
+            'writable directory' => [$sut, $directory],
+            'writable SplFileInfo file' => [$sut, new SplFileInfo($filename)],
+            'writable SplFileObject file' => [$sut, new SplFileObject($filename)],
+        ];
     }
 
-    return $return;
-}
-
-/**
- * @group  rule
- * @covers Respect\Validation\Rules\Writable
- * @covers Respect\Validation\Exceptions\WritableException
- */
-class WritableTest extends \PHPUnit_Framework_TestCase
-{
-    /**
-     * @covers Respect\Validation\Rules\Writable::validate
-     */
-    public function testValidWritableFileShouldReturnTrue()
-    {
-        $GLOBALS['is_writable'] = true;
-
-        $rule = new Writable();
-        $input = '/path/of/a/valid/writable/file.txt';
-        $this->assertTrue($rule->validate($input));
-    }
-
-    /**
-     * @covers Respect\Validation\Rules\Writable::validate
-     */
-    public function testInvalidWritableFileShouldReturnFalse()
-    {
-        $GLOBALS['is_writable'] = false;
-
-        $rule = new Writable();
-        $input = '/path/of/an/invalid/writable/file.txt';
-        $this->assertFalse($rule->validate($input));
-    }
-
-    /**
-     * @covers Respect\Validation\Rules\Writable::validate
-     */
-    public function testShouldValidateObjects()
+    public function providerForInvalidInput(): array
     {
         $rule = new Writable();
-        $object = $this->createMock('SplFileInfo', ['isWritable'], ['somefile.txt']);
-        $object->expects($this->once())
-                ->method('isWritable')
-                ->will($this->returnValue(true));
+        $filename =  'tests/fixtures/non-writable.txt';
 
-        $this->assertTrue($rule->validate($object));
+        chmod($filename, 0555);
+
+        return [
+            'unwritable filename' => [$rule, $filename],
+            'unwritable SplFileInfo file' => [$rule, new SplFileInfo($filename)],
+            'unwritable SplFileObject file' => [$rule, new SplFileObject($filename)],
+            'invalid filename' => [$rule, '/path/of/a/valid/writable/file.txt'],
+            'empty string' => [$rule, ''],
+            'boolean true' => [$rule, true],
+            'boolean false' => [$rule, false],
+            'integer' => [$rule, 123456],
+            'float' => [$rule, 1.1111],
+            'instance of stdClass' => [$rule, new stdClass()],
+            'array' => [$rule, []],
+        ];
     }
 }

@@ -9,38 +9,43 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\StartsWithException;
+use Respect\Validation\Rules\StartsWith;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\StartsWith
- * @covers Respect\Validation\Exceptions\StartsWithException
+ * @covers StartsWith
+ * @covers StartsWithException
  */
-class StartsWithTest extends \PHPUnit_Framework_TestCase
+class StartsWithTest extends TestCase
 {
     /**
      * @dataProvider providerForStartsWith
      */
-    public function testStartsWith($start, $input)
+    public function testStartsWith($start, $input): void
     {
         $v = new StartsWith($start);
-        $this->assertTrue($v->__invoke($input));
-        $this->assertTrue($v->check($input));
-        $this->assertTrue($v->assert($input));
+        static::assertTrue($v->__invoke($input));
+        static::assertTrue($v->check($input));
+        static::assertTrue($v->assert($input));
     }
 
     /**
      * @dataProvider providerForNotStartsWith
-     * @expectedException Respect\Validation\Exceptions\StartsWithException
+     *
      */
     public function testNotStartsWith($start, $input, $caseSensitive = false)
     {
+        $this->expectException(StartsWithException::class);
         $v = new StartsWith($start, $caseSensitive);
-        $this->assertFalse($v->__invoke($input));
-        $this->assertFalse($v->assert($input));
+        static::assertFalse($v->__invoke($input));
+        static::assertFalse($v->assert($input));
     }
 
-    public function providerForStartsWith()
+    public static function providerForStartsWith()
     {
         return [
             ['foo', ['foo', 'bar']],
@@ -52,7 +57,7 @@ class StartsWithTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotStartsWith()
+    public static function providerForNotStartsWith()
     {
         return [
             ['foo', ''],

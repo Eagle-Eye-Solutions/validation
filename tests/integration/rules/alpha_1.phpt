@@ -8,4 +8,3 @@ v::alpha()->assert('abc');
 v::alpha()->check('abc');
 
 ?>
---EXPECTF--

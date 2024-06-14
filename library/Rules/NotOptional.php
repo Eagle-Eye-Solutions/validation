@@ -13,8 +13,8 @@ namespace Respect\Validation\Rules;
 
 class NotOptional extends AbstractRule
 {
-    public function validate($input)
+    public function validate($input): bool
     {
-        return false === in_array($input, [null, ''], true);
+        return !in_array($input, [null, ''], true);
     }
 }

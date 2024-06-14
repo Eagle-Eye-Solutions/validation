@@ -9,18 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\PhoneException;
+use Respect\Validation\Rules\Phone;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Phone
- * @covers Respect\Validation\Exceptions\PhoneException
+ * @covers Phone
+ * @covers PhoneException
  */
-class PhoneTest extends \PHPUnit_Framework_TestCase
+class PhoneTest extends TestCase
 {
-    protected $phoneValidator;
+    protected Phone $phoneValidator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->phoneValidator = new Phone();
     }
@@ -30,22 +34,23 @@ class PhoneTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidPhoneShouldReturnTrue($input)
     {
-        $this->assertTrue($this->phoneValidator->__invoke($input));
-        $this->assertTrue($this->phoneValidator->assert($input));
-        $this->assertTrue($this->phoneValidator->check($input));
+        static::assertTrue($this->phoneValidator->__invoke($input));
+        static::assertTrue($this->phoneValidator->assert($input));
+        static::assertTrue($this->phoneValidator->check($input));
     }
 
     /**
      * @dataProvider providerForNotPhone
-     * @expectedException Respect\Validation\Exceptions\PhoneException
+     * @throws \Exception
      */
-    public function testInvalidPhoneShouldThrowPhoneException($input)
+    public function testInvalidPhoneShouldThrowPhoneException($input): void
     {
-        $this->assertFalse($this->phoneValidator->__invoke($input));
-        $this->assertFalse($this->phoneValidator->assert($input));
+        $this->expectException(PhoneException::class);
+        static::assertFalse($this->phoneValidator->__invoke($input));
+        static::assertFalse($this->phoneValidator->assert($input));
     }
 
-    public function providerForPhone()
+    public static function providerForPhone(): array
     {
         return [
             ['+5-555-555-5555'],
@@ -96,7 +101,7 @@ class PhoneTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotPhone()
+    public static function providerForNotPhone(): array
     {
         return [
             [''],

@@ -9,43 +9,50 @@
  * file that was distributed with this source code.
  */
 
-namespace Respect\Validation\Rules;
+namespace Respect\Validation\Test\Rules;
+
+use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\OddException;
+use Respect\Validation\Rules\Odd;
 
 /**
  * @group  rule
- * @covers Respect\Validation\Rules\Odd
- * @covers Respect\Validation\Exceptions\OddException
+ * @covers Odd
+ * @covers OddException
  */
-class OddTest extends \PHPUnit_Framework_TestCase
+class OddTest extends TestCase
 {
-    protected $object;
+    protected Odd $object;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new Odd();
     }
 
     /**
      * @dataProvider providerForOdd
+     * @throws \Exception
      */
-    public function testOdd($input)
+    public function testOdd($input): void
     {
-        $this->assertTrue($this->object->assert($input));
-        $this->assertTrue($this->object->__invoke($input));
-        $this->assertTrue($this->object->check($input));
+        static::assertTrue($this->object->assert($input));
+        static::assertTrue($this->object->__invoke($input));
+        static::assertTrue($this->object->check($input));
     }
 
     /**
      * @dataProvider providerForNotOdd
-     * @expectedException Respect\Validation\Exceptions\OddException
+     *
+     * @throws \Exception
      */
-    public function testNotOdd($input)
+    public function testNotOdd($input): void
     {
-        $this->assertFalse($this->object->__invoke($input));
-        $this->assertFalse($this->object->assert($input));
+        $this->expectException(OddException::class);
+        static::assertFalse($this->object->__invoke($input));
+        static::assertFalse($this->object->assert($input));
     }
 
-    public function providerForOdd()
+    public static function providerForOdd(): array
     {
         return [
             [-5],
@@ -55,7 +62,7 @@ class OddTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function providerForNotOdd()
+    public static function providerForNotOdd(): array
     {
         return [
             [''],
