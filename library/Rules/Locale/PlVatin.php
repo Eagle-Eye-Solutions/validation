@@ -39,7 +39,7 @@ final class PlVatin extends AbstractRule
             $calculateControlNumber += $input[$i] * $weights[$i];
         }
 
-        $calculateControlNumber = $calculateControlNumber % 11;
+        $calculateControlNumber %= 11;
 
         return $targetControlNumber == $calculateControlNumber;
     }

@@ -37,7 +37,7 @@ abstract class AbstractInterval extends AbstractRule
 
         try {
             return new DateTime($value);
-        } catch (Exception $e) {
+        } catch (Exception) {
             // Pokémon Exception Handling
         }
 

@@ -47,7 +47,7 @@ abstract class AbstractRule implements Validatable
         $exception = $this->createException();
         $name = $this->name ?: ValidationException::stringify($input);
         $params = array_merge(
-            get_class_vars(__CLASS__),
+            get_class_vars(self::class),
             get_object_vars($this),
             $extraParams,
             compact('input')
@@ -76,7 +76,7 @@ abstract class AbstractRule implements Validatable
 
     protected function createException()
     {
-        $currentFqn = get_called_class();
+        $currentFqn = static::class;
         $exceptionFqn = str_replace('\\Rules\\', '\\Exceptions\\', $currentFqn);
         $exceptionFqn .= 'Exception';
 

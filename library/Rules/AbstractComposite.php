@@ -89,7 +89,7 @@ abstract class AbstractComposite extends AbstractRule
 
         if (is_string($validator)) {
             foreach ($this->rules as $rule) {
-                if (get_class($rule) == __NAMESPACE__.'\\'.$validator) {
+                if ($rule::class == __NAMESPACE__ . '\\' . $validator) {
                     return true;
                 }
             }

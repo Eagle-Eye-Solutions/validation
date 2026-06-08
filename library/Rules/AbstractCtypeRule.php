@@ -18,10 +18,10 @@ abstract class AbstractCtypeRule extends AbstractFilterRule
     protected function filterWhiteSpaceOption($input)
     {
         if (!empty($this->additionalChars)) {
-            $input = str_replace(str_split($this->additionalChars), '', $input);
+            $input = str_replace(str_split((string) $this->additionalChars), '', $input);
         }
 
-        return preg_replace('/\s/', '', $input);
+        return preg_replace('/\s/', '', (string) $input);
     }
 
     public function validateClean($input)

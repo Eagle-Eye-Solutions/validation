@@ -29,7 +29,7 @@ class NestedValidationException extends ValidationException implements IteratorA
      */
     public function addRelated(ValidationException $exception)
     {
-        $this->getRelated()->attach($exception);
+        $this->getRelated()->offsetSet($exception);
 
         return $this;
     }
@@ -99,7 +99,7 @@ class NestedValidationException extends ValidationException implements IteratorA
     public function findRelated($path)
     {
         $target = $this;
-        $pieces = explode('.', $path);
+        $pieces = explode('.', (string) $path);
 
         while (!empty($pieces) && $target) {
             $piece = array_shift($pieces);
@@ -158,7 +158,7 @@ class NestedValidationException extends ValidationException implements IteratorA
             $lastDepth = $currentDepth;
             $lastDepthOriginal = $currentDepthOriginal;
 
-            $childrenExceptions->attach(
+            $childrenExceptions->offsetSet(
                 $childException,
                 [
                     'depth' => $currentDepth,

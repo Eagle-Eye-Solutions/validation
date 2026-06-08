@@ -20,6 +20,6 @@ class Version extends AbstractRule
     {
         $pattern = '/^[0-9]+\.[0-9]+\.[0-9]+([+-][^+-][0-9A-Za-z-.]*)?$/';
 
-        return (bool) preg_match($pattern, $input);
+        return (bool) preg_match($pattern, (string) $input);
     }
 }

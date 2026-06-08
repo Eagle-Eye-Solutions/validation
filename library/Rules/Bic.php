@@ -23,7 +23,7 @@ class Bic extends AbstractWrapper
      * @param string  $countryCode The ISO 639-1 country code
      * @param Factory $factory
      */
-    public function __construct($countryCode, Factory $factory = null)
+    public function __construct($countryCode, ?Factory $factory = null)
     {
         if (null === $factory) {
             $factory = new Factory();

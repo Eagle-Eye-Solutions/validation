@@ -16,7 +16,7 @@ use Respect\Validation\Validatable;
 
 class Key extends AbstractRelated
 {
-    public function __construct($reference, Validatable $referenceValidator = null, $mandatory = true)
+    public function __construct($reference, ?Validatable $referenceValidator = null, $mandatory = true)
     {
         if (!is_scalar($reference) || '' === $reference) {
             throw new ComponentException('Invalid array key name');
@@ -31,6 +31,6 @@ class Key extends AbstractRelated
 
     public function hasReference($input)
     {
-        return is_array($input) && array_key_exists($this->reference, $input);
+        return is_array($input) && array_key_exists((string) $this->reference, $input);
     }
 }

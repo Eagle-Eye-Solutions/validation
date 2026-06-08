@@ -26,7 +26,7 @@ abstract class AbstractSearcher extends AbstractRule
             return $input == $this->haystack;
         }
 
-        return false !== mb_stripos($this->haystack, $input, 0, mb_detect_encoding($input));
+        return false !== mb_stripos((string) $this->haystack, (string) $input, 0, mb_detect_encoding((string) $input));
     }
 
     protected function validateIdentical($input)
@@ -39,7 +39,7 @@ abstract class AbstractSearcher extends AbstractRule
             return $input === $this->haystack;
         }
 
-        return false !== mb_strpos($this->haystack, $input, 0, mb_detect_encoding($input));
+        return false !== mb_strpos((string) $this->haystack, (string) $input, 0, mb_detect_encoding((string) $input));
     }
 
     public function validate($input)

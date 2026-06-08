@@ -24,7 +24,7 @@ class BankAccount extends AbstractWrapper
      * @param string  $bank        The bank
      * @param Factory $factory
      */
-    public function __construct($countryCode, $bank, Factory $factory = null)
+    public function __construct($countryCode, $bank, ?Factory $factory = null)
     {
         if (null === $factory) {
             $factory = new Factory();

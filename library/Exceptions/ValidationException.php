@@ -68,7 +68,7 @@ class ValidationException extends InvalidArgumentException implements ExceptionI
 
                 return ValidationException::stringify($value);
             },
-            $template
+            (string) $template
         );
     }
 
@@ -163,7 +163,7 @@ class ValidationException extends InvalidArgumentException implements ExceptionI
             return sprintf('"%s"', $value->format('Y-m-d H:i:s'));
         }
 
-        $class = get_class($value);
+        $class = $value::class;
 
         if ($value instanceof Traversable) {
             return sprintf('`[traversable] (%s: %s)`', $class, static::stringify(iterator_to_array($value), $nextDepth));
@@ -188,9 +188,9 @@ class ValidationException extends InvalidArgumentException implements ExceptionI
         return sprintf('`[object] (%s: %s)`', $class, str_replace('`', '', $properties));
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->getMainMessage();
+        return (string) $this->getMainMessage();
     }
 
     public function chooseTemplate()
@@ -330,7 +330,7 @@ class ValidationException extends InvalidArgumentException implements ExceptionI
             return $this->id;
         }
 
-        $pieces = explode('\\', get_called_class());
+        $pieces = explode('\\', static::class);
         $exceptionClassShortName = end($pieces);
         $ruleClassShortName = str_replace('Exception', '', $exceptionClassShortName);
         $ruleName = lcfirst($ruleClassShortName);

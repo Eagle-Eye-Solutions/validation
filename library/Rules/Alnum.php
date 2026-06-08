@@ -20,6 +20,6 @@ class Alnum extends AbstractCtypeRule
 
     protected function ctypeFunction($input)
     {
-        return ctype_alnum($input);
+        return ctype_alnum((string) $input);
     }
 }

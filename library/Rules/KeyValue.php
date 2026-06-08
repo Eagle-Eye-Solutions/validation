@@ -41,7 +41,7 @@ class KeyValue extends AbstractRule
         try {
             $rule = Validator::__callStatic($this->ruleName, [$input[$this->baseKey]]);
             $rule->setName($this->comparedKey);
-        } catch (ComponentException $exception) {
+        } catch (ComponentException) {
             throw $this->reportError($input, ['component' => true]);
         }
 
@@ -94,7 +94,7 @@ class KeyValue extends AbstractRule
     {
         try {
             $rule = $this->getRule($input);
-        } catch (ValidationException $e) {
+        } catch (ValidationException) {
             return false;
         }
 

@@ -32,7 +32,6 @@ class AbstractWrapperTest extends TestCase
     {
         $reflectionObject = new ReflectionObject($wrapper);
         $reflectionProperty = $reflectionObject->getProperty('validatable');
-        $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($wrapper, $validatable);
     }
 

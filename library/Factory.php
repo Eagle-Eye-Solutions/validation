@@ -26,14 +26,14 @@ class Factory
     private function filterRulePrefix($rulePrefix)
     {
         $namespaceSeparator = '\\';
-        $rulePrefix = rtrim($rulePrefix, $namespaceSeparator);
+        $rulePrefix = rtrim((string) $rulePrefix, $namespaceSeparator);
 
-        return $rulePrefix.$namespaceSeparator;
+        return $rulePrefix . $namespaceSeparator;
     }
 
     public function appendRulePrefix($rulePrefix)
     {
-        array_push($this->rulePrefixes, $this->filterRulePrefix($rulePrefix));
+        $this->rulePrefixes[] = $this->filterRulePrefix($rulePrefix);
     }
 
     public function prependRulePrefix($rulePrefix)
@@ -48,7 +48,7 @@ class Factory
         }
 
         foreach ($this->getRulePrefixes() as $prefix) {
-            $className = $prefix.ucfirst($ruleName);
+            $className = $prefix . ucfirst((string) $ruleName);
             if (!class_exists($className)) {
                 continue;
             }

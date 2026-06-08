@@ -15,15 +15,15 @@ class Slug extends AbstractRule
 {
     public function validate($input)
     {
-        if (mb_strstr($input, '--')) {
+        if (mb_strstr((string) $input, '--')) {
             return false;
         }
 
-        if (!preg_match('@^[0-9a-z\-]+$@', $input)) {
+        if (!preg_match('@^[0-9a-z\-]+$@', (string) $input)) {
             return false;
         }
 
-        if (preg_match('@^-|-$@', $input)) {
+        if (preg_match('@^-|-$@', (string) $input)) {
             return false;
         }
 

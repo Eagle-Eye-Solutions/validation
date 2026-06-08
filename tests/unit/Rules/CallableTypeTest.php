@@ -60,7 +60,7 @@ class CallableTypeTest extends TestCase
     public static function providerForCallable(): array
     {
         return [
-            [function () {
+            [function (): void {
             }],
             ['trim'],
             [__METHOD__],

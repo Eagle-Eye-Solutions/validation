@@ -59,7 +59,7 @@ class CreditCard extends AbstractRule
             return false;
         }
 
-        $input = preg_replace('([^0-9])', '', $input);
+        $input = preg_replace('([^0-9])', '', (string) $input);
 
         if (empty($input)) {
             return false;

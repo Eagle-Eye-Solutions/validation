@@ -24,7 +24,7 @@ abstract class AbstractRelated extends AbstractRule
 
     abstract public function getReferenceValue($input);
 
-    public function __construct($reference, Validatable $validator = null, $mandatory = true)
+    public function __construct($reference, ?Validatable $validator = null, $mandatory = true)
     {
         $this->setName($reference);
         if ($validator && !$validator->getName()) {

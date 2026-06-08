@@ -17,6 +17,6 @@ abstract class AbstractRegexRule extends AbstractFilterRule
 
     public function validateClean($input)
     {
-        return preg_match($this->getPregFormat(), $input);
+        return preg_match($this->getPregFormat(), (string) $input);
     }
 }

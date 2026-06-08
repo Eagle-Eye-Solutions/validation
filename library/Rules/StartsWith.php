@@ -37,7 +37,7 @@ class StartsWith extends AbstractRule
             return reset($input) == $this->startValue;
         }
 
-        return 0 === mb_stripos($input, $this->startValue, 0, mb_detect_encoding($input));
+        return 0 === mb_stripos((string) $input, (string) $this->startValue, 0, mb_detect_encoding((string) $input));
     }
 
     protected function validateIdentical($input)
@@ -46,6 +46,6 @@ class StartsWith extends AbstractRule
             return reset($input) === $this->startValue;
         }
 
-        return 0 === mb_strpos($input, $this->startValue, 0, mb_detect_encoding($input));
+        return 0 === mb_strpos((string) $input, (string) $this->startValue, 0, mb_detect_encoding((string) $input));
     }
 }

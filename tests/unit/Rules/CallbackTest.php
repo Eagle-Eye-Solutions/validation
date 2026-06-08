@@ -75,7 +75,7 @@ class CallbackTest extends TestCase
 
     public function testCallbackValidatorShouldAcceptArrayCallbackDefinitions()
     {
-        $v = new Callback([$this, 'thisIsASampleCallbackUsedInsideThisTest']);
+        $v = new Callback($this->thisIsASampleCallbackUsedInsideThisTest(...));
         static::assertTrue($v->assert('test'));
     }
 

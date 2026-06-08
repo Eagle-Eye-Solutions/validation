@@ -20,6 +20,6 @@ class Digit extends AbstractCtypeRule
 
     protected function ctypeFunction($input)
     {
-        return ctype_digit($input);
+        return ctype_digit((string) $input);
     }
 }

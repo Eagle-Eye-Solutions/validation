@@ -67,8 +67,7 @@ class Domain extends AbstractComposite
             }
         }
 
-        if (count($parts = explode('.', $input)) < 2
-            || !$this->tld->validate(array_pop($parts))) {
+        if (count($parts = explode('.', (string) $input)) < 2 || !$this->tld->validate(array_pop($parts))) {
             return false;
         }
 
@@ -118,7 +117,7 @@ class Domain extends AbstractComposite
             $chk->check($input);
         }
 
-        if (count($parts = explode('.', $input)) >= 2) {
+        if (count($parts = explode('.', (string) $input)) >= 2) {
             $this->tld->check(array_pop($parts));
         }
 

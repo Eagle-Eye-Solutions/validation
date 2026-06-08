@@ -89,13 +89,13 @@ class KeyTest extends TestCase
         try {
             $rule->assert($input);
             $this->fail('`assert()` must throws exception');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
         }
 
         try {
             $rule->check($input);
             $this->fail('`check()` must throws exception');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
         }
 
         static::assertFalse($rule->validate($input));

@@ -15,6 +15,6 @@ class Punct extends AbstractCtypeRule
 {
     protected function ctypeFunction($input)
     {
-        return ctype_punct($input);
+        return ctype_punct((string) $input);
     }
 }
