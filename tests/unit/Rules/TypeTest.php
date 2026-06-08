@@ -82,7 +82,7 @@ class TypeTest extends TestCase
             ['array', []],
             ['bool', true],
             ['boolean', false],
-            ['callable', function () {
+            ['callable', function (): void {
             }],
             ['double', 0.8],
             ['float', 1.0],

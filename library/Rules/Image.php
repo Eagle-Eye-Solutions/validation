@@ -18,7 +18,7 @@ class Image extends AbstractRule
 {
     public $fileInfo;
 
-    public function __construct(finfo $fileInfo = null)
+    public function __construct(?finfo $fileInfo = null)
     {
         $this->fileInfo = $fileInfo ?: new finfo(FILEINFO_MIME_TYPE);
     }
@@ -37,6 +37,6 @@ class Image extends AbstractRule
             return false;
         }
 
-        return 0 === mb_strpos($this->fileInfo->file($input), 'image/');
+        return 0 === mb_strpos((string) $this->fileInfo->file($input), 'image/');
     }
 }

@@ -15,6 +15,6 @@ class Uppercase extends AbstractRule
 {
     public function validate($input)
     {
-        return $input === mb_strtoupper($input, mb_detect_encoding($input));
+        return $input === mb_strtoupper((string) $input, mb_detect_encoding((string) $input));
     }
 }

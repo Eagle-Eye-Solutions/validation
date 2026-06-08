@@ -138,7 +138,7 @@ class AbstractRuleTest extends TestCase
 
         $exception = $abstractRuleMock->reportError('something');
 
-        static::assertInstanceOf(get_class($exceptionMock), $exception);
+        static::assertInstanceOf($exceptionMock::class, $exception);
     }
 
     /**

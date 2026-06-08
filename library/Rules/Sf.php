@@ -25,7 +25,7 @@ class Sf extends AbstractRule
 
     public function __construct($name, array $params = [])
     {
-        $this->name = ucfirst($name);
+        $this->name = ucfirst((string) $name);
         $this->constraint = $this->createSymfonyConstraint($this->name, $params);
     }
 

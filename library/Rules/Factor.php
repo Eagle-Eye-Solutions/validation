@@ -49,6 +49,6 @@ class Factor extends AbstractRule
 
         // The dividend divided by the input must be an integer if input is a
         // factor of the dividend.
-        return is_integer($dividend / $input);
+        return is_int($dividend / $input);
     }
 }

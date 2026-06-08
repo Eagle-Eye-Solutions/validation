@@ -16,7 +16,7 @@ class Cnpj extends AbstractRule
     public function validate($input)
     {
         //Code ported from jsfromhell.com
-        $c = preg_replace('/\D/', '', $input);
+        $c = preg_replace('/\D/', '', (string) $input);
         $b = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
         if (mb_strlen($c) != 14) {

@@ -22,7 +22,7 @@ class PlIdentityCard extends AbstractRule
 {
     public function validate($input)
     {
-        if (!preg_match('/^[A-Z0-9]{9}$/', $input)) {
+        if (!preg_match('/^[A-Z0-9]{9}$/', (string) $input)) {
             return false;
         }
 

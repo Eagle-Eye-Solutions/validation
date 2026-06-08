@@ -35,7 +35,7 @@ class Mimetype extends AbstractRule
      * @param string $mimetype
      * @param finfo  $fileInfo
      */
-    public function __construct($mimetype, finfo $fileInfo = null)
+    public function __construct($mimetype, ?finfo $fileInfo = null)
     {
         $this->mimetype = $mimetype;
         $this->fileInfo = $fileInfo ?: new finfo(FILEINFO_MIME_TYPE);

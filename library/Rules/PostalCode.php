@@ -176,7 +176,7 @@ class PostalCode extends Regex
 
     public $countryCode;
 
-    public function __construct($countryCode, CountryCode $countryCodeRule = null)
+    public function __construct($countryCode, ?CountryCode $countryCodeRule = null)
     {
         $countryCodeRule = $countryCodeRule ?: new CountryCode();
         if (!$countryCodeRule->validate($countryCode)) {
@@ -184,7 +184,7 @@ class PostalCode extends Regex
         }
 
         $regex = self::DEFAULT_PATTERN;
-        $upperCountryCode = mb_strtoupper($countryCode);
+        $upperCountryCode = mb_strtoupper((string) $countryCode);
         if (isset($this->postalCodes[$upperCountryCode])) {
             $regex = $this->postalCodes[$upperCountryCode];
         }

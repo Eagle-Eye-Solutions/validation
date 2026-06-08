@@ -66,7 +66,7 @@ class ResourceTypeTest extends TestCase
             ['String'],
             [123],
             [[]],
-            [function () {
+            [function (): void {
             }],
             [new \stdClass()],
             [null],

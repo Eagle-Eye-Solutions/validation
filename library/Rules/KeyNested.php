@@ -20,7 +20,7 @@ class KeyNested extends AbstractRelated
     {
         try {
             $this->getReferenceValue($input);
-        } catch (ComponentException $cex) {
+        } catch (ComponentException) {
             return false;
         }
 
@@ -29,12 +29,12 @@ class KeyNested extends AbstractRelated
 
     private function getReferencePieces()
     {
-        return explode('.', rtrim($this->reference, '.'));
+        return explode('.', rtrim((string) $this->reference, '.'));
     }
 
     private function getValueFromArray($array, $key)
     {
-        if (!array_key_exists($key, $array)) {
+        if (!array_key_exists((string) $key, $array)) {
             $message = sprintf('Cannot select the key %s from the given array', $this->reference);
             throw new ComponentException($message);
         }

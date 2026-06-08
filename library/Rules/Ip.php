@@ -32,15 +32,17 @@ class Ip extends AbstractRule
 
     protected function parseRange($input)
     {
-        if ($input === null || $input == '*' || $input == '*.*.*.*'
-            || $input == '0.0.0.0-255.255.255.255') {
+        if (
+            $input === null || $input == '*' || $input == '*.*.*.*'
+            || $input == '0.0.0.0-255.255.255.255'
+        ) {
             return;
         }
 
         $range = ['min' => null, 'max' => null, 'mask' => null];
 
         if (mb_strpos($input, '-') !== false) {
-            list($range['min'], $range['max']) = explode('-', $input);
+            [$range['min'], $range['max']] = explode('-', $input);
         } elseif (mb_strpos($input, '*') !== false) {
             $this->parseRangeUsingWildcards($input, $range);
         } elseif (mb_strpos($input, '/') !== false) {
@@ -62,7 +64,7 @@ class Ip extends AbstractRule
 
     protected function fillAddress(&$input, $char = '*')
     {
-        while (mb_substr_count($input, '.') < 3) {
+        while (mb_substr_count((string) $input, '.') < 3) {
             $input .= '.'.$char;
         }
     }
@@ -77,7 +79,7 @@ class Ip extends AbstractRule
 
     protected function parseRangeUsingCidr($input, &$range)
     {
-        $input = explode('/', $input);
+        $input = explode('/', (string) $input);
         $this->fillAddress($input[0], '0');
 
         $range['min'] = $input[0];
@@ -93,7 +95,7 @@ class Ip extends AbstractRule
             throw new ComponentException('Invalid network mask');
         }
 
-        $range['mask'] = sprintf('%032b', ip2long(long2ip(~(pow(2, (32 - $input[1])) - 1))));
+        $range['mask'] = sprintf('%032b', ip2long(long2ip(~(2 ** (32 - $input[1]) - 1))));
     }
 
     public function validate($input)

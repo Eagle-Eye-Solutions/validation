@@ -25,11 +25,11 @@ class Bsn extends AbstractRule
      */
     public function validate($input)
     {
-        if (!ctype_digit($input)) {
+        if (!ctype_digit((string) $input)) {
             return false;
         }
 
-        if (mb_strlen($input) !== 9) {
+        if (mb_strlen((string) $input) !== 9) {
             return false;
         }
 

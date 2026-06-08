@@ -92,7 +92,7 @@ class KeySet extends AllOf
         }
 
         foreach ($this->getRules() as $keyRule) {
-            if (!array_key_exists($keyRule->reference, $input) && $keyRule->mandatory) {
+            if (!array_key_exists((string) $keyRule->reference, $input) && $keyRule->mandatory) {
                 return false;
             }
 

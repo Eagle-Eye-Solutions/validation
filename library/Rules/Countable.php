@@ -15,6 +15,6 @@ class Countable extends AbstractRule
 {
     public function validate($input)
     {
-        return is_array($input) || $input instanceof \Countable;
+        return is_countable($input);
     }
 }

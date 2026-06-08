@@ -15,6 +15,6 @@ class Cntrl extends AbstractCtypeRule
 {
     protected function ctypeFunction($input)
     {
-        return ctype_cntrl($input);
+        return ctype_cntrl((string) $input);
     }
 }

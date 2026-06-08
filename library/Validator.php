@@ -257,7 +257,7 @@ class Validator extends AllOf
      */
     public static function create()
     {
-        $ref = new ReflectionClass(__CLASS__);
+        $ref = new ReflectionClass(self::class);
 
         return $ref->newInstanceArgs(func_get_args());
     }

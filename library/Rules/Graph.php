@@ -15,6 +15,6 @@ class Graph extends AbstractCtypeRule
 {
     protected function ctypeFunction($input)
     {
-        return ctype_graph($input);
+        return ctype_graph((string) $input);
     }
 }

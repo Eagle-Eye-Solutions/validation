@@ -68,7 +68,7 @@ class ScalarValTest extends TestCase
     {
         return [
             [[]],
-            [function () {
+            [function (): void {
             }],
             [new \stdClass()],
             [null],

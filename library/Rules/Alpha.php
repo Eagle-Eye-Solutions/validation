@@ -20,6 +20,6 @@ class Alpha extends AbstractCtypeRule
 
     protected function ctypeFunction($input)
     {
-        return ctype_alpha($input);
+        return ctype_alpha((string) $input);
     }
 }

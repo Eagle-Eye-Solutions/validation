@@ -15,6 +15,6 @@ class Xdigit extends AbstractCtypeRule
 {
     public function ctypeFunction($input)
     {
-        return ctype_xdigit($input);
+        return ctype_xdigit((string) $input);
     }
 }

@@ -15,6 +15,6 @@ class Lowercase extends AbstractRule
 {
     public function validate($input)
     {
-        return $input === mb_strtolower($input, mb_detect_encoding($input));
+        return $input === mb_strtolower((string) $input, mb_detect_encoding((string) $input));
     }
 }

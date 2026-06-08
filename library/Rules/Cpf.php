@@ -16,7 +16,7 @@ class Cpf extends AbstractRule
     public function validate($input)
     {
         // Code ported from jsfromhell.com
-        $c = preg_replace('/\D/', '', $input);
+        $c = preg_replace('/\D/', '', (string) $input);
 
         if (mb_strlen($c) != 11 || preg_match("/^{$c[0]}{11}$/", $c)) {
             return false;
