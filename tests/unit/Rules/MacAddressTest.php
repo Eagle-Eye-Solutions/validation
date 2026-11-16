@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\MacAddressException;
 use Respect\Validation\Rules\MacAddress;
 
-/**
- * @group  rule
- * @covers MacAddress
- * @covers MacAddressException
- */
+#[CoversClass(MacAddress::class)]
+#[CoversClass(MacAddressException::class)]
+#[Group('rule')]
 class MacAddressTest extends TestCase
 {
     protected MacAddress $macaddressValidator;
@@ -29,9 +30,7 @@ class MacAddressTest extends TestCase
         $this->macaddressValidator = new MacAddress();
     }
 
-    /**
-     * @dataProvider providerForMacAddress
-     */
+    #[DataProvider('providerForMacAddress')]
     public function testValidMacaddressesShouldReturnTrue($input): void
     {
         static::assertTrue($this->macaddressValidator->__invoke($input));
@@ -40,9 +39,9 @@ class MacAddressTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotMacAddress
      * @throws \Exception
      */
+    #[DataProvider('providerForNotMacAddress')]
     public function testInvalidMacaddressShouldThrowMacAddressException($input): void
     {
         $this->expectException(MacAddressException::class);

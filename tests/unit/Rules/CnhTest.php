@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\CnhException;
 use Respect\Validation\Rules\Cnh;
 
-/**
- * @group  rule
- * @covers Cnh
- * @covers CnhException
- */
+#[CoversClass(Cnh::class)]
+#[CoversClass(CnhException::class)]
+#[Group('rule')]
 class CnhTest extends TestCase
 {
     protected $cnhValidator;
@@ -30,9 +31,9 @@ class CnhTest extends TestCase
     }
 
     /**
-     * @dataProvider validCnhProvider
      * @throws \Exception
      */
+    #[DataProvider('validCnhProvider')]
     public function testValidCnh($cnh): void
     {
         static::assertTrue($this->cnhValidator->assert($cnh));
@@ -41,10 +42,9 @@ class CnhTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidCnhProvider
-     *
      * @throws \Exception
      */
+    #[DataProvider('invalidCnhProvider')]
     public function testInvalidCnh($cnh): void
     {
         $this->expectException(CnhException::class);
@@ -53,9 +53,9 @@ class CnhTest extends TestCase
     }
 
     /**
-     * @dataProvider notIntegerCnhProvider
      * @throws \Exception
      */
+    #[DataProvider('notIntegerCnhProvider')]
     public function testNotIntegerCnh($cnh): void
     {
         $this->expectException(CnhException::class);
@@ -64,10 +64,9 @@ class CnhTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidCnhLengthProvider
-     *
      * @throws \Exception
      */
+    #[DataProvider('invalidCnhLengthProvider')]
     public function testInvalidLengthCnh($cnh): void
     {
         $this->expectException(CnhException::class);

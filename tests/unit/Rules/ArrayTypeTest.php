@@ -11,14 +11,13 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\ArrayType;
 
-/**
- * @group  rule
- */
+#[Group('rule')]
 class ArrayTypeTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new ArrayType();
 
@@ -29,7 +28,7 @@ class ArrayTypeTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new ArrayType();
 

@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\Nif;
 
-/**
- * @group  rule
- * @covers Nif
- */
+#[CoversClass(Nif::class)]
+#[Group('rule')]
 class NifTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new Nif();
 
@@ -47,7 +47,7 @@ class NifTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new Nif();
 

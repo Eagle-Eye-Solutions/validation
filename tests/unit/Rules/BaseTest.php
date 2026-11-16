@@ -11,23 +11,24 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\BaseException;
 use Respect\Validation\Rules\Base;
 
-/**
- * @group  rule
- * @covers Base
- * @covers BaseException
- */
+#[CoversClass(Base::class)]
+#[CoversClass(BaseException::class)]
+#[Group('rule')]
 class BaseTest extends TestCase
 {
     protected $object;
 
     /**
-     * @dataProvider providerForBase
      * @throws \Exception
      */
+    #[DataProvider('providerForBase')]
     public function testBase($base, $input): void
     {
         $object = new Base($base);
@@ -36,9 +37,7 @@ class BaseTest extends TestCase
         static::assertTrue($object->assert($input));
     }
 
-    /**
-     * @dataProvider providerForInvalidBase
-     */
+    #[DataProvider('providerForInvalidBase')]
     public function testInvalidBase($base, $input): void
     {
         $object = new Base($base);
@@ -46,9 +45,9 @@ class BaseTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForExceptionBase
      * @throws \Exception
      */
+    #[DataProvider('providerForExceptionBase')]
     public function testExceptionBase($base, $input): void
     {
         $this->expectException(BaseException::class);
@@ -58,9 +57,9 @@ class BaseTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForCustomBase
      * @throws \Exception
      */
+    #[DataProvider('providerForCustomBase')]
     public function testCustomBase($base, $custom, $input): void
     {
         $object = new Base($base, $custom);

@@ -13,40 +13,33 @@ namespace Respect\Validation\Test\Rules;
 
 use org\bovigo\vfs\content\LargeFileContent;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ExistsException;
 use Respect\Validation\Rules\Exists;
 use SplFileInfo;
 
-/**
- * @group  rule
- * @covers Exists
- * @covers ExistsException
- */
+#[CoversClass(Exists::class)]
+#[CoversClass(ExistsException::class)]
+#[Group('rule')]
 class ExistsTest extends TestCase
 {
-    /**
-     * @dataProvider fileProvider
-     * @covers Exists::validate
-     */
+    #[DataProvider('fileProvider')]
     public function testExistentFileShouldReturnTrue($file)
     {
         $rule = new Exists();
         static::assertTrue($rule->validate($file->url()));
     }
 
-    /**
-     * @covers Exists::validate
-     */
     public function testNonExistentFileShouldReturnFalse()
     {
         $rule = new Exists();
         static::assertFalse($rule->validate('/path/of/a/non-existent/file'));
     }
 
-    /**
-     * @dataProvider fileProvider
-     * @covers Exists::validate
-     */
+    #[DataProvider('fileProvider')]
     public function testShouldValidateObjects($file)
     {
         $rule = new Exists();

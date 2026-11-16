@@ -11,21 +11,20 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException as ComponentExceptionAlias;
 use Respect\Validation\Exceptions\PrntException;
 use Respect\Validation\Rules\Prnt;
 
-/**
- * @group  rule
- * @covers Prnt
- * @covers PrntException
- */
+#[CoversClass(Prnt::class)]
+#[CoversClass(PrntException::class)]
+#[Group('rule')]
 class PrntTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidPrint
-     */
+    #[DataProvider('providerForValidPrint')]
     public function testValidDataWithPrintCharsShouldReturnTrue($validPrint, $additional = ''): void
     {
         $validator = new Prnt($additional);
@@ -33,9 +32,9 @@ class PrntTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidPrint
      * @throws ComponentExceptionAlias
      */
+    #[DataProvider('providerForInvalidPrint')]
     public function testInvalidPrintShouldFailAndThrowPrntException($invalidPrint, $additional = ''): void
     {
         $this->expectException(PrntException::class);
@@ -44,9 +43,7 @@ class PrntTest extends TestCase
         static::assertFalse($validator->assert($invalidPrint));
     }
 
-    /**
-     * @dataProvider providerForInvalidParams
-     */
+    #[DataProvider('providerForInvalidParams')]
     public function testInvalidConstructorParamsn($additional): void
     {
         $this->expectException(ComponentExceptionAlias::class);
@@ -54,9 +51,9 @@ class PrntTest extends TestCase
     }
 
     /**
-     * @dataProvider providerAdditionalChars
      * @throws ComponentExceptionAlias
      */
+    #[DataProvider('providerAdditionalChars')]
     public function testAdditionalCharsShouldBeRespected($additional, $query): void
     {
         $validator = new Prnt($additional);

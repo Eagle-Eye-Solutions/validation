@@ -11,20 +11,21 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ReadableException;
 use Respect\Validation\Rules\Readable;
 use SplFileInfo;
 use stdClass;
 
 
-/**
- * @group  rule
- * @covers Readable
- * @covers ReadableException
- */
+#[CoversClass(Readable::class)]
+#[CoversClass(ReadableException::class)]
+#[Group('rule')]
 class ReadableTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $file = realpath(__DIR__.'/../../fixtures/valid-image.gif');
         $rule = new Readable();
@@ -35,7 +36,7 @@ class ReadableTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $file = realpath(__DIR__.'/../../fixtures/invalid-image.gif');
         $rule = new Readable();

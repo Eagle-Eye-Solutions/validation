@@ -11,17 +11,17 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\AllOfException;
 use Respect\Validation\Exceptions\EqualsException;
 use Respect\Validation\Exceptions\KeyValueException;
 use Respect\Validation\Rules\KeyValue;
 
-/**
- * @group  rule
- * @covers KeyValue
- * @covers KeyValueException
- */
+#[CoversClass(KeyValue::class)]
+#[CoversClass(KeyValueException::class)]
+#[Group('rule')]
 class KeyValueTest extends TestCase
 {
     public function testShouldDefineValuesOnConstructor(): void

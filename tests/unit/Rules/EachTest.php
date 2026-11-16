@@ -11,21 +11,23 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Exceptions\EachException;
+use Respect\Validation\Rules\AlwaysInvalid;
+use Respect\Validation\Rules\AlwaysValid;
 use Respect\Validation\Rules\Each;
 
-/**
- * @group  rule
- * @covers Each
- * @covers EachException
- */
+#[CoversClass(Each::class)]
+#[CoversClass(EachException::class)]
+#[Group('rule')]
 class EachTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
-        $ruleNotEmpty = new Each($this->getRuleMock(true));
-        $ruleAlphaItemIntKey = new Each($this->getRuleMock(true), $this->getRuleMock(true));
-        $ruleOnlyKeyValidation = new Each(null, $this->getRuleMock(true));
+        $ruleNotEmpty = new Each(new AlwaysValid());
+        $ruleAlphaItemIntKey = new Each(new AlwaysValid(), new AlwaysValid());
+        $ruleOnlyKeyValidation = new Each(null, new AlwaysValid());
 
         $intStack = new \SplStack();
         $intStack->push(1);
@@ -47,10 +49,10 @@ class EachTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
-        $rule = new Each($this->getRuleMock(false));
-        $ruleOnlyKeyValidation = new Each(null, $this->getRuleMock(false));
+        $rule = new Each(new AlwaysInvalid());
+        $ruleOnlyKeyValidation = new Each(null, new AlwaysInvalid());
 
         return [
             [$rule, 123],

@@ -11,19 +11,19 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\TrueValException;
 use Respect\Validation\Rules\TrueVal;
 
-/**
- * @group  rule
- * @covers TrueVal
- * @covers TrueValException
- */
+#[CoversClass(TrueVal::class)]
+#[CoversClass(TrueValException::class)]
+#[Group('rule')]
 class TrueValTest extends TestCase
 {
-    /**
-     * @dataProvider validTrueProvider
-     */
+    #[DataProvider('validTrueProvider')]
     public function testShouldValidatePatternAccordingToTheDefinedLocale($input)
     {
         $rule = new TrueVal();
@@ -49,9 +49,7 @@ class TrueValTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidTrueProvider
-     */
+    #[DataProvider('invalidTrueProvider')]
     public function testShouldNotValidatePatternAccordingToTheDefinedLocale($input)
     {
         $rule = new TrueVal();

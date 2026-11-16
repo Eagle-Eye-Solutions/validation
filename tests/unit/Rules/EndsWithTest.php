@@ -11,21 +11,22 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\EndsWithException;
 use Respect\Validation\Rules\EndsWith;
 
-/**
- * @group  rule
- * @covers EndsWith
- * @covers EndsWithException
- */
+#[CoversClass(EndsWith::class)]
+#[CoversClass(EndsWithException::class)]
+#[Group('rule')]
 class EndsWithTest extends TestCase
 {
     /**
-     * @dataProvider providerForEndsWith
      * @throws \Exception
      */
+    #[DataProvider('providerForEndsWith')]
     public function testStringsEndingWithExpectedValueShouldPass($start, $input): void
     {
         $v = new EndsWith($start);
@@ -35,9 +36,9 @@ class EndsWithTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotEndsWith
      * @throws \Exception
      */
+    #[DataProvider('providerForNotEndsWith')]
     public function testStringsNotEndingWithExpectedValueShouldNotPass($start, $input, $caseSensitive = false): void
     {
         $this->expectException(EndsWithException::class);

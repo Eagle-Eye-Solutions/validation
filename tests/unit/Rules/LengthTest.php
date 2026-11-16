@@ -11,21 +11,23 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\LengthException;
 use Respect\Validation\Rules\Length;
 
-/**
- * @group  rule
- * @covers Length
- * @covers LengthException
- */
+#[CoversClass(Length::class)]
+#[CoversClass(LengthException::class)]
+#[Group('rule')]
 class LengthTest extends TestCase
 {
     /**
-     * @dataProvider providerForValidLengthInclusive
      * @throws ComponentException
      */
+    #[DataProvider('providerForValidLengthInclusive')]
     public function testLengthInsideBoundsForInclusiveCasesReturnTrue($string, $min, $max): void
     {
         $validator = new Length($min, $max, true);
@@ -33,18 +35,16 @@ class LengthTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForValidLengthNonInclusive
      * @throws ComponentException
      */
+    #[DataProvider('providerForValidLengthNonInclusive')]
     public function testLengthInsideBoundsForNonInclusiveCasesShouldReturnTrue($string, $min, $max): void
     {
         $validator = new Length($min, $max, false);
         static::assertTrue($validator->validate($string));
     }
 
-    /**
-     * @dataProvider providerForInvalidLengthInclusive
-     */
+    #[DataProvider('providerForInvalidLengthInclusive')]
     public function testLengthOutsideBoundsForInclusiveCasesReturnFalse($string, $min, $max): void
     {
         $validator = new Length($min, $max, true);
@@ -52,18 +52,16 @@ class LengthTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidLengthNonInclusive
      * @throws ComponentException
      */
+    #[DataProvider('providerForInvalidLengthNonInclusive')]
     public function testLengthOutsideBoundsForNonInclusiveCasesReturnFalse($string, $min, $max)
     {
         $validator = new Length($min, $max, false);
         static::assertFalse($validator->validate($string));
     }
 
-    /**
-     * @dataProvider providerForComponentException
-     */
+    #[DataProvider('providerForComponentException')]
     public function testComponentExceptionsForInvalidParameters($min, $max): void
     {
         $this->expectException(ComponentException::class);

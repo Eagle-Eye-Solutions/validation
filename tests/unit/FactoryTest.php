@@ -11,13 +11,14 @@
 
 namespace Respect\Validation;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Factory;
 use Respect\Validation\Rules\Uppercase;
 
-/**
- * @covers Factory
- */
+#[CoversClass(Factory::class)]
 class FactoryTest extends TestCase
 {
     public function testShouldHaveRulePrefixesByDefault(): void
@@ -27,9 +28,7 @@ class FactoryTest extends TestCase
         static::assertEquals(['Respect\\Validation\\Rules\\'], $factory->getRulePrefixes());
     }
 
-    /**
-     * @dataProvider provideRulePrefixes
-     */
+    #[DataProvider('provideRulePrefixes')]
     public function testShouldBeAbleToAppendANewPrefix($namespace, $expectedNamespace): void
     {
         $factory = new Factory();
@@ -49,9 +48,7 @@ class FactoryTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideRulePrefixes
-     */
+    #[DataProvider('provideRulePrefixes')]
     public function testShouldBeAbleToPrependANewRulePrefix($namespace, $expectedNamespace): void
     {
         $factory = new Factory();
@@ -70,11 +67,11 @@ class FactoryTest extends TestCase
         return [
             'Namespace with trailing separator' => [
                 'namespace' => 'My\\Validation\\Rules\\',
-                'expected' => 'My\\Validation\\Rules\\',
+                'expectedNamespace' => 'My\\Validation\\Rules\\',
             ],
             'Namespace without trailing separator' => [
                 'namespace' => 'My\\Validation\\Rules',
-                'expected' => 'My\\Validation\\Rules\\',
+                'expectedNamespace' => 'My\\Validation\\Rules\\',
             ],
         ];
     }

@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\PrimeNumberException;
 use Respect\Validation\Rules\PrimeNumber;
 
-/**
- * @group  rule
- * @covers PrimeNumber
- * @covers PrimeNumberException
- */
+#[CoversClass(PrimeNumber::class)]
+#[CoversClass(PrimeNumberException::class)]
+#[Group('rule')]
 class PrimeNumberTest extends TestCase
 {
     protected PrimeNumber $object;
@@ -30,9 +31,9 @@ class PrimeNumberTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForPrimeNumber
      * @throws \Exception
      */
+    #[DataProvider('providerForPrimeNumber')]
     public function testPrimeNumber($input): void
     {
         static::assertTrue($this->object->__invoke($input));
@@ -41,9 +42,9 @@ class PrimeNumberTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotPrimeNumber
      * @throws \Exception
      */
+    #[DataProvider('providerForNotPrimeNumber')]
     public function testNotPrimeNumber($input): void
     {
         $this->expectException(PrimeNumberException::class);

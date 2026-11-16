@@ -10,3 +10,4 @@ v::slug()->assert('welcome-to-php-7');
 ?>
 
 
+--EXPECT--

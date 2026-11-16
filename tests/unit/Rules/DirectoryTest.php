@@ -11,20 +11,19 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\DirectoryException;
 use Respect\Validation\Rules\Directory;
 
-/**
- * @group  rule
- * @covers Directory
- * @covers DirectoryException
- */
+#[CoversClass(Directory::class)]
+#[CoversClass(DirectoryException::class)]
+#[Group('rule')]
 class DirectoryTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidDirectory
-     */
+    #[DataProvider('providerForValidDirectory')]
     public function testValidDirectoryShouldReturnTrue($input)
     {
         $rule = new Directory();
@@ -33,10 +32,7 @@ class DirectoryTest extends TestCase
         static::assertTrue($rule->check($input));
     }
 
-    /**
-     * @dataProvider providerForInvalidDirectory
-     *
-     */
+    #[DataProvider('providerForInvalidDirectory')]
     public function testInvalidDirectoryShouldThrowException($input)
     {
         $this->expectException(DirectoryException::class);
@@ -46,9 +42,7 @@ class DirectoryTest extends TestCase
         static::assertFalse($rule->check($input));
     }
 
-    /**
-     * @dataProvider providerForDirectoryObjects
-     */
+    #[DataProvider('providerForDirectoryObjects')]
     public function testDirectoryWithObjects($object, $valid)
     {
         $rule = new Directory();

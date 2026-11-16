@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ScalarValException;
 use Respect\Validation\Rules\ScalarVal;
 
-/**
- * @group  rule
- * @covers ScalarVal
- * @covers ScalarValException
- */
+#[CoversClass(ScalarVal::class)]
+#[CoversClass(ScalarValException::class)]
+#[Group('rule')]
 class ScalarValTest extends TestCase
 {
     protected $rule;
@@ -29,17 +30,13 @@ class ScalarValTest extends TestCase
         $this->rule = new ScalarVal();
     }
 
-    /**
-     * @dataProvider providerForScalar
-     */
+    #[DataProvider('providerForScalar')]
     public function testShouldValidateScalarNumbers($input): void
     {
         static::assertTrue($this->rule->validate($input));
     }
 
-    /**
-     * @dataProvider providerForNonScalar
-     */
+    #[DataProvider('providerForNonScalar')]
     public function testShouldNotValidateNonScalarNumbers($input): void
     {
         static::assertFalse($this->rule->validate($input));

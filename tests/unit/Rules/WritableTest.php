@@ -9,7 +9,7 @@ use stdClass;
 
 class WritableTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $sut = new Writable();
         $directory = 'tests/fixtures/';
@@ -26,7 +26,7 @@ class WritableTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new Writable();
         $filename =  'tests/fixtures/non-writable.txt';

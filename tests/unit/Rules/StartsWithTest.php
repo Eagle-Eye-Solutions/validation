@@ -11,20 +11,19 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\StartsWithException;
 use Respect\Validation\Rules\StartsWith;
 
-/**
- * @group  rule
- * @covers StartsWith
- * @covers StartsWithException
- */
+#[CoversClass(StartsWith::class)]
+#[CoversClass(StartsWithException::class)]
+#[Group('rule')]
 class StartsWithTest extends TestCase
 {
-    /**
-     * @dataProvider providerForStartsWith
-     */
+    #[DataProvider('providerForStartsWith')]
     public function testStartsWith($start, $input): void
     {
         $v = new StartsWith($start);
@@ -33,10 +32,7 @@ class StartsWithTest extends TestCase
         static::assertTrue($v->assert($input));
     }
 
-    /**
-     * @dataProvider providerForNotStartsWith
-     *
-     */
+    #[DataProvider('providerForNotStartsWith')]
     public function testNotStartsWith($start, $input, $caseSensitive = false)
     {
         $this->expectException(StartsWithException::class);

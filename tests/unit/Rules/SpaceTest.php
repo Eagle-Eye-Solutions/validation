@@ -11,22 +11,23 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\SpaceException;
 use Respect\Validation\Rules\Space;
 
-/**
- * @group  rule
- * @covers Space
- * @covers SpaceException
- */
+#[CoversClass(Space::class)]
+#[CoversClass(SpaceException::class)]
+#[Group('rule')]
 class SpaceTest extends TestCase
 {
     /**
-     * @dataProvider providerForValidSpace
      * @throws ComponentException
      */
+    #[DataProvider('providerForValidSpace')]
     public function testValidDataWithSpaceShouldReturnTrue($validSpace, $additional = ''): void
     {
         $validator = new Space($additional);
@@ -34,9 +35,9 @@ class SpaceTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidSpace
      * @throws ComponentException
      */
+    #[DataProvider('providerForInvalidSpace')]
     public function testInvalidSpaceShouldFailAndThrowSpaceException($invalidSpace, $additional = ''): void
     {
         $this->expectException(SpaceException::class);
@@ -45,10 +46,7 @@ class SpaceTest extends TestCase
         static::assertFalse($validator->assert($invalidSpace));
     }
 
-    /**
-     * @dataProvider providerForInvalidParams
-
-     */
+    #[DataProvider('providerForInvalidParams')]
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
     {
         $this->expectException(ComponentException::class);
@@ -56,9 +54,9 @@ class SpaceTest extends TestCase
     }
 
     /**
-     * @dataProvider providerAdditionalChars
      * @throws ComponentException
      */
+    #[DataProvider('providerAdditionalChars')]
     public function testAdditionalCharsShouldBeRespected($additional, $query): void
     {
         $validator = new Space($additional);

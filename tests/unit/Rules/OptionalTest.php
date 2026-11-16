@@ -11,6 +11,9 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
@@ -18,10 +21,8 @@ use Respect\Validation\Rules\Optional;
 use Respect\Validation\Validatable;
 use stdClass;
 
-/**
- * @group  rule
- * @covers Optional
- */
+#[CoversClass(Optional::class)]
+#[Group('rule')]
 class OptionalTest extends TestCase
 {
     public static function providerForOptional(): array
@@ -59,16 +60,16 @@ class OptionalTest extends TestCase
      */
     public function testShouldAcceptInstanceOfValidatobleOnConstructor(): void
     {
-        $validatable = $this->createMock(Validatable::class);
+        $validatable = $this->createStub(Validatable::class);
         $rule = new Optional($validatable);
 
         static::assertSame($validatable, $rule->getValidatable());
     }
 
     /**
-     * @dataProvider providerForOptional
      * @throws Exception
      */
+    #[DataProvider('providerForOptional')]
     public function testShouldNotValidateRuleWhenInputIsOptional($input)
     {
         $validatable = $this->createMock(Validatable::class);
@@ -81,9 +82,9 @@ class OptionalTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotOptional
      * @throws Exception
      */
+    #[DataProvider('providerForNotOptional')]
     public function testShouldValidateRuleWhenInputIsNotOptional($input): void
     {
         $validatable = $this->createMock(Validatable::class);

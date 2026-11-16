@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\BoolTypeException;
 use Respect\Validation\Rules\BoolType;
 
-/**
- * @group  rule
- * @covers BoolType
- * @covers BoolTypeException
- */
+#[CoversClass(BoolType::class)]
+#[CoversClass(BoolTypeException::class)]
+#[Group('rule')]
 class BoolTypeTest extends TestCase
 {
     public function testBooleanValuesONLYShouldReturnTrue()

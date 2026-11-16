@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\InfiniteException;
 use Respect\Validation\Rules\Infinite;
 
-/**
- * @group  rule
- * @covers Infinite
- * @covers InfiniteException
- */
+#[CoversClass(Infinite::class)]
+#[CoversClass(InfiniteException::class)]
+#[Group('rule')]
 class InfiniteTest extends TestCase
 {
     protected $rule;
@@ -29,17 +30,13 @@ class InfiniteTest extends TestCase
         $this->rule = new Infinite();
     }
 
-    /**
-     * @dataProvider providerForInfinite
-     */
+    #[DataProvider('providerForInfinite')]
     public function testShouldValidateInfiniteNumbers($input): void
     {
         static::assertTrue($this->rule->validate($input));
     }
 
-    /**
-     * @dataProvider providerForNonInfinite
-     */
+    #[DataProvider('providerForNonInfinite')]
     public function testShouldNotValidateNonInfiniteNumbers($input): void
     {
         static::assertFalse($this->rule->validate($input));

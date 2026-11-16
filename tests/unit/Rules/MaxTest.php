@@ -11,20 +11,19 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\MaxException;
 use Respect\Validation\Rules\Max;
 
-/**
- * @group  rule
- * @covers Max
- * @covers MaxException
- */
+#[CoversClass(Max::class)]
+#[CoversClass(MaxException::class)]
+#[Group('rule')]
 class MaxTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidMax
-     */
+    #[DataProvider('providerForValidMax')]
     public function testValidMaxInputShouldReturnTrue($maxValue, $inclusive, $input)
     {
         $max = new Max($maxValue, $inclusive);
@@ -34,9 +33,9 @@ class MaxTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidMax
      * @throws \Exception
      */
+    #[DataProvider('providerForInvalidMax')]
     public function testInvalidMaxValueShouldThrowMaxException($maxValue, $inclusive, $input): void
     {
         $this->expectException(MaxException::class);

@@ -11,22 +11,23 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\ConsonantException;
 use Respect\Validation\Rules\Consonant;
 
-/**
- * @group  rule
- * @covers Consonant
- * @covers ConsonantException
- */
+#[CoversClass(Consonant::class)]
+#[CoversClass(ConsonantException::class)]
+#[Group('rule')]
 class ConsonantTest extends TestCase
 {
     /**
-     * @dataProvider providerForValidConsonants
      * @throws ComponentException
      */
+    #[DataProvider('providerForValidConsonants')]
     public function testValidDataWithConsonants($validConsonants, $additional = ''): void
     {
         $validator = new Consonant($additional);
@@ -34,11 +35,10 @@ class ConsonantTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidConsonants
-     *
      * @throws ComponentException
      * @throws \Exception
      */
+    #[DataProvider('providerForInvalidConsonants')]
     public function testInvalidConsonants($invalidConsonants, $additional = '')
     {
         $this->expectException(ConsonantException::class);
@@ -47,9 +47,7 @@ class ConsonantTest extends TestCase
         static::assertFalse($validator->assert($invalidConsonants));
     }
 
-    /**
-     * @dataProvider providerForInvalidParams
-     */
+    #[DataProvider('providerForInvalidParams')]
     public function testInvalidConstructorParams($additional): void
     {
         $this->expectException(ComponentException::class);
@@ -57,9 +55,9 @@ class ConsonantTest extends TestCase
     }
 
     /**
-     * @dataProvider providerAdditionalChars
      * @throws ComponentException
      */
+    #[DataProvider('providerAdditionalChars')]
     public function testAdditionalCharsd($additional, $query)
     {
         $validator = new Consonant($additional);

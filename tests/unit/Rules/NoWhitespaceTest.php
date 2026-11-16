@@ -11,15 +11,17 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\NoWhitespaceException;
 use Respect\Validation\Exceptions\NoWhitespaceException as NoWhitespaceExceptionAlias;
 use Respect\Validation\Rules\NoWhitespace;
 
-/**
- * @group  rule
- * @covers NoWhitespace
- * @covers NoWhitespaceException
- */
+#[CoversClass(NoWhitespace::class)]
+#[CoversClass(NoWhitespaceException::class)]
+#[Group('rule')]
 class NoWhitespaceTest extends TestCase
 {
     protected $noWhitespaceValidator;
@@ -29,9 +31,7 @@ class NoWhitespaceTest extends TestCase
         $this->noWhitespaceValidator = new NoWhitespace();
     }
 
-    /**
-     * @dataProvider providerForPass
-     */
+    #[DataProvider('providerForPass')]
     public function testStringWithNoWhitespaceShouldPass($input): void
     {
         static::assertTrue($this->noWhitespaceValidator->__invoke($input));
@@ -39,9 +39,7 @@ class NoWhitespaceTest extends TestCase
         static::assertTrue($this->noWhitespaceValidator->assert($input));
     }
 
-    /**
-     * @dataProvider providerForFail
-     */
+    #[DataProvider('providerForFail')]
     public function testStringWithWhitespaceShouldFail($input): void
     {
         $this->expectException(NoWhitespaceExceptionAlias::class);

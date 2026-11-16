@@ -11,21 +11,20 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\EqualsException;
 use Respect\Validation\Rules\Equals;
 use stdClass;
 
-/**
- * @group  rule
- * @covers Equals
- * @covers EqualsException
- */
+#[CoversClass(Equals::class)]
+#[CoversClass(EqualsException::class)]
+#[Group('rule')]
 class EqualsTest extends TestCase
 {
-    /**
-     * @dataProvider providerForEquals
-     */
+    #[DataProvider('providerForEquals')]
     public function testInputEqualsToExpectedValueShouldPass($compareTo, $input): void
     {
         $rule = new Equals($compareTo);
@@ -33,9 +32,7 @@ class EqualsTest extends TestCase
         static::assertTrue($rule->validate($input));
     }
 
-    /**
-     * @dataProvider providerForNotEquals
-     */
+    #[DataProvider('providerForNotEquals')]
     public function testInputNotEqualsToExpectedValueShouldPass($compareTo, $input): void
     {
         $rule = new Equals($compareTo);

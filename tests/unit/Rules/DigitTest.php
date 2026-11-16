@@ -11,31 +11,27 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\DigitException;
 use Respect\Validation\Rules\Digit;
 
-/**
- * @group  rule
- * @covers Digit
- * @covers DigitException
- */
+#[CoversClass(Digit::class)]
+#[CoversClass(DigitException::class)]
+#[Group('rule')]
 class DigitTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidDigits
-     */
+    #[DataProvider('providerForValidDigits')]
     public function testValidDataWithDigitsShouldReturnTrue($validDigits, $additional = '')
     {
         $validator = new Digit($additional);
         static::assertTrue($validator->validate($validDigits));
     }
 
-    /**
-     * @dataProvider providerForInvalidDigits
-     *
-     */
+    #[DataProvider('providerForInvalidDigits')]
     public function testInvalidDigitsShouldFailAndThrowDigitException($invalidDigits, $additional = '')
     {
         $this->expectException(DigitException::class);
@@ -44,18 +40,14 @@ class DigitTest extends TestCase
         static::assertFalse($validator->assert($invalidDigits));
     }
 
-    /**
-     * @dataProvider providerForInvalidParams
-     */
+    #[DataProvider('providerForInvalidParams')]
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
     {
         $this->expectException(ComponentException::class);
         new Digit($additional);
     }
 
-    /**
-     * @dataProvider providerAdditionalChars
-     */
+    #[DataProvider('providerAdditionalChars')]
     public function testAdditionalCharsShouldBeRespected($additional, $query)
     {
         $validator = new Digit($additional);

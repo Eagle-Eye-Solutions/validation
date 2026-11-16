@@ -25,7 +25,7 @@ class AbstractFilterRuleTest extends TestCase
     {
         $this->expectExceptionMessage("Invalid list of additional characters to be loaded");
         $this->expectException(ComponentException::class);
-        $this->getMockForAbstractClass(AbstractFilterRule::class, [1]);
+        $this->getMockBuilder(AbstractFilterRule::class)->setConstructorArgs([1])->onlyMethods(['validateClean'])->getMock();
     }
 
     /**
@@ -33,7 +33,7 @@ class AbstractFilterRuleTest extends TestCase
      */
     public function testValidateShouldReturnTrueForValidArguments(): void
     {
-        $filterRuleMock = $this->getMockForAbstractClass(AbstractFilterRule::class);
+        $filterRuleMock = $this->getMockBuilder(AbstractFilterRule::class)->onlyMethods(['validateClean'])->getMock();
         $filterRuleMock->method('validateClean')
             ->willReturn(true);
 
@@ -42,7 +42,7 @@ class AbstractFilterRuleTest extends TestCase
 
     public function testValidateShouldReturnFalseForInvalidArguments(): void
     {
-        $filterRuleMock = $this->getMockForAbstractClass(AbstractFilterRule::class);
+        $filterRuleMock = $this->getMockBuilder(AbstractFilterRule::class)->onlyMethods(['validateClean'])->getMock();
         $filterRuleMock->method('validateClean')
             ->willReturn(true);
 

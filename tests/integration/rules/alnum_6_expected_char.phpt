@@ -9,3 +9,4 @@ if (!v::alnum('-')->validate('bla - bla')) {
 }
 
 ?>
+--EXPECT--

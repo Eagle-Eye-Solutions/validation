@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\Regex;
 
-/**
- * @group  rule
- * @covers Regex
- */
+#[CoversClass(Regex::class)]
+#[Group('rule')]
 class RegexTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         return [
             [new Regex('/^[a-z]+$/'), 'wpoiur'],
@@ -28,7 +28,7 @@ class RegexTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         return [
             [new Regex('/^w+$/'), 'w poiur'],

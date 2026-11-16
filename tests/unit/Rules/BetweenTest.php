@@ -12,16 +12,17 @@
 namespace Respect\Validation\Test\Rules;
 
 use DateTime;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\BetweenException;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Rules\Between;
 
-/**
- * @group  rule
- * @covers Between
- * @covers BetweenException
- */
+#[CoversClass(Between::class)]
+#[CoversClass(BetweenException::class)]
+#[Group('rule')]
 class BetweenTest extends TestCase
 {
     public static function providerValid()
@@ -65,9 +66,7 @@ class BetweenTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providerValid
-     */
+    #[DataProvider('providerValid')]
     public function testValuesBetweenBoundsShouldPass($min, $max, $inclusive, $input)
     {
         $o = new Between($min, $max, $inclusive);
@@ -76,9 +75,7 @@ class BetweenTest extends TestCase
         static::assertTrue($o->check($input));
     }
 
-    /**
-     * @dataProvider providerInvalid
-     */
+    #[DataProvider('providerInvalid')]
     public function testValuesOutBoundsShouldRaiseException($min, $max, $inclusive, $input)
     {
         $this->expectException(BetweenException::class);

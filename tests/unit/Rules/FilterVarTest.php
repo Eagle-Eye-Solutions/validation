@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\FilterVarException;
 use Respect\Validation\Rules\FilterVar;
 
-/**
- * @group  rule
- * @covers FilterVar
- * @covers FilterVarException
- */
+#[CoversClass(FilterVar::class)]
+#[CoversClass(FilterVarException::class)]
+#[Group('rule')]
 class FilterVarTest extends TestCase
 {
     public function testShouldThrowsExceptionWhenFilterIsNotDefined()

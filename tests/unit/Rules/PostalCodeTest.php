@@ -11,16 +11,17 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\PostalCodeException;
 use Respect\Validation\Rules\PostalCode;
 
-/**
- * @group  rule
- * @covers PostalCode
- * @covers PostalCodeException
- */
+#[CoversClass(PostalCode::class)]
+#[CoversClass(PostalCodeException::class)]
+#[Group('rule')]
 class PostalCodeTest extends TestCase
 {
     /**
@@ -78,9 +79,9 @@ class PostalCodeTest extends TestCase
     }
 
     /**
-     * @dataProvider validPostalCodesProvider
      * @throws ComponentException
      */
+    #[DataProvider('validPostalCodesProvider')]
     public function testPatternAccordingToTheDefinedCountryCode($countryCode, $postalCode): void
     {
         $rule = new PostalCode($countryCode);
@@ -102,9 +103,9 @@ class PostalCodeTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidPostalCodesProvider
      * @throws ComponentException
      */
+    #[DataProvider('invalidPostalCodesProvider')]
     public function testShouldNotValidatePatternAccordingToTheDefinedCountryCode($countryCode, $postalCode): void
     {
         $rule = new PostalCode($countryCode);

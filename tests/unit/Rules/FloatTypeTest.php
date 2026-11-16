@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\FloatType;
 
-/**
- * @group  rule
- * @covers FloatType
- */
+#[CoversClass(FloatType::class)]
+#[Group('rule')]
 class FloatTypeTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new FloatType();
 
@@ -34,7 +34,7 @@ class FloatTypeTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new FloatType();
 

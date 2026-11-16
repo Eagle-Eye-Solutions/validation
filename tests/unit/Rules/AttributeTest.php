@@ -11,6 +11,9 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\AttributeException;
 use Respect\Validation\Exceptions\ComponentException;
@@ -19,16 +22,14 @@ use Respect\Validation\Exceptions\ValidationException;
 use Respect\Validation\Rules\Attribute;
 use Respect\Validation\Rules\Length;
 
+#[CoversClass(Attribute::class)]
+#[CoversClass(AttributeException::class)]
 class PrivClass
 {
     private $bar = 'foo';
 }
 
-/**
- * @group  rule
- * @covers Attribute
- * @covers AttributeException
- */
+#[Group('rule')]
 class AttributeTest extends TestCase
 {
     /**
@@ -66,9 +67,7 @@ class AttributeTest extends TestCase
         static::assertFalse($validator->check($obj));
     }
 
-    /**
-     * @dataProvider providerForInvalidAttributeNames
-     */
+    #[DataProvider('providerForInvalidAttributeNames')]
     public function testInvalidConstructorArguments($attributeName): void
     {
         $this->expectException(ComponentException::class);

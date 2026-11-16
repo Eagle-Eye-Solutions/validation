@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\FloatValException;
 use Respect\Validation\Rules\FloatVal;
 
-/**
- * @group  rule
- * @covers FloatVal
- * @covers FloatValException
- */
+#[CoversClass(FloatVal::class)]
+#[CoversClass(FloatValException::class)]
+#[Group('rule')]
 class FloatValTest extends TestCase
 {
     protected $floatValidator;
@@ -29,9 +30,7 @@ class FloatValTest extends TestCase
         $this->floatValidator = new FloatVal();
     }
 
-    /**
-     * @dataProvider providerForFloat
-     */
+    #[DataProvider('providerForFloat')]
     public function testFloatNumbersShouldPass($input): void
     {
         static::assertTrue($this->floatValidator->assert($input));
@@ -39,10 +38,7 @@ class FloatValTest extends TestCase
         static::assertTrue($this->floatValidator->check($input));
     }
 
-    /**
-     * @dataProvider providerForNotFloat
-     *
-     */
+    #[DataProvider('providerForNotFloat')]
     public function testNotFloatNumbersShouldFail($input): void
     {
         $this->expectException(FloatValException::class);

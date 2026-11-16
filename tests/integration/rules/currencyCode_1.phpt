@@ -8,3 +8,4 @@ v::currencyCode()->assert('usd');
 v::currencyCode()->check('BRL');
 ?>
 
+--EXPECT--

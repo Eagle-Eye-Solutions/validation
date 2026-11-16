@@ -8,3 +8,4 @@ v::image()->assert('tests/fixtures/valid-image.png');
 v::image()->check(new SplFileInfo('tests/fixtures/valid-image.gif'));
 ?>
 
+--EXPECT--

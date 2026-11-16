@@ -11,17 +11,18 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\TypeException;
 use Respect\Validation\Rules\Type;
 use stdClass;
 
-/**
- * @group  rule
- * @covers Type
- * @covers TypeException
- */
+#[CoversClass(Type::class)]
+#[CoversClass(TypeException::class)]
+#[Group('rule')]
 class TypeTest extends TestCase
 {
     public function testShouldDefineTypeOnConstructor(): void
@@ -47,9 +48,9 @@ class TypeTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForValidType
      * @throws ComponentException
      */
+    #[DataProvider('providerForValidType')]
     public function testShouldValidateValidTypes($type, $input): void
     {
         $rule = new Type($type);
@@ -58,9 +59,9 @@ class TypeTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidType
      * @throws ComponentException
      */
+    #[DataProvider('providerForInvalidType')]
     public function testShouldNotValidateInvalidTypes($type, $input): void
     {
         $rule = new Type($type);

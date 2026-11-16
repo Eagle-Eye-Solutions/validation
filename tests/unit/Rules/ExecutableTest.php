@@ -2,18 +2,19 @@
 declare(strict_types=1);
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use Respect\Validation\Exceptions\ExecutableException;
 use Respect\Validation\Rules\Executable;
 use SplFileInfo;
 use SplFileObject;
 
-/**
- * @group  rule
- * @covers Executable
- * @covers ExecutableException
- */
+#[CoversClass(Executable::class)]
+#[CoversClass(ExecutableException::class)]
+#[Group('rule')]
 class ExecutableTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new Executable();
         chmod('tests/fixtures/executable', 705);
@@ -23,7 +24,7 @@ class ExecutableTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new Executable();
 

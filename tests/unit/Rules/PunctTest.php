@@ -11,31 +11,27 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\PunctException;
 use Respect\Validation\Rules\Punct;
 
-/**
- * @group  rule
- * @covers Punct
- * @covers PunctException
- */
+#[CoversClass(Punct::class)]
+#[CoversClass(PunctException::class)]
+#[Group('rule')]
 class PunctTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidPunct
-     */
+    #[DataProvider('providerForValidPunct')]
     public function testValidDataWithPunctShouldReturnTrue($validPunct, $additional = '')
     {
         $validator = new Punct($additional);
         static::assertTrue($validator->validate($validPunct));
     }
 
-    /**
-     * @dataProvider providerForInvalidPunct
-     *
-     */
+    #[DataProvider('providerForInvalidPunct')]
     public function testInvalidPunctShouldFailAndThrowPunctException($invalidPunct, $additional = '')
     {
         $this->expectException(PunctException::class);
@@ -44,19 +40,14 @@ class PunctTest extends TestCase
         static::assertFalse($validator->assert($invalidPunct));
     }
 
-    /**
-     * @dataProvider providerForInvalidParams
-     *
-     */
+    #[DataProvider('providerForInvalidParams')]
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
     {
         $this->expectException(ComponentException::class);
         new Punct($additional);
     }
 
-    /**
-     * @dataProvider providerAdditionalChars
-     */
+    #[DataProvider('providerAdditionalChars')]
     public function testAdditionalCharsShouldBeRespected($additional, $query)
     {
         $validator = new Punct($additional);

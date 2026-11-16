@@ -11,30 +11,27 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\CntrlException;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Rules\Cntrl;
 
-/**
- * @group  rule
- * @covers Cntrl
- * @covers CntrlException
- */
+#[CoversClass(Cntrl::class)]
+#[CoversClass(CntrlException::class)]
+#[Group('rule')]
 class CntrlTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidCntrl
-     */
+    #[DataProvider('providerForValidCntrl')]
     public function testValidDataWithCntrlShouldReturnTrue($validCntrl, $additional = '')
     {
         $validator = new Cntrl($additional);
         static::assertTrue($validator->validate($validCntrl));
     }
 
-    /**
-     * @dataProvider providerForInvalidCntrl
-     */
+    #[DataProvider('providerForInvalidCntrl')]
     public function testInvalidCntrlShouldFailAndThrowCntrlException($invalidCntrl, $additional = '')
     {
         $this->expectException(CntrlException::class);
@@ -44,9 +41,9 @@ class CntrlTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidParams
      * @throws ComponentException
      */
+    #[DataProvider('providerForInvalidParams')]
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
     {
         $this->expectException(ComponentException::class);
@@ -54,9 +51,9 @@ class CntrlTest extends TestCase
     }
 
     /**
-     * @dataProvider providerAdditionalChars
      * @throws ComponentException
      */
+    #[DataProvider('providerAdditionalChars')]
     public function testAdditionalCharsShouldBeRespected($additional, $query)
     {
         $validator = new Cntrl($additional);

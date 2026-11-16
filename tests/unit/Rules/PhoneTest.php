@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\PhoneException;
 use Respect\Validation\Rules\Phone;
 
-/**
- * @group  rule
- * @covers Phone
- * @covers PhoneException
- */
+#[CoversClass(Phone::class)]
+#[CoversClass(PhoneException::class)]
+#[Group('rule')]
 class PhoneTest extends TestCase
 {
     protected Phone $phoneValidator;
@@ -29,9 +30,7 @@ class PhoneTest extends TestCase
         $this->phoneValidator = new Phone();
     }
 
-    /**
-     * @dataProvider providerForPhone
-     */
+    #[DataProvider('providerForPhone')]
     public function testValidPhoneShouldReturnTrue($input)
     {
         static::assertTrue($this->phoneValidator->__invoke($input));
@@ -40,9 +39,9 @@ class PhoneTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotPhone
      * @throws \Exception
      */
+    #[DataProvider('providerForNotPhone')]
     public function testInvalidPhoneShouldThrowPhoneException($input): void
     {
         $this->expectException(PhoneException::class);

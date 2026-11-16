@@ -18,7 +18,7 @@ class AbstractRegexRuleTest extends TestCase
 {
     public function testValidateCleanShouldReturnOneIfPatternIsFound()
     {
-        $regexRuleMock = $this->getMockForAbstractClass(AbstractRegexRule::class);
+        $regexRuleMock = $this->getMockBuilder(AbstractRegexRule::class)->onlyMethods(['getPregFormat'])->getMock();
         $regexRuleMock->expects($this->once())
             ->method('getPregFormat')
             ->willReturn('/^Respect$/');
@@ -28,7 +28,7 @@ class AbstractRegexRuleTest extends TestCase
 
     public function testValidateCleanShouldReturnZeroIfPatternIsNotFound()
     {
-        $regexRuleMock = $this->getMockForAbstractClass(AbstractRegexRule::class);
+        $regexRuleMock = $this->getMockBuilder(AbstractRegexRule::class)->onlyMethods(['getPregFormat'])->getMock();
         $regexRuleMock->expects($this->once())
             ->method('getPregFormat')
             ->willReturn('/^Respect$/');

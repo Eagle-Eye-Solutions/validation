@@ -10,3 +10,4 @@ v::countryCode(CountryCode::NUMERIC)->assert('276');
 v::countryCode(CountryCode::NUMERIC)->check('076');
 v::countryCode(CountryCode::NUMERIC)->check('276');
 ?>
+--EXPECT--

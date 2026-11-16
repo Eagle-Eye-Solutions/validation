@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\EvenException;
 use Respect\Validation\Rules\Even;
 
-/**
- * @group  rule
- * @covers Even
- * @covers EvenException
- */
+#[CoversClass(Even::class)]
+#[CoversClass(EvenException::class)]
+#[Group('rule')]
 class EvenTest extends TestCase
 {
     protected $evenValidator;
@@ -29,9 +30,7 @@ class EvenTest extends TestCase
         $this->evenValidator = new Even();
     }
 
-    /**
-     * @dataProvider providerForEven
-     */
+    #[DataProvider('providerForEven')]
     public function testEvenNumbersShouldPass($input): void
     {
         static::assertTrue($this->evenValidator->validate($input));
@@ -40,9 +39,9 @@ class EvenTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotEven
      * @throws \Exception
      */
+    #[DataProvider('providerForNotEven')]
     public function testNotEvenNumbersShouldFail($input): void
     {
         $this->expectException(EvenException::class);

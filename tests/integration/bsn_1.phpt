@@ -7,3 +7,4 @@ use Respect\Validation\Validator as v;
 
 v::bsn()->check('612890053');
 ?>
+--EXPECT--

@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\IntValException;
 use Respect\Validation\Rules\IntVal;
 
-/**
- * @group  rule
- * @covers IntVal
- * @covers IntValException
- */
+#[CoversClass(IntVal::class)]
+#[CoversClass(IntValException::class)]
+#[Group('rule')]
 class IntValTest extends TestCase
 {
     protected IntVal $intValidator;
@@ -29,9 +30,7 @@ class IntValTest extends TestCase
         $this->intValidator = new IntVal();
     }
 
-    /**
-     * @dataProvider providerForInt
-     */
+    #[DataProvider('providerForInt')]
     public function testValidIntegersShouldReturnTrue($input): void
     {
         static::assertTrue($this->intValidator->__invoke($input));
@@ -39,10 +38,7 @@ class IntValTest extends TestCase
         static::assertTrue($this->intValidator->assert($input));
     }
 
-    /**
-     * @dataProvider providerForNotInt
-     *
-     */
+    #[DataProvider('providerForNotInt')]
     public function testInvalidIntegersShouldThrowIntException($input)
     {
         $this->expectException(IntValException::class);

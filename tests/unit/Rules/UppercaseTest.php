@@ -11,20 +11,19 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\UppercaseException;
 use Respect\Validation\Rules\Uppercase;
 
-/**
- * @group  rule
- * @covers Uppercase
- * @covers UppercaseException
- */
+#[CoversClass(Uppercase::class)]
+#[CoversClass(UppercaseException::class)]
+#[Group('rule')]
 class UppercaseTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidUppercase
-     */
+    #[DataProvider('providerForValidUppercase')]
     public function testValidUppercaseShouldReturnTrue($input): void
     {
         $uppercase = new Uppercase();
@@ -33,9 +32,7 @@ class UppercaseTest extends TestCase
         static::assertTrue($uppercase->check($input));
     }
 
-    /**
-     * @dataProvider providerForInvalidUppercase
-     */
+    #[DataProvider('providerForInvalidUppercase')]
     public function testInvalidUppercaseShouldThrowException($input): void
     {
         $this->expectException(UppercaseException::class);

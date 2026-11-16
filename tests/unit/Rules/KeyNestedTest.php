@@ -12,6 +12,8 @@
 namespace Respect\Validation\Test\Rules;
 
 use ArrayObject;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\KeyNestedException;
@@ -19,11 +21,9 @@ use Respect\Validation\Rules\Equals;
 use Respect\Validation\Rules\KeyNested;
 use Respect\Validation\Rules\Length;
 
-/**
- * @group  rule
- * @covers KeyNested
- * @covers KeyNestedException
- */
+#[CoversClass(KeyNested::class)]
+#[CoversClass(KeyNestedException::class)]
+#[Group('rule')]
 class KeyNestedTest extends TestCase
 {
     public function testArrayWithPresentKeysWillReturnTrueForFullPathValidator(): void

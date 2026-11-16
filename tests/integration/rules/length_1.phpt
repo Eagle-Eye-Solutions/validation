@@ -12,3 +12,4 @@ v::not($validator)->validate('phpsp');
 $validator->assert('nickolas');
 $validator->check('nawarian');
 ?>
+--EXPECT--

@@ -20,7 +20,7 @@ class AbstractSearcherTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->searcherRuleMock = $this->getMockForAbstractClass(AbstractSearcher::class);
+        $this->searcherRuleMock = $this->getMockBuilder(AbstractSearcher::class)->onlyMethods([])->getMock();
     }
 
     public function testValidateShouldReturnTrueWhenEqualValueIsFoundInHaystack()

@@ -10,3 +10,4 @@ v::MinimumAge(12, 'd/m/Y')->check('12/10/1999');
 
 ?>
 
+--EXPECT--

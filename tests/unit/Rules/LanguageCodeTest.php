@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\LanguageCode;
 
-/**
- * @group  rule
- * @covers LanguageCode
- */
+#[CoversClass(LanguageCode::class)]
+#[Group('rule')]
 class LanguageCodeTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $ruleAlpha2 = new LanguageCode();
         $ruleAlpha3 = new LanguageCode('alpha-3');
@@ -36,7 +36,7 @@ class LanguageCodeTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $ruleAlpha2 = new LanguageCode();
         $ruleAlpha3 = new LanguageCode('alpha-3');

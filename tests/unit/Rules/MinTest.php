@@ -12,20 +12,19 @@
 namespace Respect\Validation\Test\Rules;
 
 use DateTime;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\MinException;
 use Respect\Validation\Rules\Min;
 
-/**
- * @group  rule
- * @covers Min
- * @covers MinException
- */
+#[CoversClass(Min::class)]
+#[CoversClass(MinException::class)]
+#[Group('rule')]
 class MinTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidMin
-     */
+    #[DataProvider('providerForValidMin')]
     public function testValidMinShouldReturnTrue($minValue, $inclusive, $input): void
     {
         $min = new Min($minValue, $inclusive);
@@ -35,9 +34,9 @@ class MinTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidMin
      * @throws \Exception
      */
+    #[DataProvider('providerForInvalidMin')]
     public function testInvalidMinShouldThrowMinException($minValue, $inclusive, $input): void
     {
         $this->expectException(MinException::class);

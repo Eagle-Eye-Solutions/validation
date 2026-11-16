@@ -11,19 +11,19 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\StringTypeException;
 use Respect\Validation\Rules\StringType;
 
-/**
- * @group  rule
- * @covers StringType
- * @covers StringTypeException
- */
+#[CoversClass(StringType::class)]
+#[CoversClass(StringTypeException::class)]
+#[Group('rule')]
 class StringTypeTest extends TestCase
 {
-    /**
-     * @dataProvider providerForString
-     */
+    #[DataProvider('providerForString')]
     public function testString($input): void
     {
         $rule = new StringType();
@@ -31,9 +31,7 @@ class StringTypeTest extends TestCase
         static::assertTrue($rule->validate($input));
     }
 
-    /**
-     * @dataProvider providerForNotString
-     */
+    #[DataProvider('providerForNotString')]
     public function testNotString($input): void
     {
         $rule = new StringType();

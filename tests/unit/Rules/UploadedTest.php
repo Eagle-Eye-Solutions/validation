@@ -2,22 +2,22 @@
 
 namespace Respect\Validation\Test\Rules;
 
-use PHPUnit\Framework\SkippedTestError;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\UploadedException;
 use Respect\Validation\Rules\Uploaded;
 use SplFileInfo;
 use stdClass;
 
-/**
- * @group  rule
- * @covers Uploaded
- * @covers UploadedException
- */
+#[CoversClass(Uploaded::class)]
+#[CoversClass(UploadedException::class)]
+#[Group('rule')]
 class UploadedTest extends RuleTestCase
 {
     public const UPLOADED_FILENAME = 'uploaded.ext';
 
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new Uploaded();
 
@@ -27,7 +27,7 @@ class UploadedTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new Uploaded();
 
@@ -43,7 +43,7 @@ class UploadedTest extends RuleTestCase
     protected function setUp(): void
     {
         if (!extension_loaded('uopz')) {
-            throw new SkippedTestError('Extension "uopz" is required to test "Uploaded" rule');
+            static::markTestSkipped('Extension "uopz" is required to test "Uploaded" rule');
         }
 
         uopz_set_return(

@@ -11,22 +11,23 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\VowelException;
 use Respect\Validation\Rules\Vowel;
 
-/**
- * @group  rule
- * @covers Vowel
- * @covers VowelException
- */
+#[CoversClass(Vowel::class)]
+#[CoversClass(VowelException::class)]
+#[Group('rule')]
 class VowelTest extends TestCase
 {
     /**
-     * @dataProvider providerForValidVowels
      * @throws ComponentException
      */
+    #[DataProvider('providerForValidVowels')]
     public function testValidDataWithVowelsShouldReturnTrue($validVowels, $additional = ''): void
     {
         $validator = new Vowel($additional);
@@ -34,9 +35,9 @@ class VowelTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidVowels
      * @throws ComponentException
      */
+    #[DataProvider('providerForInvalidVowels')]
     public function testInvalidVowelsShouldFailAndThrowVowelException($invalidVowels, $additional = ''): void
     {
         $this->expectException(VowelException::class);
@@ -45,18 +46,14 @@ class VowelTest extends TestCase
         static::assertFalse($validator->assert($invalidVowels));
     }
 
-    /**
-     * @dataProvider providerForInvalidParams
-     */
+    #[DataProvider('providerForInvalidParams')]
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional): void
     {
         $this->expectException(ComponentException::class);
         new Vowel($additional);
     }
 
-    /**
-     * @dataProvider providerAdditionalChars
-     */
+    #[DataProvider('providerAdditionalChars')]
     public function testAdditionalCharsShouldBeRespected($additional, $query): void
     {
         $validator = new Vowel($additional);

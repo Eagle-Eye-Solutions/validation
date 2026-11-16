@@ -11,13 +11,14 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Rules\AlwaysValid;
 
-/**
- * @group  rule
- * @covers AlwaysValid
- */
+#[CoversClass(AlwaysValid::class)]
+#[Group('rule')]
 class AlwaysValidTest extends TestCase
 {
     public static function providerForValidAlwaysValid()
@@ -35,9 +36,7 @@ class AlwaysValidTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providerForValidAlwaysValid
-     */
+    #[DataProvider('providerForValidAlwaysValid')]
     public function testShouldValidateInputWhenItIsAValidAlwaysValid($input)
     {
         $rule = new AlwaysValid();

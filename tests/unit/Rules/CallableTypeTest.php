@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\CallableTypeException;
 use Respect\Validation\Rules\CallableType;
 
-/**
- * @group  rule
- * @covers CallableType
- * @covers CallableTypeException
- */
+#[CoversClass(CallableType::class)]
+#[CoversClass(CallableTypeException::class)]
+#[Group('rule')]
 class CallableTypeTest extends TestCase
 {
     protected $rule;
@@ -29,9 +30,7 @@ class CallableTypeTest extends TestCase
         $this->rule = new CallableType();
     }
 
-    /**
-     * @dataProvider providerForCallable
-     */
+    #[DataProvider('providerForCallable')]
     public function testValidateCallableTypeNumbers($input): void
     {
         static::assertTrue($this->rule->validate($input));
@@ -42,9 +41,7 @@ class CallableTypeTest extends TestCase
         static::assertTrue($this->rule->validate([$this, __FUNCTION__]));
     }
 
-    /**
-     * @dataProvider providerForNonCallable
-     */
+    #[DataProvider('providerForNonCallable')]
     public function testValidateNonCallableTypeNumbers($input): void
     {
         static::assertFalse($this->rule->validate($input));

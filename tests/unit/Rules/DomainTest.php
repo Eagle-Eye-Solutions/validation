@@ -11,17 +11,18 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\DomainException;
 use Respect\Validation\Exceptions\ValidationException;
 use Respect\Validation\Rules\Domain;
 use Respect\Validation\Validator as v;
 
-/**
- * @group  rule
- * @covers Domain
- * @covers DomainException
- */
+#[CoversClass(Domain::class)]
+#[CoversClass(DomainException::class)]
+#[Group('rule')]
 class DomainTest extends TestCase
 {
     protected $object;
@@ -31,9 +32,7 @@ class DomainTest extends TestCase
         $this->object = new Domain();
     }
 
-    /**
-     * @dataProvider providerForDomain
-     */
+    #[DataProvider('providerForDomain')]
     public function testValidDomainsShouldReturnTrue($input, $tldcheck = true): void
     {
         $this->object->tldCheck($tldcheck);
@@ -42,10 +41,7 @@ class DomainTest extends TestCase
         static::assertTrue($this->object->check($input));
     }
 
-    /**
-     * @dataProvider providerForNotDomain
-
-     */
+    #[DataProvider('providerForNotDomain')]
     public function testNotDomain($input, $tldcheck = true)
     {
         $this->expectException(ValidationException::class);
@@ -53,9 +49,7 @@ class DomainTest extends TestCase
         static::assertFalse($this->object->check($input));
     }
 
-    /**
-     * @dataProvider providerForNotDomain
-     */
+    #[DataProvider('providerForNotDomain')]
     public function testNotDomainCheck($input, $tldcheck = true): void
     {
         $this->expectException(DomainException::class);
@@ -90,9 +84,7 @@ class DomainTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providerForDomain
-     */
+    #[DataProvider('providerForDomain')]
     public function testBuilder($validDomain, $checkTLD = true): void
     {
         static::assertTrue(

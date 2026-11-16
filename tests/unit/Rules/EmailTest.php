@@ -11,21 +11,22 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\EmailException;
 use Respect\Validation\Rules\Email;
 
-/**
- * @group  rule
- * @covers Email
- * @covers EmailException
- */
+#[CoversClass(Email::class)]
+#[CoversClass(EmailException::class)]
+#[Group('rule')]
 class EmailTest extends TestCase
 {
     /**
-     * @dataProvider providerForValidEmail
      * @throws \Exception
      */
+    #[DataProvider('providerForValidEmail')]
     public function testValidEmailShouldPass($validEmail): void
     {
         $validator = new Email();
@@ -35,9 +36,9 @@ class EmailTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidEmail
      * @throws \Exception
      */
+    #[DataProvider('providerForInvalidEmail')]
     public function testInvalidEmailsShouldFailValidation($invalidEmail): void
     {
         $this->expectException(EmailException::class);

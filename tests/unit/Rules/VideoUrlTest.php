@@ -11,16 +11,18 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
+use Respect\Validation\Exceptions\VideoUrlException;
 use Respect\Validation\Exceptions\VideoUrlException as VideoUrlExceptionAlias;
 use Respect\Validation\Rules\VideoUrl;
 
-/**
- * @group  rule
- * @covers VideoUrl
- * @covers VideoUrlException
- */
+#[CoversClass(VideoUrl::class)]
+#[CoversClass(VideoUrlException::class)]
+#[Group('rule')]
 class VideoUrlTest extends TestCase
 {
     public function testShouldThrowsAnExceptionWhenProviderIsNotValid(): void
@@ -64,9 +66,9 @@ class VideoUrlTest extends TestCase
     }
 
     /**
-     * @dataProvider validVideoUrlProvider
      * @throws ComponentException
      */
+    #[DataProvider('validVideoUrlProvider')]
     public function testShouldValidateVideoUrl($service, $input): void
     {
         $rule = new VideoUrl($service);
@@ -75,9 +77,9 @@ class VideoUrlTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidVideoUrlProvider
      * @throws ComponentException
      */
+    #[DataProvider('invalidVideoUrlProvider')]
     public function testShouldInvalidateNonVideoUrl($service, $input): void
     {
         $rule = new VideoUrl($service);

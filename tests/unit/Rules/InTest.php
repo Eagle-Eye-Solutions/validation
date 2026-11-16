@@ -11,21 +11,22 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\InException;
 use Respect\Validation\Rules\In;
 
-/**
- * @group  rule
- * @covers In
- * @covers InException
- */
+#[CoversClass(In::class)]
+#[CoversClass(InException::class)]
+#[Group('rule')]
 class InTest extends TestCase
 {
     /**
-     * @dataProvider providerForIn
      * @throws \Exception
      */
+    #[DataProvider('providerForIn')]
     public function testSuccessInValidatorCases($input, $options = null): void
     {
         $v = new In($options);
@@ -35,9 +36,9 @@ class InTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotIn
      * @throws \Exception
      */
+    #[DataProvider('providerForNotIn')]
     public function testInvalidInChecksShouldThrowInException($input, $options, $strict = false): void
     {
         $this->expectException(InException::class);

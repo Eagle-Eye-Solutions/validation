@@ -11,16 +11,17 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use Respect\Validation\Exceptions\PhpLabelException;
 use Respect\Validation\Rules\PhpLabel;
 
-/**
- * @group  rule
- * @covers PhpLabel
- * @covers PhpLabelException
- */
+#[CoversClass(PhpLabel::class)]
+#[CoversClass(PhpLabelException::class)]
+#[Group('rule')]
 class PhpLabelTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new PhpLabel();
 
@@ -35,7 +36,7 @@ class PhpLabelTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new PhpLabel();
 

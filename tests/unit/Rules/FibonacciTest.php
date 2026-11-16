@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\Fibonacci;
 
-/**
- * @group  rule
- * @covers Fibonacci
- */
+#[CoversClass(Fibonacci::class)]
+#[Group('rule')]
 class FibonacciTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new Fibonacci();
 
@@ -40,7 +40,7 @@ class FibonacciTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new Fibonacci();
 

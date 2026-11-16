@@ -11,22 +11,23 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\GraphException;
 use Respect\Validation\Rules\Graph;
 
-/**
- * @group  rule
- * @covers Graph
- * @covers GraphException
- */
+#[CoversClass(Graph::class)]
+#[CoversClass(GraphException::class)]
+#[Group('rule')]
 class GraphTest extends TestCase
 {
     /**
-     * @dataProvider providerForValidGraph
      * @throws ComponentException
      */
+    #[DataProvider('providerForValidGraph')]
     public function testValidDataWithGraphCharsShouldReturnTrue($validGraph, $additional = ''): void
     {
         $validator = new Graph($additional);
@@ -34,10 +35,9 @@ class GraphTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidGraph
-     *
      * @throws ComponentException
      */
+    #[DataProvider('providerForInvalidGraph')]
     public function testInvalidGraphShouldFailAndThrowGraphException($invalidGraph, $additional = ''): void
     {
         $this->expectException(GraphException::class);
@@ -46,10 +46,7 @@ class GraphTest extends TestCase
         static::assertFalse($validator->assert($invalidGraph));
     }
 
-    /**
-     * @dataProvider providerForInvalidParams
-     *
-     */
+    #[DataProvider('providerForInvalidParams')]
     public function testInvalidConstructorParams($additional): void
     {
         $this->expectException(ComponentException::class);
@@ -57,9 +54,9 @@ class GraphTest extends TestCase
     }
 
     /**
-     * @dataProvider providerAdditionalChars
      * @throws ComponentException
      */
+    #[DataProvider('providerAdditionalChars')]
     public function testAdditionalCharsShouldBeRespected($additional, $query): void
     {
         $validator = new Graph($additional);

@@ -12,14 +12,14 @@
 namespace Respect\Validation\Test\Rules;
 
 use finfo;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\Image;
 use SplFileInfo;
 use SplFileObject;
 
-/**
- * @group rule
- * @covers Image
- */
+#[CoversClass(Image::class)]
+#[Group('rule')]
 class ImageTest extends RuleTestCase
 {
     public function testShouldAcceptAnInstanceOfInfoOnConstructor(): void
@@ -37,7 +37,7 @@ class ImageTest extends RuleTestCase
         static::assertInstanceOf('finfo', $rule->fileInfo);
     }
 
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new Image();
         $fixturesDirectory = realpath(__DIR__.'/../../fixtures/');
@@ -52,7 +52,7 @@ class ImageTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new Image();
         $fixturesDirectory = realpath(__DIR__.'/../../fixtures/');

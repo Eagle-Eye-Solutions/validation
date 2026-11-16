@@ -11,20 +11,19 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\VersionException;
 use Respect\Validation\Rules\Version;
 
-/**
- * @group  rule
- * @covers Version
- * @covers VersionException
- */
+#[CoversClass(Version::class)]
+#[CoversClass(VersionException::class)]
+#[Group('rule')]
 class VersionTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidVersion
-     */
+    #[DataProvider('providerForValidVersion')]
     public function testValidVersionShouldReturnTrue($input): void
     {
         $rule = new Version();
@@ -34,10 +33,9 @@ class VersionTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidVersion
-     *
      * @throws \Exception
      */
+    #[DataProvider('providerForInvalidVersion')]
     public function testInvalidVersionShouldThrowException($input): void
     {
         $this->expectException(VersionException::class);

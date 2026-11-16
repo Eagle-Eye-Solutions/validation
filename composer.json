@@ -16,7 +16,7 @@
     },
     "require-dev": {
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^11.5",
         "symfony/validator": "^7.0.5",
         "rector/rector": "^2.5"
     },

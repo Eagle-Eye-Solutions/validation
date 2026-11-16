@@ -2,16 +2,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\SymbolicLink;
 use SplFileInfo;
 
-/**
- * @group rule
- * @covers SymbolicLink
- */
+#[CoversClass(SymbolicLink::class)]
+#[Group('rule')]
 class SymbolicLinkTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $sut = new SymbolicLink();
 
@@ -21,7 +21,7 @@ class SymbolicLinkTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $sut = new SymbolicLink();
 

@@ -11,8 +11,11 @@
 
 namespace Respect\Validation\Test\Rules;
 
-use bovigo\vfs\content\LargeFileContent;
-use bovigo\vfs\vfsStream;
+use org\bovigo\vfs\content\LargeFileContent;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\SizeException;
@@ -21,10 +24,10 @@ use SplFileInfo;
 
 /**
  * @author Henrique Moody <henriquemoody@gmail.com>
- * @group  rule
- * @covers Size
- * @covers SizeException
  */
+#[CoversClass(Size::class)]
+#[CoversClass(SizeException::class)]
+#[Group('rule')]
 class SizeTest extends TestCase
 {
     public static function validSizeProvider(): array
@@ -73,9 +76,7 @@ class SizeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider validSizeProvider
-     */
+    #[DataProvider('validSizeProvider')]
     public function testShouldConvertUnitonConstructor($size, $bytes): void
     {
         $rule = new Size($size);
@@ -90,9 +91,7 @@ class SizeTest extends TestCase
         new Size('42jb');
     }
 
-    /**
-     * @dataProvider validFileProvider
-     */
+    #[DataProvider('validFileProvider')]
     public function testShouldValidateFile($filename, $minSize, $maxSize, $expectedValidation): void
     {
         $rule = new Size($minSize, $maxSize);

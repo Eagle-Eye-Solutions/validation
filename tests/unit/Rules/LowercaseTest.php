@@ -11,21 +11,22 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\LowercaseException;
 use Respect\Validation\Rules\Lowercase;
 
-/**
- * @group  rule
- * @covers Lowercase
- * @covers LowercaseException
- */
+#[CoversClass(Lowercase::class)]
+#[CoversClass(LowercaseException::class)]
+#[Group('rule')]
 class LowercaseTest extends TestCase
 {
     /**
-     * @dataProvider providerForValidLowercase
      * @throws \Exception
      */
+    #[DataProvider('providerForValidLowercase')]
     public function testValidLowercaseShouldReturnTrue($input): void
     {
         $lowercase = new Lowercase();
@@ -35,10 +36,9 @@ class LowercaseTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidLowercase
-     *
      * @throws \Exception
      */
+    #[DataProvider('providerForInvalidLowercase')]
     public function testInvalidLowercaseShouldThrowException($input): void
     {
         $this->expectException(LowercaseException::class);

@@ -11,6 +11,8 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\OneOfException;
@@ -20,11 +22,9 @@ use Respect\Validation\Rules\Callback;
 use Respect\Validation\Rules\OneOf;
 use Respect\Validation\Rules\Xdigit;
 
-/**
- * @group  rule
- * @covers OneOf
- * @covers OneOfException
- */
+#[CoversClass(OneOf::class)]
+#[CoversClass(OneOfException::class)]
+#[Group('rule')]
 class OneOfTest extends TestCase
 {
     /**

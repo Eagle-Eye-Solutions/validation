@@ -22,7 +22,7 @@ class AbstractCtypeRuleTest extends TestCase
      */
     public function testCtypeFunctionReturnsTrue(): void
     {
-        $ctypeRuleMock = $this->getMockForAbstractClass(AbstractCtypeRule::class);
+        $ctypeRuleMock = $this->getMockBuilder(AbstractCtypeRule::class)->onlyMethods(['ctypeFunction'])->getMock();
         $ctypeRuleMock->expects(static::once())
             ->method('ctypeFunction')
             ->willReturn(true);
@@ -32,7 +32,7 @@ class AbstractCtypeRuleTest extends TestCase
 
     public function testCTypeFunctionReturnsFalse(): void
     {
-        $ctypeRuleMock = $this->getMockForAbstractClass(AbstractCtypeRule::class);
+        $ctypeRuleMock = $this->getMockBuilder(AbstractCtypeRule::class)->onlyMethods(['ctypeFunction'])->getMock();
         $ctypeRuleMock->expects(static::once())
             ->method('ctypeFunction')
             ->willReturn(false);

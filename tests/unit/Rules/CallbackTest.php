@@ -11,16 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\CallbackException;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Rules\Callback;
 
-/**
- * @group  rule
- * @covers Callback
- * @covers CallbackException
- */
+#[CoversClass(Callback::class)]
+#[CoversClass(CallbackException::class)]
+#[Group('rule')]
 class CallbackTest extends TestCase
 {
     private $truthy, $falsy;

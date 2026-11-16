@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\RomanException;
 use Respect\Validation\Rules\Roman;
 
-/**
- * @group  rule
- * @covers Roman
- * @covers RomanException
- */
+#[CoversClass(Roman::class)]
+#[CoversClass(RomanException::class)]
+#[Group('rule')]
 class RomanTest extends TestCase
 {
     protected $romanValidator;
@@ -29,9 +30,7 @@ class RomanTest extends TestCase
         $this->romanValidator = new Roman();
     }
 
-    /**
-     * @dataProvider providerForRoman
-     */
+    #[DataProvider('providerForRoman')]
     public function testValidRomansShouldReturnTrue($input)
     {
         static::assertTrue($this->romanValidator->__invoke($input));
@@ -39,10 +38,7 @@ class RomanTest extends TestCase
         static::assertTrue($this->romanValidator->check($input));
     }
 
-    /**
-     * @dataProvider providerForNotRoman
-     *
-     */
+    #[DataProvider('providerForNotRoman')]
     public function testInvalidRomansShouldThrowRomanException($input)
     {
         $this->expectException(RomanException::class);

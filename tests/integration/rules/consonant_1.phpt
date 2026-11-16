@@ -9,3 +9,4 @@ v::consonant()->assert('ddd');
 v::not(v::consonant())->check('uou');
 v::not(v::consonant())->assert('aaaaa');
 
+--EXPECT--

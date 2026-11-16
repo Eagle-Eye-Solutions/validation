@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Rules\Vatin;
 use Respect\Validation\Validatable;
 
-/**
- * @group  rule
- * @covers Vatin
- */
+#[CoversClass(Vatin::class)]
+#[Group('rule')]
 class VatinTest extends TestCase
 {
     /**

@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\NfeAccessKeyException;
 use Respect\Validation\Rules\NfeAccessKey;
 
-/**
- * @group  rule
- * @covers NfeAccessKey
- * @covers NfeAccessKeyException
- */
+#[CoversClass(NfeAccessKey::class)]
+#[CoversClass(NfeAccessKeyException::class)]
+#[Group('rule')]
 class NfeAccessKeyTest extends TestCase
 {
     protected NfeAccessKey $nfeValidator;
@@ -30,9 +31,9 @@ class NfeAccessKeyTest extends TestCase
     }
 
     /**
-     * @dataProvider validAccessKeyProvider
      * @throws \Exception
      */
+    #[DataProvider('validAccessKeyProvider')]
     public function testValidAccessKey($aK): void
     {
         static::assertTrue($this->nfeValidator->assert($aK));
@@ -41,9 +42,9 @@ class NfeAccessKeyTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidAccessKeyProvider
      * @throws \Exception
      */
+    #[DataProvider('invalidAccessKeyProvider')]
     public function testInvalidAccessKey($aK)
     {
         $this->expectException(NfeAccessKeyException::class);
@@ -51,9 +52,9 @@ class NfeAccessKeyTest extends TestCase
     }
 
     /**
-     * @dataProvider invalidAccessKeyLengthProvider
      * @throws \Exception
      */
+    #[DataProvider('invalidAccessKeyLengthProvider')]
     public function testInvalidLengthCnh($aK)
     {
         $this->expectException(NfeAccessKeyException::class);

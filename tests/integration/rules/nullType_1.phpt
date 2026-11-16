@@ -8,3 +8,4 @@ v::nullType()->assert(null);
 v::nullType()->check(null);
 
 ?>
+--EXPECT--

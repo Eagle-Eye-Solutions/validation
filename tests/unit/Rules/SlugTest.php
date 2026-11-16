@@ -11,18 +11,17 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Rules\Slug;
 
-/**
- * @group  rule
- * @covers Slug
- */
+#[CoversClass(Slug::class)]
+#[Group('rule')]
 class SlugTest extends TestCase
 {
-    /**
-     * @dataProvider providerValidSlug
-     */
+    #[DataProvider('providerValidSlug')]
     public function testValidSlug($input)
     {
         $rule = new Slug();
@@ -30,9 +29,7 @@ class SlugTest extends TestCase
         static::assertTrue($rule->validate($input));
     }
 
-    /**
-     * @dataProvider providerInvalidSlug
-     */
+    #[DataProvider('providerInvalidSlug')]
     public function testInvalidSlug($input)
     {
         $rule = new Slug();

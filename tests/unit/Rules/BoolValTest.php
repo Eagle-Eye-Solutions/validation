@@ -10,15 +10,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\BoolVal;
 
-/**
- * @group  rule
- * @covers BoolVal
- */
+#[CoversClass(BoolVal::class)]
+#[Group('rule')]
 class BoolValTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new BoolVal();
 
@@ -35,7 +35,7 @@ class BoolValTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new BoolVal();
 

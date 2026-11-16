@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\SubdivisionCode\BrSubdivisionCodeException;
+use Respect\Validation\Exceptions\SubdivisionCodeException;
 use Respect\Validation\Rules\SubdivisionCode;
 
-/**
- * @covers SubdivisionCode
- * @covers SubdivisionCodeException
- */
+#[CoversClass(SubdivisionCode::class)]
+#[CoversClass(SubdivisionCodeException::class)]
 class SubdivisionCodeTest extends TestCase
 {
     public function testShouldThrowsExceptionWhenInvalidFormat(): void
@@ -55,9 +56,9 @@ class SubdivisionCodeTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForValidSubdivisionCodeInformation
      * @throws ComponentException
      */
+    #[DataProvider('providerForValidSubdivisionCodeInformation')]
     public function testShouldValidateValidSubdivisionCodeInformation($countryCode, $input): void
     {
         $countrySubdivision = new SubdivisionCode($countryCode);
@@ -75,9 +76,9 @@ class SubdivisionCodeTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidSubdivisionCodeInformation
      * @throws ComponentException
      */
+    #[DataProvider('providerForInvalidSubdivisionCodeInformation')]
     public function testShouldNotValidateInvalidSubdivisionCodeInformation($countryCode, $input): void
     {
         $countrySubdivision = new SubdivisionCode($countryCode);

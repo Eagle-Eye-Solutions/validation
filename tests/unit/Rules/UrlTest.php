@@ -11,19 +11,19 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\UrlException;
 use Respect\Validation\Rules\Url;
 
-/**
- * @group  rule
- * @covers Url
- * @covers UrlException
- */
+#[CoversClass(Url::class)]
+#[CoversClass(UrlException::class)]
+#[Group('rule')]
 class UrlTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidUrl
-     */
+    #[DataProvider('providerForValidUrl')]
     public function testShouldValidateValidUrls($validUrl): void
     {
         $validator = new Url();
@@ -31,9 +31,7 @@ class UrlTest extends TestCase
         static::assertTrue($validator->validate($validUrl));
     }
 
-    /**
-     * @dataProvider providerForInvalidUrl
-     */
+    #[DataProvider('providerForInvalidUrl')]
     public function testShouldNotValidateInvalidUrls($invalidUrl): void
     {
         $validator = new Url();

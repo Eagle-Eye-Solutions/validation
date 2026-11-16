@@ -11,22 +11,23 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\IpException;
 use Respect\Validation\Rules\Ip;
 
-/**
- * @group  rule
- * @covers Ip
- * @covers IpException
- */
+#[CoversClass(Ip::class)]
+#[CoversClass(IpException::class)]
+#[Group('rule')]
 class IpTest extends TestCase
 {
     /**
-     * @dataProvider providerForIp
      * @throws \Exception
      */
+    #[DataProvider('providerForIp')]
     public function testValidIpsShouldReturnTrue($input, $options = null): void
     {
         $ipValidator = new Ip($options);
@@ -36,9 +37,9 @@ class IpTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForIpBetweenRange
      * @throws \Exception
      */
+    #[DataProvider('providerForIpBetweenRange')]
     public function testIpsBetweenRangeShouldReturnTrue($input, $networkRange): void
     {
         $ipValidator = new Ip($networkRange);
@@ -48,10 +49,9 @@ class IpTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotIp
-     *
      * @throws \Exception
      */
+    #[DataProvider('providerForNotIp')]
     public function testInvalidIpsShouldThrowIpException($input, $options = null): void
     {
         $this->expectException(IpException::class);
@@ -61,9 +61,9 @@ class IpTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForIpOutsideRange
      * @throws \Exception
      */
+    #[DataProvider('providerForIpOutsideRange')]
     public function testIpsOutsideRangeShouldReturnFalse($input, $networkRange): void
     {
         $this->expectException(IpException::class);
@@ -129,10 +129,7 @@ class IpTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providerForInvalidRanges
-     *
-     */
+    #[DataProvider('providerForInvalidRanges')]
     public function testInvalidRangeShouldRaiseException($range): void
     {
         $this->expectException(ComponentException::class);

@@ -13,15 +13,16 @@ namespace Respect\Validation\Test\Rules;
 
 use DateTime;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\DateException;
 use Respect\Validation\Rules\Date;
 
-/**
- * @group  rule
- * @covers Date
- * @covers DateException
- */
+#[CoversClass(Date::class)]
+#[CoversClass(DateException::class)]
+#[Group('rule')]
 class DateTest extends TestCase
 {
     protected $dateValidator;
@@ -135,9 +136,9 @@ class DateTest extends TestCase
     /**
      * @param string $systemTimezone
      * @param string $input
-     * @dataProvider providerForDateTimeTimezoneStrings
      * @throws \Exception
      */
+    #[DataProvider('providerForDateTimeTimezoneStrings')]
     public function testDateTimeSystemTimezoneIndependent($systemTimezone, $format, $input): void
     {
         date_default_timezone_set($systemTimezone);

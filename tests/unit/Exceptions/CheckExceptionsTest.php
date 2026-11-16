@@ -11,6 +11,7 @@
 
 namespace Respect\Validation\Test\Exceptions;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use DirectoryIterator;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -49,9 +50,7 @@ class CheckExceptionsTest extends TestCase
         return $ruleNames;
     }
 
-    /**
-     * @dataProvider provideListOfRuleNames
-     */
+    #[DataProvider('provideListOfRuleNames')]
     public function testRuleHasAnExceptionWhichHasValidApi($ruleName): void
     {
         $exceptionClass = 'Respect\\Validation\\Exceptions\\'.$ruleName.'Exception';

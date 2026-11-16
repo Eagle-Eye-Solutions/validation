@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_TestCase;
+use Respect\Validation\Exceptions\BsnException;
 use Respect\Validation\Rules\Bsn;
 
-/**
- * @group  rule
- * @covers Bsn
- * @covers BsnException
- */
+#[CoversClass(Bsn::class)]
+#[CoversClass(BsnException::class)]
+#[Group('rule')]
 class BsnTest extends TestCase
 {
     /**
@@ -35,17 +36,13 @@ class BsnTest extends TestCase
         $this->rule = new Bsn();
     }
 
-    /**
-     * @dataProvider providerForBsn
-     */
+    #[DataProvider('providerForBsn')]
     public function testShouldValidateBsn(string $input): void
     {
         static::assertTrue($this->rule->validate($input));
     }
 
-    /**
-     * @dataProvider providerForInvalidBsn
-     */
+    #[DataProvider('providerForInvalidBsn')]
     public function testShouldNotValidateBsn(string $input): void
     {
         static::assertFalse($this->rule->validate($input));

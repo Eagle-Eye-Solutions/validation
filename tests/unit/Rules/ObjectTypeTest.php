@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ObjectTypeException;
 use Respect\Validation\Rules\ObjectType;
 
-/**
- * @group  rule
- * @covers ObjectType
- * @covers ObjectTypeException
- */
+#[CoversClass(ObjectType::class)]
+#[CoversClass(ObjectTypeException::class)]
+#[Group('rule')]
 class ObjectTypeTest extends TestCase
 {
     protected $object;
@@ -30,9 +31,9 @@ class ObjectTypeTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForObject
      * @throws \Exception
      */
+    #[DataProvider('providerForObject')]
     public function testObject($input): void
     {
         static::assertTrue($this->object->__invoke($input));
@@ -40,10 +41,7 @@ class ObjectTypeTest extends TestCase
         static::assertTrue($this->object->check($input));
     }
 
-    /**
-     * @dataProvider providerForNotObject
-     *
-     */
+    #[DataProvider('providerForNotObject')]
     public function testNotObject($input): void
     {
         $this->expectException(ObjectTypeException::class);

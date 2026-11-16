@@ -11,6 +11,8 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\KeyException;
@@ -18,11 +20,9 @@ use Respect\Validation\Rules\Key;
 use Respect\Validation\Rules\Length;
 use Respect\Validation\Rules\NotEmpty;
 
-/**
- * @group  rule
- * @covers Key
- * @covers KeyException
- */
+#[CoversClass(Key::class)]
+#[CoversClass(KeyException::class)]
+#[Group('rule')]
 class KeyTest extends TestCase
 {
     public function testArrayWithPresentKeyShouldReturnTrue(): void

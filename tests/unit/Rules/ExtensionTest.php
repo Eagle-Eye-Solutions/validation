@@ -11,16 +11,17 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ExtensionException;
 use Respect\Validation\Rules\Extension;
 use SplFileInfo;
 
-/**
- * @group  rule
- * @covers Extension
- * @covers ExtensionException
- */
+#[CoversClass(Extension::class)]
+#[CoversClass(ExtensionException::class)]
+#[Group('rule')]
 class ExtensionTest extends TestCase
 {
     public static function providerValidExtension(): array
@@ -33,9 +34,7 @@ class ExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providerValidExtension
-     */
+    #[DataProvider('providerValidExtension')]
     public function testShouldValidateExtension($filename, $extension): void
     {
         $rule = new Extension($extension);

@@ -11,14 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\CnpjException;
 use Respect\Validation\Rules\Cnpj;
 
-/**
- * @group  rule
- * @covers Cnpj
- * @covers CnpjException
- */
+#[CoversClass(Cnpj::class)]
+#[CoversClass(CnpjException::class)]
+#[Group('rule')]
 class CnpjTest extends TestCase
 {
     protected $cnpjValidator;
@@ -28,41 +30,31 @@ class CnpjTest extends TestCase
         $this->cnpjValidator = new Cnpj();
     }
 
-    /**
-     * @dataProvider providerValidFormattedCnpj
-     */
+    #[DataProvider('providerValidFormattedCnpj')]
     public function testFormattedCnpjsShouldValidate($input): void
     {
         static::assertTrue($this->cnpjValidator->validate($input));
     }
 
-    /**
-     * @dataProvider providerValidUnformattedCnpj
-     */
+    #[DataProvider('providerValidUnformattedCnpj')]
     public function testUnformattedCnpjsShouldValidate($input): void
     {
         static::assertTrue($this->cnpjValidator->validate($input));
     }
 
-    /**
-     * @dataProvider providerInvalidFormattedCnpj
-     */
+    #[DataProvider('providerInvalidFormattedCnpj')]
     public function testFormattedCnpjsShouldNotValidate($input): void
     {
         static::assertFalse($this->cnpjValidator->validate($input));
     }
 
-    /**
-     * @dataProvider providerInvalidUnformattedCnpj
-     */
+    #[DataProvider('providerInvalidUnformattedCnpj')]
     public function testUnformattedCnpjsShouldNotValidate($input): void
     {
         static::assertFalse($this->cnpjValidator->validate($input));
     }
 
-    /**
-     * @dataProvider providerInvalidFormattedAndUnformattedCnpjLength
-     */
+    #[DataProvider('providerInvalidFormattedAndUnformattedCnpjLength')]
     public function testFormattedAndUnformattedCnpjsShouldNotValidate($input): void
     {
         static::assertFalse($this->cnpjValidator->validate($input));

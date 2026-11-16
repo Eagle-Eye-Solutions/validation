@@ -2,19 +2,20 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use Respect\Validation\Exceptions\FileException;
 use Respect\Validation\Rules\File;
 use SplFileInfo;
 use SplFileObject;
 use stdClass;
 
-/**
- * @group  rule
- * @covers File
- * @covers FileException
- */
+#[CoversClass(File::class)]
+#[CoversClass(FileException::class)]
+#[Group('rule')]
 class FileTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $sut = new File();
         $fixturesDirectory = realpath(__DIR__.'/../../fixtures/');
@@ -26,7 +27,7 @@ class FileTest extends RuleTestCase
     }
 
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $sut = new File();
 

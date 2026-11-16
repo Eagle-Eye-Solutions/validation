@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\IterableType;
 
-/**
- * @group  rule
- * @covers IterableType
- */
+#[CoversClass(IterableType::class)]
+#[Group('rule')]
 class IterableTypeTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new IterableType();
 
@@ -30,7 +30,7 @@ class IterableTypeTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new IterableType();
 

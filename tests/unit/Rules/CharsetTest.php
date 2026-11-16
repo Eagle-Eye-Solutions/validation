@@ -11,22 +11,23 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\CharsetException;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Rules\Charset;
 
-/**
- * @group  rule
- * @covers Charset
- * @covers CharsetException
- */
+#[CoversClass(Charset::class)]
+#[CoversClass(CharsetException::class)]
+#[Group('rule')]
 class CharsetTest extends TestCase
 {
     /**
-     * @dataProvider providerForValidCharset
      * @throws ComponentException
      */
+    #[DataProvider('providerForValidCharset')]
     public function testValidDataWithCharsetShouldReturnTrue($charset, $input)
     {
         $validator = new Charset($charset);
@@ -34,9 +35,9 @@ class CharsetTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidCharset
      * @throws ComponentException
      */
+    #[DataProvider('providerForInvalidCharset')]
     public function testInvalidCharsetShouldFailAndThrowCharsetException($charset, $input)
     {
         $this->expectException(CharsetException::class);
@@ -45,10 +46,7 @@ class CharsetTest extends TestCase
         static::assertFalse($validator->assert($input));
     }
 
-    /**
-     * @dataProvider providerForInvalidParams
-     *
-     */
+    #[DataProvider('providerForInvalidParams')]
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($charset)
     {
         $this->expectException(ComponentException::class);

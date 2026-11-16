@@ -11,14 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\NoException;
 use Respect\Validation\Rules\No;
 
-/**
- * @group  rule
- * @covers No
- * @covers NoException
- */
+#[CoversClass(No::class)]
+#[CoversClass(NoException::class)]
+#[Group('rule')]
 class NoTest extends TestCase
 {
     public function testShouldUseDefaultPattern()
@@ -45,9 +47,7 @@ class NoTest extends TestCase
         static::assertSame($expectedPattern, $actualPattern);
     }
 
-    /**
-     * @dataProvider validNoProvider
-     */
+    #[DataProvider('validNoProvider')]
     public function testShouldValidatePatternAccordingToTheDefinedLocale($input): void
     {
         $rule = new No();
@@ -67,9 +67,7 @@ class NoTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidNoProvider
-     */
+    #[DataProvider('invalidNoProvider')]
     public function testShouldNotValidatePatternAccordingToTheDefinedLocale($input): void
     {
         $rule = new No();

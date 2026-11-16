@@ -11,6 +11,9 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\AllOfException;
 use Respect\Validation\Exceptions\CallbackException;
@@ -21,11 +24,9 @@ use Respect\Validation\Rules\Callback;
 use Respect\Validation\Rules\IntVal;
 use Respect\Validation\Rules\Positive;
 
-/**
- * @group  rule
- * @covers AllOf
- * @covers AllOfException
- */
+#[CoversClass(AllOf::class)]
+#[CoversClass(AllOfException::class)]
+#[Group('rule')]
 class AllOfTest extends TestCase
 {
     public function testRemoveRulesShouldRemoveAllRules()
@@ -74,10 +75,7 @@ class AllOfTest extends TestCase
         static::assertTrue($o->assert(''));
     }
 
-    /**
-     * @dataProvider providerStaticDummyRules
-     *
-     */
+    #[DataProvider('providerStaticDummyRules')]
     public function testValidationAssertShouldFailIfAnyRuleFailsAndReturnAllExceptionsFailed($v1, $v2, $v3)
     {
         $this->expectException(AllOfException::class);
@@ -86,10 +84,7 @@ class AllOfTest extends TestCase
         static::assertFalse($o->assert('any'));
     }
 
-    /**
-     * @dataProvider providerStaticDummyRules
-     *
-     */
+    #[DataProvider('providerStaticDummyRules')]
     public function testValidationCheckShouldFailIfAnyRuleFailsAndThrowTheFirstExceptionOnly($v1, $v2, $v3)
     {
         $this->expectException(CallbackException::class);
@@ -98,10 +93,7 @@ class AllOfTest extends TestCase
         static::assertFalse($o->check('any'));
     }
 
-    /**
-     * @dataProvider providerStaticDummyRules
-     *
-     */
+    #[DataProvider('providerStaticDummyRules')]
     public function testValidationCheckShouldFailOnEmptyInput($v1, $v2, $v3)
     {
         $this->expectException(ValidationException::class);
@@ -109,9 +101,7 @@ class AllOfTest extends TestCase
         static::assertTrue($o->check(''));
     }
 
-    /**
-     * @dataProvider providerStaticDummyRules
-     */
+    #[DataProvider('providerStaticDummyRules')]
     public function testValidationShouldFailIfAnyRuleFails($v1, $v2, $v3): void
     {
         $o = new AllOf($v1, $v2, $v3);

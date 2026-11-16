@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\NumericValException;
 use Respect\Validation\Rules\NumericVal;
 
-/**
- * @group  rule
- * @covers NumericVal
- * @covers NumericValException
- */
+#[CoversClass(NumericVal::class)]
+#[CoversClass(NumericValException::class)]
+#[Group('rule')]
 class NumericValTest extends TestCase
 {
     protected NumericVal $object;
@@ -30,9 +31,9 @@ class NumericValTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNumeric
      * @throws \Exception
      */
+    #[DataProvider('providerForNumeric')]
     public function testNumeric($input): void
     {
         static::assertTrue($this->object->__invoke($input));
@@ -41,9 +42,9 @@ class NumericValTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotNumeric
      * @throws \Exception
      */
+    #[DataProvider('providerForNotNumeric')]
     public function testNotNumeric($input): void
     {
         $this->expectException(NumericValException::class);

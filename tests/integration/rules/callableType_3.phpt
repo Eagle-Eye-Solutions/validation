@@ -35,3 +35,4 @@ try {
     echo $exception->getFullMessage();
 }
 ?>
+--EXPECT--

@@ -12,3 +12,4 @@ v::date()->between('1989-12-20', 'tomorrow', false)->assert(new DateTime());
 v::stringType()->between('a', 'e', false)->assert('d');
 
 ?>
+--EXPECT--

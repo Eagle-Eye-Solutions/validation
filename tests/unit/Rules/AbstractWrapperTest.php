@@ -24,7 +24,7 @@ class AbstractWrapperTest extends TestCase
     {
         $this->expectException(ComponentException::class);
         $this->expectExceptionMessage("There is no defined validatable");
-        $wrapper = $this->getMockForAbstractClass(AbstractWrapper::class);
+        $wrapper = $this->getMockBuilder(AbstractWrapper::class)->onlyMethods([])->getMock();
         $wrapper->getValidatable();
     }
 
@@ -41,9 +41,9 @@ class AbstractWrapperTest extends TestCase
      */
     public function testShouldReturnDefinedValidatable(): void
     {
-        $validatable = $this->createMock(Validatable::class);
+        $validatable = $this->createStub(Validatable::class);
 
-        $wrapper = $this->getMockForAbstractClass(AbstractWrapper::class);
+        $wrapper = $this->getMockBuilder(AbstractWrapper::class)->onlyMethods([])->getMock();
         $this->bindValidatable($wrapper, $validatable);
 
         static::assertSame($validatable, $wrapper->getValidatable());
@@ -62,7 +62,7 @@ class AbstractWrapperTest extends TestCase
             ->with($input)
             ->willReturn(true);
 
-        $wrapper = $this->getMockForAbstractClass(AbstractWrapper::class);
+        $wrapper = $this->getMockBuilder(AbstractWrapper::class)->onlyMethods([])->getMock();
         $this->bindValidatable($wrapper, $validatable);
 
         static::assertTrue($wrapper->validate($input));
@@ -81,7 +81,7 @@ class AbstractWrapperTest extends TestCase
             ->with($input)
             ->willReturn(true);
 
-        $wrapper = $this->getMockForAbstractClass(AbstractWrapper::class);
+        $wrapper = $this->getMockBuilder(AbstractWrapper::class)->onlyMethods([])->getMock();
         $this->bindValidatable($wrapper, $validatable);
 
         static::assertTrue($wrapper->assert($input));
@@ -97,7 +97,7 @@ class AbstractWrapperTest extends TestCase
             ->with($input)
             ->willReturn(true);
 
-        $wrapper = $this->getMockForAbstractClass(AbstractWrapper::class);
+        $wrapper = $this->getMockBuilder(AbstractWrapper::class)->onlyMethods([])->getMock();
         $this->bindValidatable($wrapper, $validatable);
 
         static::assertTrue($wrapper->check($input));
@@ -116,7 +116,7 @@ class AbstractWrapperTest extends TestCase
             ->with($name)
             ->willReturn($validatable);
 
-        $wrapper = $this->getMockForAbstractClass(AbstractWrapper::class);
+        $wrapper = $this->getMockBuilder(AbstractWrapper::class)->onlyMethods([])->getMock();
         $this->bindValidatable($wrapper, $validatable);
 
         static::assertSame($wrapper, $wrapper->setName($name));

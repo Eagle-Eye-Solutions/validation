@@ -11,31 +11,27 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\AlnumException;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Rules\Alnum;
 
-/**
- * @group  rule
- * @covers Alnum
- * @covers AlnumException
- */
+#[CoversClass(Alnum::class)]
+#[CoversClass(AlnumException::class)]
+#[Group('rule')]
 class AlnumTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidAlnum
-     */
+    #[DataProvider('providerForValidAlnum')]
     public function testValidAlnumCharsShouldReturnTrue($validAlnum, $additional)
     {
         $validator = new Alnum($additional);
         static::assertTrue($validator->validate($validAlnum));
     }
 
-    /**
-     * @dataProvider providerForInvalidAlnum
-     *
-     */
+    #[DataProvider('providerForInvalidAlnum')]
     public function testInvalidAlnumCharsShouldThrowAlnumExceptionAndReturnFalse($invalidAlnum, $additional)
     {
         $this->expectException(AlnumException::class);
@@ -44,10 +40,7 @@ class AlnumTest extends TestCase
         static::assertFalse($validator->assert($invalidAlnum));
     }
 
-    /**
-     * @dataProvider providerForInvalidParams
-     *
-     */
+    #[DataProvider('providerForInvalidParams')]
     public function testInvalidConstructorParamsShouldThrowComponentExceptionUponInstantiation($additional)
     {
         $this->expectException(ComponentException::class);
@@ -55,9 +48,9 @@ class AlnumTest extends TestCase
     }
 
     /**
-     * @dataProvider providerAdditionalChars
      * @throws ComponentException
      */
+    #[DataProvider('providerAdditionalChars')]
     public function testAdditionalCharsShouldBeRespected($additional, $query): void
     {
         $validator = new Alnum($additional);

@@ -9,3 +9,4 @@ v::identityCard('PL')->check('AYE205410');
 v::identityCard('PL')->assert('AYE205410');
 ?>
 
+--EXPECT--

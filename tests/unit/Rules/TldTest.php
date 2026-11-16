@@ -11,13 +11,14 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Rules\Tld;
 
-/**
- * @group  rule
- * @covers Tld
- */
+#[CoversClass(Tld::class)]
+#[Group('rule')]
 class TldTest extends TestCase
 {
     public static function providerForValidTld()
@@ -32,9 +33,7 @@ class TldTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providerForValidTld
-     */
+    #[DataProvider('providerForValidTld')]
     public function testShouldValidateInputWhenItIsAValidTld($input)
     {
         $rule = new Tld();
@@ -52,9 +51,7 @@ class TldTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providerForInvalidTld
-     */
+    #[DataProvider('providerForInvalidTld')]
     public function testShouldInvalidateInputWhenItIsNotAValidTld($input)
     {
         $rule = new Tld();

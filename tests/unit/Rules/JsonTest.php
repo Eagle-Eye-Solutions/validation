@@ -11,16 +11,17 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use Respect\Validation\Exceptions\JsonException;
 use Respect\Validation\Rules\Json;
 
-/**
- * @group  rule
- * @covers Json
- * @covers JsonException
- */
+#[CoversClass(Json::class)]
+#[CoversClass(JsonException::class)]
+#[Group('rule')]
 class JsonTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $json = new Json();
 
@@ -37,7 +38,7 @@ class JsonTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $json = new Json();
 

@@ -11,6 +11,8 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\MimetypeException;
 use Respect\Validation\Rules\Mimetype;
@@ -18,10 +20,10 @@ use SplFileInfo;
 
 /**
  * @author Henrique Moody <henriquemoody@gmail.com>
- * @group  rule
- * @covers Mimetype
- * @covers MimetypeException
  */
+#[CoversClass(Mimetype::class)]
+#[CoversClass(MimetypeException::class)]
+#[Group('rule')]
 class MimetypeTest extends TestCase
 {
     private $filename;

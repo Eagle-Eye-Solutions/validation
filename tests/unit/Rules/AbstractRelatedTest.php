@@ -11,6 +11,7 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Rules\AbstractRelated;
@@ -32,8 +33,8 @@ class AbstractRelatedTest extends TestCase
      */
     public function testConstructionOfAbstractRelatedClass(): void
     {
-        $validatableMock = $this->createMock(Validatable::class);
-        $relatedRuleMock = $this->getMockForAbstractClass(AbstractRelated::class, ['foo', $validatableMock]);
+        $validatableMock = $this->createStub(Validatable::class);
+        $relatedRuleMock = $this->getMockBuilder(AbstractRelated::class)->setConstructorArgs(['foo', $validatableMock])->onlyMethods(['hasReference', 'getReferenceValue'])->getMock();
 
         static::assertSame('foo', $relatedRuleMock->getName());
         static::assertEquals('foo', $relatedRuleMock->reference);
@@ -42,9 +43,9 @@ class AbstractRelatedTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForOperations
      * @throws Exception
      */
+    #[DataProvider('providerForOperations')]
     public function testReferenceValidatesItsValue($method): void
     {
         $validatableMock = $this->createMock(Validatable::class);
@@ -52,7 +53,7 @@ class AbstractRelatedTest extends TestCase
             ->method($method)
             ->willReturn(true);
 
-        $relatedRuleMock = $this->getMockForAbstractClass(AbstractRelated::class, ['foo', $validatableMock]);
+        $relatedRuleMock = $this->getMockBuilder(AbstractRelated::class)->setConstructorArgs(['foo', $validatableMock])->onlyMethods(['hasReference', 'getReferenceValue'])->getMock();
         $relatedRuleMock->expects(self::once())
             ->method('hasReference')
             ->willReturn(true);
@@ -65,7 +66,7 @@ class AbstractRelatedTest extends TestCase
      */
     public function testIsMandatoryAndThereIsNoReference(): void
     {
-        $relatedRuleMock = $this->getMockForAbstractClass(AbstractRelated::class, ['foo']);
+        $relatedRuleMock = $this->getMockBuilder(AbstractRelated::class)->setConstructorArgs(['foo'])->onlyMethods(['hasReference', 'getReferenceValue'])->getMock();
         $relatedRuleMock->expects(self::once())
             ->method('hasReference')
             ->willReturn(false);
@@ -98,7 +99,7 @@ class AbstractRelatedTest extends TestCase
      */
     public function testShouldAcceptReferenceAndRuleOnConstructor(): void
     {
-        $ruleMock = $this->createMock(Validatable::class);
+        $ruleMock = $this->createStub(Validatable::class);
 
         $abstractMock = $this->getMockBuilder(AbstractRelated::class)
             ->setConstructorArgs(['something', $ruleMock])
@@ -155,7 +156,7 @@ class AbstractRelatedTest extends TestCase
 
         $abstractMock = $this
             ->getMockBuilder(AbstractRelated::class)
-            ->setConstructorArgs(['something', $this->createMock(Validatable::class), $mandatory])
+            ->setConstructorArgs(['something', $this->createStub(Validatable::class), $mandatory])
             ->getMock();
 
         static::assertSame($mandatory, $abstractMock->mandatory);

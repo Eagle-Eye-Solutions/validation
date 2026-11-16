@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\Pesel;
 
-/**
- * @group  rule
- * @covers Pesel
- */
+#[CoversClass(Pesel::class)]
+#[Group('rule')]
 class PeselTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new Pesel();
 
@@ -35,7 +35,7 @@ class PeselTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new Pesel();
 

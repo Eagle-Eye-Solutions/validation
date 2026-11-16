@@ -11,17 +11,17 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\NoneOfException;
 use Respect\Validation\Rules\Callback;
 use Respect\Validation\Rules\NoneOf;
 
-/**
- * @group  rule
- * @covers NoneOf
- * @covers NoneOfException
- */
+#[CoversClass(NoneOf::class)]
+#[CoversClass(NoneOfException::class)]
+#[Group('rule')]
 class NoneOfTest extends TestCase
 {
     /**

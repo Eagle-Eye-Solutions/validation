@@ -11,19 +11,19 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\HexRgbColorException;
 use Respect\Validation\Rules\HexRgbColor;
 
-/**
- * @group  rule
- * @covers HexRgbColor
- * @covers HexRgbColorException
- */
+#[CoversClass(HexRgbColor::class)]
+#[CoversClass(HexRgbColorException::class)]
+#[Group('rule')]
 class HexRgbColorTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidHexRgbColor
-     */
+    #[DataProvider('providerForValidHexRgbColor')]
     public function testHexRgbColorValuesONLYShouldReturnTrue($validHexRgbColor): void
     {
         $validator = new HexRgbColor();
@@ -31,9 +31,7 @@ class HexRgbColorTest extends TestCase
         static::assertTrue($validator->validate($validHexRgbColor));
     }
 
-    /**
-     * @dataProvider providerForInvalidHexRgbColor
-     */
+    #[DataProvider('providerForInvalidHexRgbColor')]
     public function testInvalidHexRgbColorValuesShouldReturnFalse($invalidHexRgbColor): void
     {
         $validator = new HexRgbColor();

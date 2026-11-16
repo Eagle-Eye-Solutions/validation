@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\Imei;
 
-/**
- * @group  rule
- * @covers Imei
- */
+#[CoversClass(Imei::class)]
+#[Group('rule')]
 class ImeiTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new Imei();
 
@@ -35,7 +35,7 @@ class ImeiTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new Imei();
 

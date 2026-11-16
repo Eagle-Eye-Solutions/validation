@@ -12,14 +12,15 @@
 namespace Respect\Validation\Test\Rules;
 
 use DateTime;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\LeapYearException;
 use Respect\Validation\Rules\LeapYear;
 
-/**
- * @group  rule
- * @covers LeapYear
- * @covers LeapYearException
- */
+#[CoversClass(LeapYear::class)]
+#[CoversClass(LeapYearException::class)]
+#[Group('rule')]
 class LeapYearTest extends TestCase
 {
     protected $leapYearValidator;

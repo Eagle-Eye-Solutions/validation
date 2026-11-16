@@ -12,16 +12,18 @@
 namespace Respect\Validation\Test\Rules;
 
 use DateTime;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\AgeException;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Rules\Age;
 
-/**
- * @group  rule
- * @covers Age
- * @covers AgeException
- */
+#[CoversClass(Age::class)]
+#[CoversClass(AgeException::class)]
+#[Group('rule')]
 class AgeTest extends TestCase
 {
     public function testShouldThrowsExceptionWhenThereIsNoArgumentsOnConstructor()
@@ -66,9 +68,9 @@ class AgeTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForValidAge
      * @throws ComponentException
      */
+    #[DataProvider('providerForValidAge')]
     public function testShouldValidateValidAge($minAge, $maxAge, $input): void
     {
         $rule = new Age($minAge, $maxAge);
@@ -92,9 +94,7 @@ class AgeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providerForInvalidAge
-     */
+    #[DataProvider('providerForInvalidAge')]
     public function testShouldValidateInvalidAge($minAge, $maxAge, $input): void
     {
         $rule = new Age($minAge, $maxAge);
@@ -103,9 +103,9 @@ class AgeTest extends TestCase
     }
 
     /**
-     * @depends testShouldValidateInvalidAge
      * @throws ComponentException
      */
+    #[Depends('testShouldValidateInvalidAge')]
     public function testShouldThrowsExceptionWhenMinimumAgeFails(): void
     {
         $this->expectExceptionMessage("\"today\" must be lower than 18 years ago");
@@ -114,9 +114,7 @@ class AgeTest extends TestCase
         $rule->assert('today');
     }
 
-    /**
-     * @depends testShouldValidateInvalidAge
-     */
+    #[Depends('testShouldValidateInvalidAge')]
     public function testShouldThrowsExceptionWhenMaximunAgeFails()
     {
         $this->expectExceptionMessage("\"51 years ago\" must be greater than 50 years ago");
@@ -125,9 +123,7 @@ class AgeTest extends TestCase
         $rule->assert('51 years ago');
     }
 
-    /**
-     * @depends testShouldValidateInvalidAge
-     */
+    #[Depends('testShouldValidateInvalidAge')]
     public function testShouldThrowsExceptionWhenMinimunAndMaximunAgeFails()
     {
         $this->expectException(AgeException::class);

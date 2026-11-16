@@ -11,14 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\YesException;
 use Respect\Validation\Rules\Yes;
 
-/**
- * @group  rule
- * @covers Yes
- * @covers YesException
- */
+#[CoversClass(Yes::class)]
+#[CoversClass(YesException::class)]
+#[Group('rule')]
 class YesTest extends TestCase
 {
     public function testShouldUseDefaultPattern(): void
@@ -45,9 +47,7 @@ class YesTest extends TestCase
         static::assertSame($expectedPattern, $actualPattern);
     }
 
-    /**
-     * @dataProvider validYesProvider
-     */
+    #[DataProvider('validYesProvider')]
     public function testShouldValidatePatternAccordingToTheDefinedLocale($input): void
     {
         $rule = new Yes();
@@ -66,9 +66,7 @@ class YesTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidYesProvider
-     */
+    #[DataProvider('invalidYesProvider')]
     public function testShouldNotValidatePatternAccordingToTheDefinedLocale($input): void
     {
         $rule = new Yes();

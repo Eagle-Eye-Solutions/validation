@@ -11,7 +11,11 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\NotException;
 use Respect\Validation\Exceptions\ValidationException;
 use Respect\Validation\Rules\AllOf;
 use Respect\Validation\Rules\Digit;
@@ -23,26 +27,19 @@ use Respect\Validation\Rules\NumericVal;
 use Respect\Validation\Rules\OneOf;
 use Respect\Validation\Validator;
 
-/**
- * @group  rule
- * @covers Not
- * @covers NotException
- */
+#[CoversClass(Not::class)]
+#[CoversClass(NotException::class)]
+#[Group('rule')]
 class NotTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidNot
-     */
+    #[DataProvider('providerForValidNot')]
     public function testNot($v, $input): void
     {
         $not = new Not($v);
         static::assertTrue($not->assert($input));
     }
 
-    /**
-     * @dataProvider providerForInvalidNot
-     *
-     */
+    #[DataProvider('providerForInvalidNot')]
     public function testNotNotHaha($v, $input): void
     {
         $this->expectException(ValidationException::class);
@@ -50,9 +47,7 @@ class NotTest extends TestCase
         static::assertFalse($not->assert($input));
     }
 
-    /**
-     * @dataProvider providerForSetName
-     */
+    #[DataProvider('providerForSetName')]
     public function testNotSetName($v): void
     {
         $not = new Not($v);

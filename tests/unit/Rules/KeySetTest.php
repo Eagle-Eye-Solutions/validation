@@ -11,6 +11,9 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\KeySetException;
@@ -19,11 +22,9 @@ use Respect\Validation\Rules\AlwaysValid;
 use Respect\Validation\Rules\Key;
 use Respect\Validation\Rules\KeySet;
 
-/**
- * @group  rule
- * @covers KeySet
- * @covers KeySetException
- */
+#[CoversClass(KeySet::class)]
+#[CoversClass(KeySetException::class)]
+#[Group('rule')]
 class KeySetTest extends TestCase
 {
     /**
@@ -193,9 +194,7 @@ class KeySetTest extends TestCase
         $keySet->assert($input);
     }
 
-    /**
-     * @dataProvider providerForInvalidArguments
-     */
+    #[DataProvider('providerForInvalidArguments')]
     public function testShouldThrowExceptionInCaseArgumentIsAnythingOtherThanArray($input): void
     {
         $this->expectExceptionMessage("Must have keys { \"name\" }");

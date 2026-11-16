@@ -11,13 +11,13 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Rules\CreditCard;
 
-/**
- * @group  rule
- * @covers CreditCard
- */
+#[CoversClass(CreditCard::class)]
+#[Group('rule')]
 class CreditCardTest extends RuleTestCase
 {
     public function testShouldHaveNoCreditCardBrandByDefault(): void
@@ -45,7 +45,7 @@ class CreditCardTest extends RuleTestCase
         new CreditCard('RespectCard');
     }
 
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $general = new CreditCard();
         $amex = new CreditCard(CreditCard::AMERICAN_EXPRESS);
@@ -73,7 +73,7 @@ class CreditCardTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $general = new CreditCard();
         $amex = new CreditCard(CreditCard::AMERICAN_EXPRESS);

@@ -8,3 +8,4 @@ v::email()->assert('batman@gothancity.com');
 v::email()->check('jocker@gothancity.com');
 ?>
 
+--EXPECT--

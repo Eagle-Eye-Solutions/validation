@@ -11,21 +11,22 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\MultipleException;
 use Respect\Validation\Rules\Multiple;
 
-/**
- * @group  rule
- * @covers Multiple
- * @covers MultipleException
- */
+#[CoversClass(Multiple::class)]
+#[CoversClass(MultipleException::class)]
+#[Group('rule')]
 class MultipleTest extends TestCase
 {
     /**
-     * @dataProvider providerForMultiple
      * @throws \Exception
      */
+    #[DataProvider('providerForMultiple')]
     public function testValidNumberMultipleOf($multipleOf, $input): void
     {
         $multiple = new Multiple($multipleOf);
@@ -35,9 +36,9 @@ class MultipleTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotMultiple
      * @throws \Exception
      */
+    #[DataProvider('providerForNotMultiple')]
     public function testNotMultipleShouldThrowMultipleException($multipleOf, $input): void
     {
         $this->expectException(MultipleException::class);

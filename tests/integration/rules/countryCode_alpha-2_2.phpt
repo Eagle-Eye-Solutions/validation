@@ -10,3 +10,4 @@ v::countryCode()->check('BR');
 v::countryCode()->check('DE');
 ?>
 
+--EXPECT--

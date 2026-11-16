@@ -11,19 +11,19 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\FalseValException;
 use Respect\Validation\Rules\FalseVal;
 
-/**
- * @group  rule
- * @covers FalseVal
- * @covers FalseValException
- */
+#[CoversClass(FalseVal::class)]
+#[CoversClass(FalseValException::class)]
+#[Group('rule')]
 class FalseValTest extends TestCase
 {
-    /**
-     * @dataProvider validFalseProvider
-     */
+    #[DataProvider('validFalseProvider')]
     public function testValidatePatternAccordingToTheDefinedLocale($input): void
     {
         $rule = new FalseVal();
@@ -49,9 +49,7 @@ class FalseValTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidFalseProvider
-     */
+    #[DataProvider('invalidFalseProvider')]
     public function testNotValidatePatternAccordingToTheDefinedLocale($input): void
     {
         $rule = new FalseVal();

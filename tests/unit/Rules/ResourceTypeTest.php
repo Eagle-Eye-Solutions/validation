@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ResourceTypeException;
 use Respect\Validation\Rules\ResourceType;
 
-/**
- * @group  rule
- * @covers ResourceType
- * @covers ResourceTypeException
- */
+#[CoversClass(ResourceType::class)]
+#[CoversClass(ResourceTypeException::class)]
+#[Group('rule')]
 class ResourceTypeTest extends TestCase
 {
     protected $rule;
@@ -29,17 +30,13 @@ class ResourceTypeTest extends TestCase
         $this->rule = new ResourceType();
     }
 
-    /**
-     * @dataProvider providerForResource
-     */
+    #[DataProvider('providerForResource')]
     public function testShouldValidateResourceNumbers($input): void
     {
         static::assertTrue($this->rule->validate($input));
     }
 
-    /**
-     * @dataProvider providerForNonResource
-     */
+    #[DataProvider('providerForNonResource')]
     public function testShouldNotValidateNonResourceNumbers($input): void
     {
         static::assertFalse($this->rule->validate($input));

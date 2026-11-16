@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\PerfectSquareException;
 use Respect\Validation\Rules\PerfectSquare;
 
-/**
- * @group  rule
- * @covers PerfectSquare
- * @covers PerfectSquareException
- */
+#[CoversClass(PerfectSquare::class)]
+#[CoversClass(PerfectSquareException::class)]
+#[Group('rule')]
 class PerfectSquareTest extends TestCase
 {
     protected $object;
@@ -30,9 +31,9 @@ class PerfectSquareTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForPerfectSquare
      * @throws \Exception
      */
+    #[DataProvider('providerForPerfectSquare')]
     public function testPerfectSquare($input): void
     {
         static::assertTrue($this->object->__invoke($input));
@@ -41,9 +42,9 @@ class PerfectSquareTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotPerfectSquare
      * @throws \Exception
      */
+    #[DataProvider('providerForNotPerfectSquare')]
     public function testNotPerfectSquare($input): void
     {
         $this->expectException(PerfectSquareException::class);

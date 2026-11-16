@@ -11,14 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Rules\CountryCode;
 
-/**
- * @group  rule
- * @covers CountryCode
- */
+#[CoversClass(CountryCode::class)]
+#[Group('rule')]
 class CountryCodeTest extends TestCase
 {
     public function testShouldThrowsExceptionWhenInvalidFormat()
@@ -63,9 +64,7 @@ class CountryCodeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providerForValidCountryCode
-     */
+    #[DataProvider('providerForValidCountryCode')]
     public function testValidContryCodes($format, $input)
     {
         $rule = new CountryCode($format);
@@ -73,9 +72,7 @@ class CountryCodeTest extends TestCase
         static::assertTrue($rule->validate($input));
     }
 
-    /**
-     * @dataProvider providerForInvalidCountryCode
-     */
+    #[DataProvider('providerForInvalidCountryCode')]
     public function testInvalidContryCodes($format, $input)
     {
         $rule = new CountryCode($format);

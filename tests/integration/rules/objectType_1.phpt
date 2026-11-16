@@ -8,3 +8,4 @@ v::objectType()->assert(new stdClass());
 v::objectType()->check(new stdClass());
 ?>
 
+--EXPECT--

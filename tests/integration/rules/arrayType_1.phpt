@@ -8,3 +8,4 @@ v::arrayType()->assert([]);
 v::arrayType()->check([1, 2, 3]);
 ?>
 
+--EXPECT--

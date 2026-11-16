@@ -32,3 +32,4 @@ foreach ($notBlankValues as $value) {
 }
 
 ?>
+--EXPECT--

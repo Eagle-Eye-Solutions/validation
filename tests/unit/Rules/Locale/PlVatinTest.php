@@ -11,17 +11,17 @@
 
 namespace Respect\Validation\Test\Rules\Locale;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\Locale\PlVatin;
 use Respect\Validation\Test\Rules\RuleTestCase;
 use stdClass;
 
-/**
- * @group  rule
- * @covers PlVatin
- */
+#[CoversClass(PlVatin::class)]
+#[Group('rule')]
 class PlVatinTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new PlVatin();
 
@@ -32,7 +32,7 @@ class PlVatinTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new PlVatin();
 

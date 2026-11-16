@@ -8,3 +8,4 @@ v::floatType()->assert(42.23);
 v::floatType()->check(1984.23);
 ?>
 
+--EXPECT--

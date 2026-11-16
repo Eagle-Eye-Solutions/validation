@@ -12,3 +12,4 @@ v::notOptional()->check(PHP_EOL);
 ?>
 
 
+--EXPECT--

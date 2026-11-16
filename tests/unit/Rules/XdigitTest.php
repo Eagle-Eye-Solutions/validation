@@ -11,16 +11,17 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\XdigitException;
 use Respect\Validation\Rules\Xdigit;
 
-/**
- * @group  rule
- * @covers Xdigit
- * @covers XdigitException
- */
+#[CoversClass(Xdigit::class)]
+#[CoversClass(XdigitException::class)]
+#[Group('rule')]
 class XdigitTest extends TestCase
 {
     protected Xdigit $xdigitsValidator;
@@ -30,9 +31,7 @@ class XdigitTest extends TestCase
         $this->xdigitsValidator = new Xdigit();
     }
 
-    /**
-     * @dataProvider providerForXdigit
-     */
+    #[DataProvider('providerForXdigit')]
     public function testValidateValidHexasdecimalDigits($input): void
     {
         static::assertTrue($this->xdigitsValidator->assert($input));
@@ -41,10 +40,9 @@ class XdigitTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotXdigit
-     *
      * @throws \Exception
      */
+    #[DataProvider('providerForNotXdigit')]
     public function testInvalidHexadecimalDigitsShouldThrowXdigitException($input): void
     {
         $this->expectException(XdigitException::class);
@@ -53,9 +51,9 @@ class XdigitTest extends TestCase
     }
 
     /**
-     * @dataProvider providerAdditionalChars
      * @throws ComponentException
      */
+    #[DataProvider('providerAdditionalChars')]
     public function testAdditionalCharsShouldBeRespected($additional, $query): void
     {
         $validator = new Xdigit($additional);

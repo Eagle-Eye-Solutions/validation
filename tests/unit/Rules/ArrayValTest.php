@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\ArrayVal;
 
-/**
- * @group  rule
- * @covers ArrayVal
- */
+#[CoversClass(ArrayVal::class)]
+#[Group('rule')]
 class ArrayValTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new ArrayVal();
 
@@ -30,7 +30,7 @@ class ArrayValTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new ArrayVal();
 

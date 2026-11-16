@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\NullTypeException;
 use Respect\Validation\Rules\NullType;
 
-/**
- * @group  rule
- * @covers NullType
- * @covers NullTypeException
- */
+#[CoversClass(NullType::class)]
+#[CoversClass(NullTypeException::class)]
+#[Group('rule')]
 class NullTypeTest extends TestCase
 {
     protected NullType $object;
@@ -39,10 +40,7 @@ class NullTypeTest extends TestCase
         static::assertTrue($this->object->check(null));
     }
 
-    /**
-     * @dataProvider providerForNotNull
-     *
-     */
+    #[DataProvider('providerForNotNull')]
     public function testNotNull($input): void
     {
         $this->expectException(NullTypeException::class);

@@ -11,21 +11,20 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\AlphaException;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Rules\Alpha;
 
-/**
- * @group  rule
- * @covers Alpha
- * @covers AlphaException
- */
+#[CoversClass(Alpha::class)]
+#[CoversClass(AlphaException::class)]
+#[Group('rule')]
 class AlphaTest extends TestCase
 {
-    /**
-     * @dataProvider providerForValidAlpha
-     */
+    #[DataProvider('providerForValidAlpha')]
     public function testValidAlphanumericCharsShouldReturnTrue($validAlpha, $additional)
     {
         $validator = new Alpha($additional);
@@ -34,10 +33,7 @@ class AlphaTest extends TestCase
         static::assertTrue($validator->assert($validAlpha));
     }
 
-    /**
-     * @dataProvider providerForInvalidAlpha
-     *
-     */
+    #[DataProvider('providerForInvalidAlpha')]
     public function testInvalidAlphanumericCharsShouldThrowAlphaException($invalidAlpha, $additional)
     {
         $this->expectException(AlphaException::class);
@@ -46,19 +42,14 @@ class AlphaTest extends TestCase
         static::assertFalse($validator->assert($invalidAlpha));
     }
 
-    /**
-     * @dataProvider providerForInvalidParams
-     *
-     */
+    #[DataProvider('providerForInvalidParams')]
     public function testInvalidConstructorParamsShouldThrowComponentException($additional)
     {
         $this->expectException(ComponentException::class);
          new Alpha($additional);
     }
 
-    /**
-     * @dataProvider providerAdditionalChars
-     */
+    #[DataProvider('providerAdditionalChars')]
     public function testAdditionalCharsShouldBeRespected($additional, $query)
     {
         $validator = new Alpha($additional);

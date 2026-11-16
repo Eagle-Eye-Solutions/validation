@@ -11,6 +11,7 @@
 
 namespace Respect\Validation\Test\Exceptions;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use ArrayIterator;
 use DateTime;
 use Exception;
@@ -28,17 +29,13 @@ class ValidationExceptionTest extends TestCase
         static::assertInstanceOf(ExceptionInterface::class, $validationException);
     }
 
-    /**
-     * @dataProvider providerForFormat
-     */
+    #[DataProvider('providerForFormat')]
     public function testFormatShouldReplacePlaceholdersProperly($template, $result, $vars): void
     {
         static::assertEquals($result, ValidationException::format($template, $vars));
     }
 
-    /**
-     * @dataProvider providerForStringify
-     */
+    #[DataProvider('providerForStringify')]
     public function testStringifyShouldConvertStringsProperly($input, $result): void
     {
         static::assertStringMatchesFormat($result, ValidationException::stringify($input));

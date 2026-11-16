@@ -11,17 +11,21 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ValidationException;
 use Respect\Validation\Validatable;
 
 abstract class RuleTestCase extends TestCase
 {
-    abstract public function providerForValidInput(): array;
+    abstract public static function providerForValidInput(): array;
 
-    abstract public function providerForInvalidInput(): array;
+    abstract public static function providerForInvalidInput(): array;
 
     /**
+     * The name is only used in the exception messages of the mock. It is not used as the
+     * mock class name, as PHPUnit 11 does not allow the same mock class name to be declared twice.
+     *
      * @param bool             $expectedResult
      * @param string[optional] $mockClassName
      *
@@ -36,7 +40,6 @@ abstract class RuleTestCase extends TestCase
                     'assert', 'check', 'getName', 'reportError', 'setName', 'setTemplate', 'validate',
                 ]
             )
-            ->setMockClassName($mockClassName)
             ->getMock();
 
         $ruleMocked->method('validate')
@@ -58,22 +61,20 @@ abstract class RuleTestCase extends TestCase
     }
 
     /**
-     * @dataProvider providerForValidInput
-     *
      * @param Validatable $validator
      * @param mixed       $input
      */
+    #[DataProvider('providerForValidInput')]
     public function testShouldValidateValidInput(Validatable $validator, $input): void
     {
         static::assertTrue($validator->validate($input));
     }
 
     /**
-     * @dataProvider providerForInvalidInput
-     *
      * @param Validatable $validator
      * @param mixed       $input
      */
+    #[DataProvider('providerForInvalidInput')]
     public function testShouldValidateInvalidInput(Validatable $validator, $input): void
     {
         static::assertFalse($validator->validate($input));

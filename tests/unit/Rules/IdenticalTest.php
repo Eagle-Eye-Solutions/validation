@@ -11,21 +11,20 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\IdenticalException;
 use Respect\Validation\Rules\Identical;
 use stdClass;
 
-/**
- * @group  rule
- * @covers Identical
- * @covers IdenticalException
- */
+#[CoversClass(Identical::class)]
+#[CoversClass(IdenticalException::class)]
+#[Group('rule')]
 class IdenticalTest extends TestCase
 {
-    /**
-     * @dataProvider providerForIdentical
-     */
+    #[DataProvider('providerForIdentical')]
     public function testInputIdenticalToExpectedValueShouldPass($compareTo, $input): void
     {
         $rule = new Identical($compareTo);
@@ -33,9 +32,7 @@ class IdenticalTest extends TestCase
         static::assertTrue($rule->validate($input));
     }
 
-    /**
-     * @dataProvider providerForNotIdentical
-     */
+    #[DataProvider('providerForNotIdentical')]
     public function testInputNotIdenticalToExpectedValueShouldPass($compareTo, $input): void
     {
         $rule = new Identical($compareTo);

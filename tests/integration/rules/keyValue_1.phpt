@@ -13,3 +13,4 @@ $data = [
 v::keyValue('password', 'equals', 'password_confirmation')->check($data);
 v::keyValue('password', 'in', 'valid_passwords')->assert($data);
 ?>
+--EXPECT--

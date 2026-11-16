@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\OddException;
 use Respect\Validation\Rules\Odd;
 
-/**
- * @group  rule
- * @covers Odd
- * @covers OddException
- */
+#[CoversClass(Odd::class)]
+#[CoversClass(OddException::class)]
+#[Group('rule')]
 class OddTest extends TestCase
 {
     protected Odd $object;
@@ -30,9 +31,9 @@ class OddTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForOdd
      * @throws \Exception
      */
+    #[DataProvider('providerForOdd')]
     public function testOdd($input): void
     {
         static::assertTrue($this->object->assert($input));
@@ -41,10 +42,9 @@ class OddTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotOdd
-     *
      * @throws \Exception
      */
+    #[DataProvider('providerForNotOdd')]
     public function testNotOdd($input): void
     {
         $this->expectException(OddException::class);

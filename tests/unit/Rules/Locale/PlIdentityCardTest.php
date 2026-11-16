@@ -11,16 +11,16 @@
 
 namespace Respect\Validation\Test\Rules\Locale;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\Locale\PlIdentityCard;
 use Respect\Validation\Test\Rules\RuleTestCase;
 
-/**
- * @group  rule
- * @covers PlIdentityCard
- */
+#[CoversClass(PlIdentityCard::class)]
+#[Group('rule')]
 class PlIdentityCardTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new PlIdentityCard();
 
@@ -31,7 +31,7 @@ class PlIdentityCardTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new PlIdentityCard();
 

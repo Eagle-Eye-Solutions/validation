@@ -37,7 +37,7 @@ class AbstractCompositeTest extends TestCase
 
         $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
             ->onlyMethods(['validate'])
-            ->getMockForAbstractClass();
+            ->getMock();
         $compositeRuleMock->setName($ruleName);
         $compositeRuleMock->addRule($simpleRuleMock);
     }
@@ -50,29 +50,30 @@ class AbstractCompositeTest extends TestCase
         $ruleName1 = 'something';
         $ruleName2 = 'something else';
 
+        $namesSet = [];
+
         $simpleRuleMock = $this->createMock(Validatable::class);
-
-        $simpleRuleMock->expects(self::once())
-            ->method('setName')
-            ->willReturn($ruleName1);
-
-        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
-            ->onlyMethods(['validate'])
-            ->getMockForAbstractClass();
-        $compositeRuleMock->setName($ruleName1);
-
-        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
-            ->onlyMethods(['validate'])
-            ->getMockForAbstractClass();
         $simpleRuleMock->expects(self::exactly(2))
             ->method('getName')
-            ->willReturnOnConsecutiveCalls([null, $ruleName1]);
-        $simpleRuleMock->expects(self::once())
+            ->willReturnOnConsecutiveCalls(null, $ruleName1);
+        $simpleRuleMock->expects(self::exactly(2))
             ->method('setName')
-            ->willReturn($ruleName2);
+            ->willReturnCallback(
+                static function (string $name) use (&$namesSet, $simpleRuleMock): Validatable {
+                    $namesSet[] = $name;
 
+                    return $simpleRuleMock;
+                }
+            );
+
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
+            ->onlyMethods(['validate'])
+            ->getMock();
+        $compositeRuleMock->setName($ruleName1);
         $compositeRuleMock->addRule($simpleRuleMock);
         $compositeRuleMock->setName($ruleName2);
+
+        static::assertSame([$ruleName1, $ruleName2], $namesSet);
     }
 
     /**
@@ -89,7 +90,7 @@ class AbstractCompositeTest extends TestCase
         $compositeRuleMock = $this
             ->getMockBuilder(AbstractComposite::class)
             ->onlyMethods(['validate'])
-            ->getMockForAbstractClass();
+            ->getMock();
         $compositeRuleMock->addRule($simpleRuleMock);
         $compositeRuleMock->setName('Whatever');
     }
@@ -110,7 +111,7 @@ class AbstractCompositeTest extends TestCase
 
         $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
             ->onlyMethods(['validate'])
-            ->getMockForAbstractClass();
+            ->getMock();
         $compositeRuleMock->addRule($simpleRuleMock);
         $compositeRuleMock->setName($ruleName);
     }
@@ -131,7 +132,7 @@ class AbstractCompositeTest extends TestCase
 
         $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
             ->onlyMethods(['validate'])
-            ->getMockForAbstractClass();
+            ->getMock();
         $compositeRuleMock->addRule($simpleRuleMock);
         $compositeRuleMock->setName($ruleName);
     }
@@ -148,7 +149,7 @@ class AbstractCompositeTest extends TestCase
 
         $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)
             ->onlyMethods(['validate'])
-            ->getMockForAbstractClass();
+            ->getMock();
         $compositeRuleMock->addRule($simpleRuleMock);
         $compositeRuleMock->setName($ruleName);
     }
@@ -158,9 +159,9 @@ class AbstractCompositeTest extends TestCase
      */
     public function testRemoveRules(): void
     {
-        $simpleRuleMock = $this->createMock(Validatable::class);
+        $simpleRuleMock = $this->createStub(Validatable::class);
 
-        $compositeRuleMock = $this->getMockForAbstractClass(AbstractComposite::class);
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)->onlyMethods(['validate'])->getMock();
         $compositeRuleMock->addRule($simpleRuleMock);
         $compositeRuleMock->removeRules();
 
@@ -172,7 +173,7 @@ class AbstractCompositeTest extends TestCase
      */
     public function testAddedRules(): void
     {
-        $compositeRuleMock = $this->getMockForAbstractClass(AbstractComposite::class);
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)->onlyMethods(['validate'])->getMock();
         $compositeRuleMock->addRule($this->createMock(Validatable::class));
         $compositeRuleMock->addRule($this->createMock(Validatable::class));
         $compositeRuleMock->addRule($this->createMock(Validatable::class));
@@ -185,7 +186,7 @@ class AbstractCompositeTest extends TestCase
      */
     public function testThereIsNoRuleAppended(): void
     {
-        $compositeRuleMock = $this->getMockForAbstractClass(AbstractComposite::class);
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)->onlyMethods(['validate'])->getMock();
 
         static::assertFalse($compositeRuleMock->hasRule(''));
     }
@@ -195,12 +196,12 @@ class AbstractCompositeTest extends TestCase
      */
     public function testRuleIsNotFound(): void
     {
-        $oneSimpleRuleMock = $this->createMock(Validatable::class);
+        $oneSimpleRuleMock = $this->createStub(Validatable::class);
 
-        $compositeRuleMock = $this->getMockForAbstractClass(AbstractComposite::class);
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)->onlyMethods(['validate'])->getMock();
         $compositeRuleMock->addRule($oneSimpleRuleMock);
 
-        $anotherSimpleRuleMock = $this->createMock(Validatable::class);
+        $anotherSimpleRuleMock = $this->createStub(Validatable::class);
 
         static::assertFalse($compositeRuleMock->hasRule($anotherSimpleRuleMock));
     }
@@ -210,9 +211,9 @@ class AbstractCompositeTest extends TestCase
      */
     public function testRulePassedAsStringIsNotFound(): void
     {
-        $simpleRuleMock = $this->createMock(Validatable::class);
+        $simpleRuleMock = $this->createStub(Validatable::class);
 
-        $compositeRuleMock = $this->getMockForAbstractClass(AbstractComposite::class);
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)->onlyMethods(['validate'])->getMock();
         $compositeRuleMock->addRule($simpleRuleMock);
 
         static::assertFalse($compositeRuleMock->hasRule('SomeRule'));
@@ -220,9 +221,9 @@ class AbstractCompositeTest extends TestCase
 
     public function testTrueWhenRuleIsFound(): void
     {
-        $simpleRuleMock = $this->createMock(Validatable::class);
+        $simpleRuleMock = $this->createStub(Validatable::class);
 
-        $compositeRuleMock = $this->getMockForAbstractClass(AbstractComposite::class);
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)->onlyMethods(['validate'])->getMock();
         $compositeRuleMock->addRule($simpleRuleMock);
 
         static::assertTrue($compositeRuleMock->hasRule($simpleRuleMock));
@@ -233,13 +234,13 @@ class AbstractCompositeTest extends TestCase
      */
     public function testPassingThroughConstructor(): void
     {
-        $simpleRuleMock = $this->createMock(Validatable::class);
-        $anotherSimpleRuleMock = $this->createMock(Validatable::class);
+        $simpleRuleMock = $this->createStub(Validatable::class);
+        $anotherSimpleRuleMock = $this->createStub(Validatable::class);
 
-        $compositeRuleMock = $this->getMockForAbstractClass(AbstractComposite::class, [
+        $compositeRuleMock = $this->getMockBuilder(AbstractComposite::class)->setConstructorArgs([
             $simpleRuleMock,
             $anotherSimpleRuleMock,
-        ]);
+        ])->onlyMethods(['validate'])->getMock();
 
         static::assertCount(2, $compositeRuleMock->getRules());
     }

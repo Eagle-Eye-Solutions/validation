@@ -2,14 +2,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\SfException;
 use Respect\Validation\Rules\Sf;
 
-/**
- * @group  rule
- * @covers Sf
- * @covers SfException
- */
+#[CoversClass(Sf::class)]
+#[CoversClass(SfException::class)]
+#[Group('rule')]
 class SfTest extends TestCase
 {
     public function testDefinedConstraintAndValidatorWithNull(): void

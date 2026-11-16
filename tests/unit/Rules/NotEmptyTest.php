@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\NotEmptyException;
 use Respect\Validation\Rules\NotEmpty;
 
-/**
- * @group  rule
- * @covers NotEmpty
- * @covers NotEmptyException
- */
+#[CoversClass(NotEmpty::class)]
+#[CoversClass(NotEmptyException::class)]
+#[Group('rule')]
 class NotEmptyTest extends TestCase
 {
     protected $object;
@@ -30,17 +31,15 @@ class NotEmptyTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotEmpty
      * @throws \Exception
      */
+    #[DataProvider('providerForNotEmpty')]
     public function testStringNotEmpty($input): void
     {
         static::assertTrue($this->object->assert($input));
     }
 
-    /**
-     * @dataProvider providerForEmpty
-     */
+    #[DataProvider('providerForEmpty')]
     public function testStringEmpty($input): void
     {
         $this->expectException(NotEmptyException::class);

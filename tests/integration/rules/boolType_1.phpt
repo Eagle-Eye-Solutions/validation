@@ -8,3 +8,4 @@ use Respect\Validation\Validator as v;
 v::boolType()->check(false);
 v::boolType()->assert(true);
 ?>
+--EXPECT--

@@ -11,13 +11,14 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Rules\IntType;
 
-/**
- * @group  rule
- * @covers IntType
- */
+#[CoversClass(IntType::class)]
+#[Group('rule')]
 class IntTypeTest extends TestCase
 {
     public static function providerForValidIntType(): array
@@ -30,9 +31,7 @@ class IntTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providerForValidIntType
-     */
+    #[DataProvider('providerForValidIntType')]
     public function testShouldValidateInputWhenItIsAValidIntType($input): void
     {
         $rule = new IntType();
@@ -50,9 +49,7 @@ class IntTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providerForInvalidIntType
-     */
+    #[DataProvider('providerForInvalidIntType')]
     public function testShouldInvalidateInputWhenItIsNotAValidIntType($input): void
     {
         $rule = new IntType();

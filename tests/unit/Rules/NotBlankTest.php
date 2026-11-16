@@ -11,21 +11,20 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\NotBlankException;
 use Respect\Validation\Rules\NotBlank;
 use stdClass;
 
-/**
- * @group  rule
- * @covers NotBlank
- * @covers NotBlankException
- */
+#[CoversClass(NotBlank::class)]
+#[CoversClass(NotBlankException::class)]
+#[Group('rule')]
 class NotBlankTest extends TestCase
 {
-    /**
-     * @dataProvider providerForNotBlank
-     */
+    #[DataProvider('providerForNotBlank')]
     public function testNotBlank($input): void
     {
         $rule = new NotBlank();
@@ -33,9 +32,7 @@ class NotBlankTest extends TestCase
         static::assertTrue($rule->validate($input));
     }
 
-    /**
-     * @dataProvider providerForBlank
-     */
+    #[DataProvider('providerForBlank')]
     public function testBlank($input): void
     {
         $rule = new NotBlank();

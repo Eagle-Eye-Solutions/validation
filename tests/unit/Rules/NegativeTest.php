@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\NegativeException;
 use Respect\Validation\Rules\Negative;
 
-/**
- * @group  rule
- * @covers Negative
- * @covers NegativeException
- */
+#[CoversClass(Negative::class)]
+#[CoversClass(NegativeException::class)]
+#[Group('rule')]
 class NegativeTest extends TestCase
 {
     protected Negative $negativeValidator;
@@ -29,9 +30,7 @@ class NegativeTest extends TestCase
         $this->negativeValidator = new Negative();
     }
 
-    /**
-     * @dataProvider providerForNegative
-     */
+    #[DataProvider('providerForNegative')]
     public function testNegativeShouldPass($input): void
     {
         static::assertTrue($this->negativeValidator->assert($input));
@@ -40,9 +39,9 @@ class NegativeTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotNegative
      * @throws \Exception
      */
+    #[DataProvider('providerForNotNegative')]
     public function testNotNegativeNumbers($input): void
     {
         $this->expectException(NegativeException::class);

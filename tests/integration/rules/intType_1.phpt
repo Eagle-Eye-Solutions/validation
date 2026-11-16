@@ -8,3 +8,4 @@ v::intType()->assert(42);
 v::intType()->check(1984);
 ?>
 
+--EXPECT--

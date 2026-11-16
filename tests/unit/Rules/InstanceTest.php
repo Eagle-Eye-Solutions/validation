@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\InstanceException;
 use Respect\Validation\Rules\Instance;
 
-/**
- * @group  rule
- * @covers Instance
- * @covers InstanceException
- */
+#[CoversClass(Instance::class)]
+#[CoversClass(InstanceException::class)]
+#[Group('rule')]
 class InstanceTest extends TestCase
 {
     protected Instance $instanceValidator;

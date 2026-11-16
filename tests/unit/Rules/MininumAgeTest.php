@@ -11,23 +11,24 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\MinimumAgeException;
 use Respect\Validation\Rules\MinimumAge;
 
-/**
- * @group  rule
- * @covers MinimumAge
- * @covers MinimumAgeException
- */
+#[CoversClass(MinimumAge::class)]
+#[CoversClass(MinimumAgeException::class)]
+#[Group('rule')]
 class MininumAgeTest extends TestCase
 {
     /**
-     * @dataProvider providerForValidDateValidMinimumAge
      * @throws ComponentException
      * @throws \Exception
      */
+    #[DataProvider('providerForValidDateValidMinimumAge')]
     public function testValidMinimumAgeInsideBoundsShouldPass($age, $format, $input): void
     {
         $minimumAge = new MinimumAge($age, $format);
@@ -37,10 +38,10 @@ class MininumAgeTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForValidDateInvalidMinimumAge
      * @throws ComponentException
      * @throws \Exception
      */
+    #[DataProvider('providerForValidDateInvalidMinimumAge')]
     public function testInvalidMinimumAgeShouldThrowException($age, $format, $input): void
     {
         $this->expectException(MinimumAgeException::class);
@@ -50,10 +51,10 @@ class MininumAgeTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidDate
      * @throws ComponentException
      * @throws \Exception
      */
+    #[DataProvider('providerForInvalidDate')]
     public function testInvalidDateShouldNotPass($age, $format, $input): void
     {
         $this->expectException(MinimumAgeException::class);

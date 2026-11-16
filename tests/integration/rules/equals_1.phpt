@@ -8,3 +8,4 @@ v::equals('test 123')->assert('test 123');
 v::equals('test 123')->check('test 123');
 ?>
 
+--EXPECT--

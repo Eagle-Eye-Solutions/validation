@@ -11,46 +11,40 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Respect\Validation\Exceptions\ContainsException;
 use Respect\Validation\Rules\Contains;
 
-/**
- * @group  rule
- * @covers Contains
- * @covers ContainsException
- */
+#[CoversClass(Contains::class)]
+#[CoversClass(ContainsException::class)]
+#[Group('rule')]
 class ContainsTest extends TestCase
 {
-    /**
-     * @dataProvider providerForContainsIdentical
-     */
+    #[DataProvider('providerForContainsIdentical')]
     public function testStringsContainingExpectedIdenticalValueShouldPass($start, $input)
     {
         $v = new Contains($start, true);
         static::assertTrue($v->validate($input));
     }
 
-    /**
-     * @dataProvider providerForContains
-     */
+    #[DataProvider('providerForContains')]
     public function testStringsContainingExpectedValueShouldPass($start, $input)
     {
         $v = new Contains($start, false);
         static::assertTrue($v->validate($input));
     }
 
-    /**
-     * @dataProvider providerForNotContainsIdentical
-     */
+    #[DataProvider('providerForNotContainsIdentical')]
     public function testStringsNotContainsExpectedIdenticalValueShouldNotPass($start, $input)
     {
         $v = new Contains($start, true);
         static::assertFalse($v->validate($input));
     }
 
-    /**
-     * @dataProvider providerForNotContains
-     */
+    #[DataProvider('providerForNotContains')]
     public function testStringsNotContainsExpectedValueShouldNotPass($start, $input)
     {
         $v = new Contains($start, false);

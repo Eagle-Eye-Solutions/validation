@@ -11,6 +11,9 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\ComponentException;
 use Respect\Validation\Exceptions\FactorException;
@@ -18,18 +21,17 @@ use Respect\Validation\Exceptions\ValidationException;
 use Respect\Validation\Rules\Factor;
 
 /**
- * @group  rule
- * @covers Factor
- * @covers FactorException
- *
  * @author David Meister <thedavidmeister@gmail.com>
  */
+#[CoversClass(Factor::class)]
+#[CoversClass(FactorException::class)]
+#[Group('rule')]
 class FactorTest extends TestCase
 {
     /**
-     * @dataProvider providerForValidFactor
      * @throws ComponentException
      */
+    #[DataProvider('providerForValidFactor')]
     public function testValidFactorShouldReturnTrue($dividend, $input): void
     {
         $min = new Factor($dividend);
@@ -39,10 +41,10 @@ class FactorTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForInvalidFactor
      * @throws ComponentException
      * @throws \Exception
      */
+    #[DataProvider('providerForInvalidFactor')]
     public function testInvalidFactorShouldThrowFactorException($dividend, $input): void
     {
         $this->expectException(FactorException::class);
@@ -53,9 +55,7 @@ class FactorTest extends TestCase
         static::assertFalse($min->assert($input));
     }
 
-    /**
-     * @dataProvider providerForInvalidFactorDividend
-     */
+    #[DataProvider('providerForInvalidFactorDividend')]
     public function testInvalidDividentShouldThrowComponentException($dividend, $input): void
     {
         $this->expectException(ComponentException::class);

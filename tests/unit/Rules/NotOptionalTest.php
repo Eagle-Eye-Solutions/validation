@@ -11,19 +11,18 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Rules\NotOptional;
 use stdClass;
 
-/**
- * @group  rule
- * @covers NotOptional
- */
+#[CoversClass(NotOptional::class)]
+#[Group('rule')]
 class NotOptionalTest extends TestCase
 {
-    /**
-     * @dataProvider providerForNotOptional
-     */
+    #[DataProvider('providerForNotOptional')]
     public function testShouldValidateWhenNotOptional($input): void
     {
         $rule = new NotOptional();
@@ -31,9 +30,7 @@ class NotOptionalTest extends TestCase
         static::assertTrue($rule->validate($input));
     }
 
-    /**
-     * @dataProvider providerForOptional
-     */
+    #[DataProvider('providerForOptional')]
     public function testShouldNotValidateWhenOptional($input): void
     {
         $rule = new NotOptional();

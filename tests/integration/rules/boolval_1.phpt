@@ -20,3 +20,4 @@ v::boolVal()->check('no');
 v::boolVal()->check(true);
 v::boolVal()->check(false);
 ?>
+--EXPECT--

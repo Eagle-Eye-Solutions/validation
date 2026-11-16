@@ -14,3 +14,4 @@ try {
     echo $e->getMainMessage();
 }
 ?>
+--EXPECT--

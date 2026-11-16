@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\CpfException;
 use Respect\Validation\Rules\Cpf;
 
-/**
- * @group  rule
- * @covers Cpf
- * @covers CpfException
- */
+#[CoversClass(Cpf::class)]
+#[CoversClass(CpfException::class)]
+#[Group('rule')]
 class CpfTest extends TestCase
 {
     protected $cpfValidator;
@@ -29,44 +30,33 @@ class CpfTest extends TestCase
         $this->cpfValidator = new Cpf();
     }
 
-    /**
-     * @dataProvider providerValidFormattedCpf
-     */
+    #[DataProvider('providerValidFormattedCpf')]
     public function testFormattedCpfsShouldValidate($input)
     {
         static::assertTrue($this->cpfValidator->assert($input));
     }
 
-    /**
-     * @dataProvider providerValidUnformattedCpf
-     */
+    #[DataProvider('providerValidUnformattedCpf')]
     public function testUnformattedCpfsShouldValidates($input)
     {
         static::assertTrue($this->cpfValidator->assert($input));
     }
 
-    /**
-     * @dataProvider providerInvalidFormattedCpf
-     *
-     */
+    #[DataProvider('providerInvalidFormattedCpf')]
     public function testInvalidCpfShouldFailWhenFormatted($input)
     {
         $this->expectException(CpfException::class);
         static::assertFalse($this->cpfValidator->assert($input));
     }
 
-    /**
-     * @dataProvider providerInvalidUnformattedCpf
-     */
+    #[DataProvider('providerInvalidUnformattedCpf')]
     public function testInvalidCpfShouldFailWhenNotFormatted($input)
     {
         $this->expectException(CpfException::class);
         static::assertFalse($this->cpfValidator->assert($input));
     }
 
-    /**
-     * @dataProvider providerInvalidFormattedAndUnformattedCpfLength
-     */
+    #[DataProvider('providerInvalidFormattedAndUnformattedCpfLength')]
     public function testCpfsWithIncorrectLengthShouldFail($input)
     {
         $this->expectException(CpfException::class);

@@ -12,3 +12,4 @@ v::alwaysValid()->assert('string');
 v::alwaysValid()->assert(new stdClass());
 ?>
 
+--EXPECT--

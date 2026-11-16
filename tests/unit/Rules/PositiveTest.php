@@ -11,15 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\PositiveException;
 use Respect\Validation\Rules\Positive;
 
-/**
- * @group  rule
- * @covers Positive
- * @covers PositiveException
- */
+#[CoversClass(Positive::class)]
+#[CoversClass(PositiveException::class)]
+#[Group('rule')]
 class PositiveTest extends TestCase
 {
     protected $object;
@@ -29,9 +30,7 @@ class PositiveTest extends TestCase
         $this->object = new Positive();
     }
 
-    /**
-     * @dataProvider providerForPositive
-     */
+    #[DataProvider('providerForPositive')]
     public function testPositive($input): void
     {
         static::assertTrue($this->object->__invoke($input));
@@ -40,9 +39,9 @@ class PositiveTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForNotPositive
      * @throws \Exception
      */
+    #[DataProvider('providerForNotPositive')]
     public function testNotPositive($input): void
     {
         $this->expectException(PositiveException::class);

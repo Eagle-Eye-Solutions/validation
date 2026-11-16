@@ -11,15 +11,15 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Respect\Validation\Rules\CurrencyCode;
 
-/**
- * @group  rule
- * @covers CurrencyCode
- */
+#[CoversClass(CurrencyCode::class)]
+#[Group('rule')]
 class CurrencyCodeTest extends RuleTestCase
 {
-    public function providerForValidInput(): array
+    public static function providerForValidInput(): array
     {
         $rule = new CurrencyCode();
 
@@ -32,7 +32,7 @@ class CurrencyCodeTest extends RuleTestCase
         ];
     }
 
-    public function providerForInvalidInput(): array
+    public static function providerForInvalidInput(): array
     {
         $rule = new CurrencyCode();
 

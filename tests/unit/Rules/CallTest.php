@@ -11,16 +11,16 @@
 
 namespace Respect\Validation\Test\Rules;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Respect\Validation\Exceptions\CallException;
 use Respect\Validation\Rules\ArrayVal;
 use Respect\Validation\Rules\Call;
 
-/**
- * @group  rule
- * @covers Call
- * @covers CallException
- */
+#[CoversClass(Call::class)]
+#[CoversClass(CallException::class)]
+#[Group('rule')]
 class CallTest extends TestCase
 {
     public function thisIsASampleCallbackUsedInsideThisTest()
