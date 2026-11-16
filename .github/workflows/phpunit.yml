@@ -66,7 +66,7 @@ jobs:
             "password":"${{ secrets.PACKAGIST_AUTHENTICATION_TOKEN }}"}}}
         run: |
           composer ${{ matrix.php == '8.2' && 'install' || 'update' }} \
-            --no-interaction --prefer-dist --no-progress --no-scripts --no-pluginsExpand commentComment on lines R68 to R69Resolved
+            --no-interaction --prefer-dist --no-progress --no-scripts --no-plugins
 
       - name: Run PHPUnit
         run: bin/phpunit --fail-on-deprecation --fail-on-phpunit-deprecation
