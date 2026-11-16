@@ -15,7 +15,7 @@
         "php": ">=8.2.12"
     },
     "require-dev": {
-        "mikey179/vfsstream": "^2.0.x-dev",
+        "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^9.5",
         "symfony/validator": "^7.0.5",
         "rector/rector": "^2.5"
