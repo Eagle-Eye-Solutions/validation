@@ -69,7 +69,7 @@ jobs:
             --no-interaction --prefer-dist --no-progress --no-scripts --no-plugins
 
       - name: Run PHPUnit
-        run: bin/phpunit --fail-on-deprecation --fail-on-phpunit-deprecation
+        run: vendor/bin/phpunit --fail-on-deprecation --fail-on-phpunit-deprecation
 
   run-phpunit-with-coverage:
     runs-on: ubuntu-latest
@@ -210,12 +210,12 @@ jobs:
         run: test -f rector.php || { echo "::error::rector.php missing"; exit 1; }
 
       - name: Rector dry run
-        run: bin/rector process --dry-run --no-progress-bar
+        run: vendor/bin/rector process --dry-run --no-progress-bar
 
       # Replaces the Travis "Phpstan analyser" job: Rector does not enforce the level-8 analysis
       # configured in phpstan.neon, so type errors need their own check. Reuses the install above.
       - name: PHPStan
-        run: bin/phpstan analyse --no-progress --memory-limit=-1
+        run: vendor/bin/phpstan analyse --no-progress --memory-limit=-1
 
   audit:
     # The only job that fails the build on a known advisory. `composer install`
