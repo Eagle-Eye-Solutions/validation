@@ -210,7 +210,7 @@ jobs:
         run: test -f rector.php || { echo "::error::rector.php missing"; exit 1; }
 
       - name: Rector dry run
-        run: bin/rector process --dry-run --no-progress-barExpand commentComment on lines R212 to R213Resolved
+        run: bin/rector process --dry-run --no-progress-bar
 
       # Replaces the Travis "Phpstan analyser" job: Rector does not enforce the level-8 analysis
       # configured in phpstan.neon, so type errors need their own check. Reuses the install above.
