@@ -1,0 +1,91 @@
+name: Quality Check
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  phpcs-diff:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
+        with:
+          php-version: '8.2'
+          tools: composer
+          extensions: bcmath, memcached, mysqli, pdo_mysql, zip
+          coverage: none
+
+      - name: Cache Composer packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/composer
+          key: composer-8.2-${{ runner.os }}-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            composer-8.2-${{ runner.os }}-
+
+      - name: Install dependencies
+        env:
+          COMPOSER_AUTH: >-
+            {"http-basic":{"repo.packagist.com":{"username":"token","password":"${{ secrets.PACKAGIST_AUTHENTICATION_TOKEN }}"}}}
+        run: composer install --no-interaction --prefer-dist --no-progress --no-scripts --no-plugins
+
+      - name: Resolve Composer global home
+        run: echo "COMPOSER_GLOBAL_HOME=$(composer -n config --global home)" >> "$GITHUB_ENV"
+
+      - name: Cache phpcs-diff install
+        id: phpcs-diff-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.COMPOSER_GLOBAL_HOME }}
+          key: phpcs-diff-2.0.1-php-8.2-${{ runner.os }}
+
+      - name: Install phpcs-diff
+        if: steps.phpcs-diff-cache.outputs.cache-hit != 'true'
+        run: composer global require olivertappin/phpcs-diff:2.0.1 --no-interaction --no-progress
+
+      - name: Run phpcs-diff
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git fetch origin "$BASE_REF:refs/remotes/origin/$BASE_REF"
+          "$(composer global config bin-dir --absolute)/phpcs-diff" "$BASE_REF"
+
+      # Equivalent to the removed .travis/composer-devcheck. minimum-stability is "dev", so both
+      # files need checking: composer.json for any constraint with letters (dev-main, 1.x-dev,
+      # ^1.0 || dev-main, @dev, -beta, "as" aliases), and composer.lock for every locked package
+      # version with letters, which also catches transitive dev versions. A leading "v" (v1.2.3)
+      # is allowed.
+      - name: Reject dev-version dependencies
+        run: |
+          status=0
+
+          json_deps=$(jq -r '((.require // {}) + (."require-dev" // {})) | to_entries[] | select(.value | test("[A-Za-z]")) | "  - \(.key): \(.value)"' composer.json)
+          if [ -n "$json_deps" ]; then
+            echo "::error::composer.json requires dev or pre-release versions instead of tagged releases:"
+            echo "$json_deps"
+            status=1
+          fi
+
+          lock_deps=$(jq -r '[(.packages // [])[], (."packages-dev" // [])[]] | .[] | select(.version | sub("^v"; "") | test("[A-Za-z]")) | "  - \(.name): \(.version)"' composer.lock)
+          if [ -n "$lock_deps" ]; then
+            echo "::error::composer.lock contains dev or pre-release versions:"
+            echo "$lock_deps"
+            status=1
+          fi
+
+          exit "$status"

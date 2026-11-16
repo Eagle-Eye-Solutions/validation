@@ -1,0 +1,241 @@
+name: PHPUnit with coverage
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  run-phpunit:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 8.3 is deliberately absent: these are the deployed runtimes, and the
+        # pinned 8.2.35 job below covers the exact patch production runs.
+        php: ['8.2', '8.4', '8.5']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:2.9.8
+          coverage: none
+          extensions: memcached, mysqli, pdo_mysql, bcmath, zip
+
+      - name: PHP syntax check
+        run: |
+          find ./modules ./tests/phpunit ./public_html ./Bootstrap.php -type f -name '*.php' -print0 \
+            | xargs -0 -n1 -P"$(nproc)" php -l -n 2>&1 \
+            | (! grep -v 'No syntax errors detected')
+
+      - name: Cache Composer packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ matrix.php }}-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            composer-${{ matrix.php }}-${{ runner.os }}-
+
+      # composer.json pins config.platform.php to 8.2.13 so the committed lock resolves for the
+      # lowest supported PHP. The 8.4/8.5 jobs resolve fresh, so they must resolve against their
+      # real runtime; with the pin left in, Composer would still pick packages that exclude 8.5
+      # (e.g. the locked openspout release). This only edits the runner's workspace copy.
+      - name: Resolve against the runtime PHP
+        if: matrix.php != '8.2'
+        run: composer config --unset platform.php
+
+      - name: Install dependencies
+        # Scoped to the steps that fetch from the private mirror, so code run by later steps
+        # cannot read the credential. The 8.2 job installs the committed lock, which production
+        # deploys. The 8.4/8.5 jobs resolve fresh: no openspout release supports both PHP 8.2 and
+        # 8.5, so the 8.2-resolved lock cannot install on 8.5. --no-scripts skips the EESComposer
+        # deploy hooks, which are not needed to run the tests.
+        env: &composer-auth
+          COMPOSER_AUTH: >-
+            {"http-basic":{"repo.packagist.com":{"username":"token",
+            "password":"${{ secrets.PACKAGIST_AUTHENTICATION_TOKEN }}"}}}
+        run: |
+          composer ${{ matrix.php == '8.2' && 'install' || 'update' }} \
+            --no-interaction --prefer-dist --no-progress --no-scripts --no-pluginsExpand commentComment on lines R68 to R69Resolved
+
+      - name: Run PHPUnit
+        run: bin/phpunit --fail-on-deprecation --fail-on-phpunit-deprecation
+
+  run-phpunit-with-coverage:
+    runs-on: ubuntu-latest
+    container:
+      image: php:8.2.35-cli
+    env:
+      # Composer's default cache location in this image is not ~/.cache/composer, so it is set
+      # explicitly and the cache step reads the same value.
+      COMPOSER_CACHE_DIR: /tmp/composer-cache
+
+    steps:
+      # SONAR_TOKEN is scoped to this step and the scan step only, so PHPUnit and the dependency
+      # code it runs cannot read it via getenv().
+      - name: Require SONAR_TOKEN
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "::error::SONAR_TOKEN secret is not set; cannot run SonarCloud scan."
+            exit 1
+          fi
+      - name: Cache PHP extension builds
+        id: php-ext-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            /usr/local/lib/php/extensions/no-debug-non-zts-20220829/pcov.so
+            /usr/local/lib/php/extensions/no-debug-non-zts-20220829/memcached.so
+            /usr/local/lib/php/extensions/no-debug-non-zts-20220829/zip.so
+            /usr/local/lib/php/extensions/no-debug-non-zts-20220829/mysqli.so
+            /usr/local/lib/php/extensions/no-debug-non-zts-20220829/pdo_mysql.so
+            /usr/local/lib/php/extensions/no-debug-non-zts-20220829/bcmath.so
+            /usr/local/etc/php/conf.d/docker-php-ext-pcov.ini
+            /usr/local/etc/php/conf.d/docker-php-ext-memcached.ini
+            /usr/local/etc/php/conf.d/docker-php-ext-zip.ini
+            /usr/local/etc/php/conf.d/docker-php-ext-mysqli.ini
+            /usr/local/etc/php/conf.d/docker-php-ext-pdo_mysql.ini
+            /usr/local/etc/php/conf.d/docker-php-ext-bcmath.ini
+          key: php-ext-pcov-1.0.11-memcached-3.4.0-zip-mysqli-pdo_mysql-bcmath-php-8.2.35-cli-${{ runner.os }}
+
+      # The -dev packages also install the runtime libraries memcached.so and zip.so link
+      # against, so they are needed on a cache hit too.
+      - name: Install system dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git unzip libmemcached-dev libzip-dev zlib1g-dev libssl-dev
+
+      - name: Install build tools
+        if: steps.php-ext-cache.outputs.cache-hit != 'true'
+        run: apt-get install -y --no-install-recommends $PHPIZE_DEPS
+
+      # memcached, zip, mysqli, bcmath: required by composer.lock. pdo_mysql: gabordemooij/redbean
+      # (via test-services) reads PDO MySQL constants at autoload without declaring ext-pdo_mysql.
+      - name: Build PHP extensions
+        if: steps.php-ext-cache.outputs.cache-hit != 'true'
+        run: |
+          docker-php-ext-install zip mysqli pdo_mysql bcmath
+          pecl install pcov-1.0.11 memcached-3.4.0 < /dev/null
+          docker-php-ext-enable pcov memcached
+
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+
+      - name: Install Composer
+        run: |
+          EXPECTED_SIGNATURE="$(curl -fsS https://composer.github.io/installer.sig)"
+          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          ACTUAL_SIGNATURE="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+          if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then
+            echo "::error::Invalid Composer installer signature"
+            rm composer-setup.php
+            exit 1
+          fi
+          php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=2.9.8
+          rm composer-setup.php
+
+      - name: Validate Composer config
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: composer-8.2.35-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            composer-8.2.35-${{ runner.os }}-
+
+      - name: Install dependencies
+        env: *composer-auth
+        run: composer install --no-interaction --prefer-dist --no-progress --no-scripts --no-plugins
+
+      - name: Run PHPUnit (with coverage)
+        run: |
+          php -dpcov.enabled=1 -dpcov.exclude="~vendor~" bin/phpunit \
+            --fail-on-deprecation --fail-on-phpunit-deprecation \
+            --coverage-clover coverage.xml --log-junit test-report.xml
+
+      - name: SonarCloud scan
+        uses: SonarSource/sonarqube-scan-action@c7ee0f9df90b7aa20e8dcf9695dcfe2e7da5b4f2 # v7
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  rector:
+    # Guard: the committed rector.php must produce no diff. Keeps deprecation
+    # fixes from regressing after the upgrade ticket is merged.
+    name: Rector (dry run)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
+        with:
+          php-version: '8.2'
+          tools: composer:2.9.8
+          coverage: none
+          extensions: memcached, mysqli, pdo_mysql, bcmath, zip
+
+      - name: Cache Composer packages
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/composer
+          key: composer-8.2-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            composer-8.2-${{ runner.os }}-
+
+      - name: Install dependencies
+        env: *composer-auth
+        run: composer install --no-interaction --prefer-dist --no-progress --no-scripts --no-plugins
+
+      # Guard against a missing config: Rector prompts interactively to
+      # generate one, which in CI hangs until the job times out instead of
+      # failing fast.
+      - name: Require rector.php
+        run: test -f rector.php || { echo "::error::rector.php missing"; exit 1; }
+
+      - name: Rector dry run
+        run: bin/rector process --dry-run --no-progress-barExpand commentComment on lines R212 to R213Resolved
+
+      # Replaces the Travis "Phpstan analyser" job: Rector does not enforce the level-8 analysis
+      # configured in phpstan.neon, so type errors need their own check. Reuses the install above.
+      - name: PHPStan
+        run: bin/phpstan analyse --no-progress --memory-limit=-1
+
+  audit:
+    # The only job that fails the build on a known advisory. `composer install`
+    # (every other job here) does not audit at all, and `composer update` warns
+    # but exits 0. --locked is required: with no vendor/ present, a plain
+    # `composer audit` reports "No packages - skipping audit" and exits 0.
+    # Reads composer.lock, so it needs no install and no PHP matrix.
+    name: Composer audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
+        with:
+          php-version: '8.2'
+          tools: composer:2.9.8
+          coverage: none
+
+      - name: Composer audit
+        env: *composer-auth
+        run: composer audit --locked
